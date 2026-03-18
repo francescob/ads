@@ -1,0 +1,47 @@
+<%= form_with model: [@beneficiario, @procedimento, rendiconto], class: "space-y-6" do |f| %>
+  <% if rendiconto.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <ul class="list-disc list-inside text-sm text-red-700">
+        <% rendiconto.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :anno, "Anno", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.number_field :anno, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.label :stato, "Stato", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :stato, Rendiconto::STATI.map { |s| [s.capitalize, s] }, { prompt: "Seleziona stato" }, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.label :importo_entrate, "Importo Entrate (€)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.number_field :importo_entrate, step: 0.01, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.label :importo_uscite, "Importo Uscite (€)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.number_field :importo_uscite, step: 0.01, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.label :data_presentazione, "Data Presentazione", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.date_field :data_presentazione, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.label :data_approvazione, "Data Approvazione", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.date_field :data_approvazione, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+    </div>
+    <div>
+      <%= f.label :note, "Note", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_area :note, rows: 3, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <%= link_to "Annulla", beneficiario_procedimento_path(@beneficiario, @procedimento), class: "bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium" %>
+    <%= f.submit rendiconto.new_record? ? "Crea Rendiconto" : "Salva Modifiche", class: "bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium cursor-pointer" %>
+  </div>
+<% end %>

@@ -1,0 +1,1222 @@
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-03-18 12:19:47.920304', '2026-03-18 12:19:47.920306') RETURNING "key"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateBeneficiarios (20260318121926)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE TABLE "beneficiarios" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "nome" varchar, "cognome" varchar, "codice_fiscale" varchar, "data_nascita" date, "luogo_nascita" varchar, "indirizzo" varchar, "telefono" varchar, "email" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318121926') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateProcedimentos (20260318121927)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "procedimentos" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "beneficiario_id" integer NOT NULL, "numero_rg" varchar, "tribunale" varchar, "giudice_tutelare" varchar, "data_apertura" date, "data_chiusura" date, "stato" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_0f2ae772ea"
+FOREIGN KEY ("beneficiario_id")
+  REFERENCES "beneficiarios" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_procedimentos_on_beneficiario_id" ON "procedimentos" ("beneficiario_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318121927') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateUdienzas (20260318121928)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE TABLE "udienzas" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "data_udienza" datetime(6), "tipo" varchar, "luogo" varchar, "note" text, "esito" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_86ddb5f593"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimentos" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_udienzas_on_procedimento_id" ON "udienzas" ("procedimento_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318121928') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateScadenzas (20260318121929)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE TABLE "scadenzas" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_scadenza" date, "completata" boolean, "tipo" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_13c1e36f7a"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimentos" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_scadenzas_on_procedimento_id" ON "scadenzas" ("procedimento_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318121929') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateRendicontos (20260318121930)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "rendicontos" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "anno" integer, "data_presentazione" date, "data_approvazione" date, "stato" varchar, "note" text, "importo_entrate" decimal, "importo_uscite" decimal, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_06cfe1a398"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimentos" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_rendicontos_on_procedimento_id" ON "rendicontos" ("procedimento_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318121930') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateAttivita (20260318121942)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "attivita" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_attivita" datetime(6), "tipo" varchar, "completata" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_85a6b2073c"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimentos" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_attivita_on_procedimento_id" ON "attivita" ("procedimento_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318121942') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiarios"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (1.0ms)[0m  [1m[32mINSERT INTO "beneficiarios" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Mario"], ["cognome", "Rossi"], ["codice_fiscale", "RSSMRA80A01H501Z"], ["data_nascita", "1980-01-01"], ["luogo_nascita", "Roma"], ["indirizzo", "Via Roma 1, 00100 Roma"], ["telefono", "06 12345678"], ["email", "[FILTERED]"], ["note", "Beneficiario con limitata capacità di gestione finanziaria."], ["created_at", "2026-03-18 12:31:13.432958"], ["updated_at", "2026-03-18 12:31:13.432958"]]
+  [1m[36mTRANSACTION (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (1.1ms)[0m  [1m[32mINSERT INTO "beneficiarios" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Lucia"], ["cognome", "Bianchi"], ["codice_fiscale", "BNCLCU75B41F205X"], ["data_nascita", "1975-02-01"], ["luogo_nascita", "Milano"], ["indirizzo", "Via Milano 10, 20100 Milano"], ["telefono", "02 98765432"], ["email", "[FILTERED]"], ["note", nil], ["created_at", "2026-03-18 12:31:13.437620"], ["updated_at", "2026-03-18 12:31:13.437620"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (0.9ms)[0m  [1m[32mINSERT INTO "beneficiarios" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Giuseppe"], ["cognome", "Verdi"], ["codice_fiscale", nil], ["data_nascita", "1945-06-15"], ["luogo_nascita", "Napoli"], ["indirizzo", "Via Napoli 5, 80100 Napoli"], ["telefono", nil], ["email", "[FILTERED]"], ["note", nil], ["created_at", "2026-03-18 12:31:13.441713"], ["updated_at", "2026-03-18 12:31:13.441713"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to RenameTablesItalianPlurals (20260318123146)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (1.7ms)[0m  [1m[35mALTER TABLE "beneficiarios" RENAME TO "beneficiari"[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[35mALTER TABLE "procedimentos" RENAME TO "procedimenti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_procedimenti_on_beneficiario_id" ON "procedimenti" ("beneficiario_id")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mDROP INDEX "index_procedimentos_on_beneficiario_id"[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mALTER TABLE "udienzas" RENAME TO "udienze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_udienze_on_procedimento_id" ON "udienze" ("procedimento_id")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mDROP INDEX "index_udienzas_on_procedimento_id"[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[35mALTER TABLE "scadenzas" RENAME TO "scadenze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_scadenze_on_procedimento_id" ON "scadenze" ("procedimento_id")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mDROP INDEX "index_scadenzas_on_procedimento_id"[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[35mALTER TABLE "rendicontos" RENAME TO "rendiconti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_rendiconti_on_procedimento_id" ON "rendiconti" ("procedimento_id")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mDROP INDEX "index_rendicontos_on_procedimento_id"[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318123146') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (1.0ms)[0m  [1m[32mINSERT INTO "beneficiari" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Mario"], ["cognome", "Rossi"], ["codice_fiscale", "RSSMRA80A01H501Z"], ["data_nascita", "1980-01-01"], ["luogo_nascita", "Roma"], ["indirizzo", "Via Roma 1, 00100 Roma"], ["telefono", "06 12345678"], ["email", "[FILTERED]"], ["note", "Beneficiario con limitata capacità di gestione finanziaria."], ["created_at", "2026-03-18 12:32:10.683475"], ["updated_at", "2026-03-18 12:32:10.683475"]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (0.9ms)[0m  [1m[32mINSERT INTO "beneficiari" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Lucia"], ["cognome", "Bianchi"], ["codice_fiscale", "BNCLCU75B41F205X"], ["data_nascita", "1975-02-01"], ["luogo_nascita", "Milano"], ["indirizzo", "Via Milano 10, 20100 Milano"], ["telefono", "02 98765432"], ["email", "[FILTERED]"], ["note", nil], ["created_at", "2026-03-18 12:32:10.687564"], ["updated_at", "2026-03-18 12:32:10.687564"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (0.8ms)[0m  [1m[32mINSERT INTO "beneficiari" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Giuseppe"], ["cognome", "Verdi"], ["codice_fiscale", nil], ["data_nascita", "1945-06-15"], ["luogo_nascita", "Napoli"], ["indirizzo", "Via Napoli 5, 80100 Napoli"], ["telefono", nil], ["email", "[FILTERED]"], ["note", nil], ["created_at", "2026-03-18 12:32:10.691916"], ["updated_at", "2026-03-18 12:32:10.691916"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mProcedimento Create (1.1ms)[0m  [1m[32mINSERT INTO "procedimenti" ("beneficiario_id", "numero_rg", "tribunale", "giudice_tutelare", "data_apertura", "data_chiusura", "stato", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["beneficiario_id", 4], ["numero_rg", "1234/2023"], ["tribunale", "Tribunale di Roma"], ["giudice_tutelare", "Dott.ssa Giuditta Ferrara"], ["data_apertura", "2023-03-15"], ["data_chiusura", nil], ["stato", "attivo"], ["note", "Procedimento aperto per difficoltà nella gestione del patrimonio."], ["created_at", "2026-03-18 12:32:10.750736"], ["updated_at", "2026-03-18 12:32:10.750736"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mProcedimento Create (0.9ms)[0m  [1m[32mINSERT INTO "procedimenti" ("beneficiario_id", "numero_rg", "tribunale", "giudice_tutelare", "data_apertura", "data_chiusura", "stato", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["beneficiario_id", 5], ["numero_rg", "567/2022"], ["tribunale", "Tribunale di Milano"], ["giudice_tutelare", "Dott. Alberto Conti"], ["data_apertura", "2022-06-01"], ["data_chiusura", nil], ["stato", "attivo"], ["note", nil], ["created_at", "2026-03-18 12:32:10.754585"], ["updated_at", "2026-03-18 12:32:10.754585"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mProcedimento Create (1.1ms)[0m  [1m[32mINSERT INTO "procedimenti" ("beneficiario_id", "numero_rg", "tribunale", "giudice_tutelare", "data_apertura", "data_chiusura", "stato", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["beneficiario_id", 6], ["numero_rg", "89/2021"], ["tribunale", "Tribunale di Napoli"], ["giudice_tutelare", "Dott.ssa Maria Esposito"], ["data_apertura", "2021-09-10"], ["data_chiusura", nil], ["stato", "attivo"], ["note", nil], ["created_at", "2026-03-18 12:32:10.757678"], ["updated_at", "2026-03-18 12:32:10.757678"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUdienza Create (0.9ms)[0m  [1m[32mINSERT INTO "udienze" ("procedimento_id", "data_udienza", "tipo", "luogo", "note", "esito", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["data_udienza", "2026-04-17 12:32:10.762178"], ["tipo", "verifica"], ["luogo", "Tribunale di Roma, Aula 3"], ["note", "Verifica annuale delle condizioni."], ["esito", nil], ["created_at", "2026-03-18 12:32:10.766405"], ["updated_at", "2026-03-18 12:32:10.766405"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUdienza Create (1.0ms)[0m  [1m[32mINSERT INTO "udienze" ("procedimento_id", "data_udienza", "tipo", "luogo", "note", "esito", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["data_udienza", "2026-03-20 12:32:10.769307"], ["tipo", "rendiconto"], ["luogo", "Tribunale di Roma"], ["note", nil], ["esito", nil], ["created_at", "2026-03-18 12:32:10.769645"], ["updated_at", "2026-03-18 12:32:10.769645"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUdienza Create (1.1ms)[0m  [1m[32mINSERT INTO "udienze" ("procedimento_id", "data_udienza", "tipo", "luogo", "note", "esito", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 2], ["data_udienza", "2026-04-02 12:32:10.772741"], ["tipo", "prima udienza"], ["luogo", "Tribunale di Milano, Sala A"], ["note", nil], ["esito", nil], ["created_at", "2026-03-18 12:32:10.773139"], ["updated_at", "2026-03-18 12:32:10.773139"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (0.9ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["titolo", "Presentazione Rendiconto Annuale 2024"], ["descrizione", "Rendiconto annuale delle spese e entrate del beneficiario."], ["data_scadenza", "2026-03-28"], ["completata", 0], ["tipo", "rendiconto"], ["note", nil], ["created_at", "2026-03-18 12:32:10.781920"], ["updated_at", "2026-03-18 12:32:10.781920"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (0.9ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["titolo", "Rinnovo patrocinio legale"], ["descrizione", "Rinnovo dell'incarico al legale di fiducia."], ["data_scadenza", "2026-03-13"], ["completata", 0], ["tipo", "adempimento"], ["note", nil], ["created_at", "2026-03-18 12:32:10.784890"], ["updated_at", "2026-03-18 12:32:10.784890"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (1.0ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 2], ["titolo", "Udienza di verifica"], ["descrizione", "Prima udienza di verifica dello stato del beneficiario."], ["data_scadenza", "2026-04-07"], ["completata", 0], ["tipo", "udienza"], ["note", nil], ["created_at", "2026-03-18 12:32:10.787875"], ["updated_at", "2026-03-18 12:32:10.787875"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (0.9ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 3], ["titolo", "Rendiconto 2023"], ["descrizione", "Rendiconto finanziario anno 2023."], ["data_scadenza", "2026-03-25"], ["completata", 0], ["tipo", "rendiconto"], ["note", nil], ["created_at", "2026-03-18 12:32:10.790810"], ["updated_at", "2026-03-18 12:32:10.790810"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mRendiconto Create (1.0ms)[0m  [1m[32mINSERT INTO "rendiconti" ("procedimento_id", "anno", "data_presentazione", "data_approvazione", "stato", "note", "importo_entrate", "importo_uscite", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["anno", 2023], ["data_presentazione", "2024-01-15"], ["data_approvazione", "2024-02-20"], ["stato", "approvato"], ["note", "Rendiconto 2023 approvato senza rilievi."], ["importo_entrate", 25000.0], ["importo_uscite", 18500.0], ["created_at", "2026-03-18 12:32:10.802542"], ["updated_at", "2026-03-18 12:32:10.802542"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mRendiconto Create (0.9ms)[0m  [1m[32mINSERT INTO "rendiconti" ("procedimento_id", "anno", "data_presentazione", "data_approvazione", "stato", "note", "importo_entrate", "importo_uscite", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["anno", 2024], ["data_presentazione", nil], ["data_approvazione", nil], ["stato", "bozza"], ["note", nil], ["importo_entrate", 8000.0], ["importo_uscite", 4200.0], ["created_at", "2026-03-18 12:32:10.806000"], ["updated_at", "2026-03-18 12:32:10.806000"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mRendiconto Create (1.0ms)[0m  [1m[32mINSERT INTO "rendiconti" ("procedimento_id", "anno", "data_presentazione", "data_approvazione", "stato", "note", "importo_entrate", "importo_uscite", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 2], ["anno", 2023], ["data_presentazione", "2024-03-01"], ["data_approvazione", nil], ["stato", "presentato"], ["note", nil], ["importo_entrate", 15000.0], ["importo_uscite", 12000.0], ["created_at", "2026-03-18 12:32:10.808894"], ["updated_at", "2026-03-18 12:32:10.808894"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAttivita Create (0.9ms)[0m  [1m[32mINSERT INTO "attivita" ("procedimento_id", "titolo", "descrizione", "data_attivita", "tipo", "completata", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["titolo", "Apertura conto corrente dedicato"], ["descrizione", "Apertura conto corrente intestato al beneficiario presso Banca X."], ["data_attivita", "2025-12-18 12:32:10.813052"], ["tipo", "finanziaria"], ["completata", 1], ["created_at", "2026-03-18 12:32:10.816875"], ["updated_at", "2026-03-18 12:32:10.816875"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAttivita Create (0.9ms)[0m  [1m[32mINSERT INTO "attivita" ("procedimento_id", "titolo", "descrizione", "data_attivita", "tipo", "completata", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["titolo", "Visita medica di controllo"], ["descrizione", "Visita neurologica di controllo presso ASL Roma 1."], ["data_attivita", "2026-04-18 12:32:10.819418"], ["tipo", "sanitaria"], ["completata", 0], ["created_at", "2026-03-18 12:32:10.819771"], ["updated_at", "2026-03-18 12:32:10.819771"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAttivita Create (0.9ms)[0m  [1m[32mINSERT INTO "attivita" ("procedimento_id", "titolo", "descrizione", "data_attivita", "tipo", "completata", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 2], ["titolo", "Consulenza legale"], ["descrizione", "Consulenza con avvocato per pratiche immobiliari."], ["data_attivita", "2026-03-11 12:32:10.822496"], ["tipo", "legale"], ["completata", 1], ["created_at", "2026-03-18 12:32:10.822920"], ["updated_at", "2026-03-18 12:32:10.822920"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti"[0m
+  [1m[36mUdienza Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "udienze"[0m
+  [1m[36mScadenza Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze"[0m
+  [1m[36mRendiconto Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "rendiconti"[0m
+  [1m[36mAttivita Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "attivita"[0m
+  [1m[36mBeneficiario Load (1.7ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[35m (1.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "attivita"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "attivita" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_attivita" datetime(6), "tipo" varchar, "completata" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_attivita_on_procedimento_id" ON "attivita" ("procedimento_id")[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE IF EXISTS "beneficiari"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-03-18 12:32:32.239207', '2026-03-18 12:32:32.239209') RETURNING "key"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateBeneficiarios (20260318121926)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "beneficiarios" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "nome" varchar, "cognome" varchar, "codice_fiscale" varchar, "data_nascita" date, "luogo_nascita" varchar, "indirizzo" varchar, "telefono" varchar, "email" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318121926') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateProcedimentos (20260318121927)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "procedimentos" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "beneficiario_id" integer NOT NULL, "numero_rg" varchar, "tribunale" varchar, "giudice_tutelare" varchar, "data_apertura" date, "data_chiusura" date, "stato" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_0f2ae772ea"
+FOREIGN KEY ("beneficiario_id")
+  REFERENCES "beneficiari" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_procedimentos_on_beneficiario_id" ON "procedimentos" ("beneficiario_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318121927') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateUdienzas (20260318121928)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE TABLE "udienzas" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "data_udienza" datetime(6), "tipo" varchar, "luogo" varchar, "note" text, "esito" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_86ddb5f593"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimenti" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_udienzas_on_procedimento_id" ON "udienzas" ("procedimento_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318121928') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateScadenzas (20260318121929)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (30.2ms)[0m  [1m[35mCREATE TABLE "scadenzas" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_scadenza" date, "completata" boolean, "tipo" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_13c1e36f7a"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimenti" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_scadenzas_on_procedimento_id" ON "scadenzas" ("procedimento_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318121929') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateRendicontos (20260318121930)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE TABLE "rendicontos" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "anno" integer, "data_presentazione" date, "data_approvazione" date, "stato" varchar, "note" text, "importo_entrate" decimal, "importo_uscite" decimal, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_06cfe1a398"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimenti" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_rendicontos_on_procedimento_id" ON "rendicontos" ("procedimento_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318121930') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateAttivita (20260318121942)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "attivita" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_attivita" datetime(6), "tipo" varchar, "completata" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_85a6b2073c"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimenti" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_attivita_on_procedimento_id" ON "attivita" ("procedimento_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318121942') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to RenameTablesItalianPlurals (20260318123146)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (1.1ms)[0m  [1m[35mALTER TABLE "beneficiarios" RENAME TO "beneficiari"[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mALTER TABLE "procedimentos" RENAME TO "procedimenti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_procedimenti_on_beneficiario_id" ON "procedimenti" ("beneficiario_id")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mDROP INDEX "index_procedimentos_on_beneficiario_id"[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mALTER TABLE "udienzas" RENAME TO "udienze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_udienze_on_procedimento_id" ON "udienze" ("procedimento_id")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mDROP INDEX "index_udienzas_on_procedimento_id"[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[35mALTER TABLE "scadenzas" RENAME TO "scadenze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_scadenze_on_procedimento_id" ON "scadenze" ("procedimento_id")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mDROP INDEX "index_scadenzas_on_procedimento_id"[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mALTER TABLE "rendicontos" RENAME TO "rendiconti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_rendiconti_on_procedimento_id" ON "rendiconti" ("procedimento_id")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mDROP INDEX "index_rendicontos_on_procedimento_id"[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260318123146') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (1.0ms)[0m  [1m[32mINSERT INTO "beneficiari" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Mario"], ["cognome", "Rossi"], ["codice_fiscale", "RSSMRA80A01H501Z"], ["data_nascita", "1980-01-01"], ["luogo_nascita", "Roma"], ["indirizzo", "Via Roma 1, 00100 Roma"], ["telefono", "06 12345678"], ["email", "[FILTERED]"], ["note", "Beneficiario con limitata capacità di gestione finanziaria."], ["created_at", "2026-03-18 12:32:32.365432"], ["updated_at", "2026-03-18 12:32:32.365432"]]
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (0.8ms)[0m  [1m[32mINSERT INTO "beneficiari" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Lucia"], ["cognome", "Bianchi"], ["codice_fiscale", "BNCLCU75B41F205X"], ["data_nascita", "1975-02-01"], ["luogo_nascita", "Milano"], ["indirizzo", "Via Milano 10, 20100 Milano"], ["telefono", "02 98765432"], ["email", "[FILTERED]"], ["note", nil], ["created_at", "2026-03-18 12:32:32.369481"], ["updated_at", "2026-03-18 12:32:32.369481"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (0.8ms)[0m  [1m[32mINSERT INTO "beneficiari" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Giuseppe"], ["cognome", "Verdi"], ["codice_fiscale", nil], ["data_nascita", "1945-06-15"], ["luogo_nascita", "Napoli"], ["indirizzo", "Via Napoli 5, 80100 Napoli"], ["telefono", nil], ["email", "[FILTERED]"], ["note", nil], ["created_at", "2026-03-18 12:32:32.372326"], ["updated_at", "2026-03-18 12:32:32.372326"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mProcedimento Create (0.9ms)[0m  [1m[32mINSERT INTO "procedimenti" ("beneficiario_id", "numero_rg", "tribunale", "giudice_tutelare", "data_apertura", "data_chiusura", "stato", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["beneficiario_id", 1], ["numero_rg", "1234/2023"], ["tribunale", "Tribunale di Roma"], ["giudice_tutelare", "Dott.ssa Giuditta Ferrara"], ["data_apertura", "2023-03-15"], ["data_chiusura", nil], ["stato", "attivo"], ["note", "Procedimento aperto per difficoltà nella gestione del patrimonio."], ["created_at", "2026-03-18 12:32:32.386140"], ["updated_at", "2026-03-18 12:32:32.386140"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mProcedimento Create (0.9ms)[0m  [1m[32mINSERT INTO "procedimenti" ("beneficiario_id", "numero_rg", "tribunale", "giudice_tutelare", "data_apertura", "data_chiusura", "stato", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["beneficiario_id", 2], ["numero_rg", "567/2022"], ["tribunale", "Tribunale di Milano"], ["giudice_tutelare", "Dott. Alberto Conti"], ["data_apertura", "2022-06-01"], ["data_chiusura", nil], ["stato", "attivo"], ["note", nil], ["created_at", "2026-03-18 12:32:32.389633"], ["updated_at", "2026-03-18 12:32:32.389633"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mProcedimento Create (0.9ms)[0m  [1m[32mINSERT INTO "procedimenti" ("beneficiario_id", "numero_rg", "tribunale", "giudice_tutelare", "data_apertura", "data_chiusura", "stato", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["beneficiario_id", 3], ["numero_rg", "89/2021"], ["tribunale", "Tribunale di Napoli"], ["giudice_tutelare", "Dott.ssa Maria Esposito"], ["data_apertura", "2021-09-10"], ["data_chiusura", nil], ["stato", "attivo"], ["note", nil], ["created_at", "2026-03-18 12:32:32.392569"], ["updated_at", "2026-03-18 12:32:32.392569"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUdienza Create (0.9ms)[0m  [1m[32mINSERT INTO "udienze" ("procedimento_id", "data_udienza", "tipo", "luogo", "note", "esito", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["data_udienza", "2026-04-17 12:32:32.396313"], ["tipo", "verifica"], ["luogo", "Tribunale di Roma, Aula 3"], ["note", "Verifica annuale delle condizioni."], ["esito", nil], ["created_at", "2026-03-18 12:32:32.400360"], ["updated_at", "2026-03-18 12:32:32.400360"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUdienza Create (0.9ms)[0m  [1m[32mINSERT INTO "udienze" ("procedimento_id", "data_udienza", "tipo", "luogo", "note", "esito", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["data_udienza", "2026-03-20 12:32:32.402861"], ["tipo", "rendiconto"], ["luogo", "Tribunale di Roma"], ["note", nil], ["esito", nil], ["created_at", "2026-03-18 12:32:32.403185"], ["updated_at", "2026-03-18 12:32:32.403185"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUdienza Create (1.0ms)[0m  [1m[32mINSERT INTO "udienze" ("procedimento_id", "data_udienza", "tipo", "luogo", "note", "esito", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 2], ["data_udienza", "2026-04-02 12:32:32.405696"], ["tipo", "prima udienza"], ["luogo", "Tribunale di Milano, Sala A"], ["note", nil], ["esito", nil], ["created_at", "2026-03-18 12:32:32.406083"], ["updated_at", "2026-03-18 12:32:32.406083"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (0.9ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["titolo", "Presentazione Rendiconto Annuale 2024"], ["descrizione", "Rendiconto annuale delle spese e entrate del beneficiario."], ["data_scadenza", "2026-03-28"], ["completata", 0], ["tipo", "rendiconto"], ["note", nil], ["created_at", "2026-03-18 12:32:32.417244"], ["updated_at", "2026-03-18 12:32:32.417244"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (0.9ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["titolo", "Rinnovo patrocinio legale"], ["descrizione", "Rinnovo dell'incarico al legale di fiducia."], ["data_scadenza", "2026-03-13"], ["completata", 0], ["tipo", "adempimento"], ["note", nil], ["created_at", "2026-03-18 12:32:32.420249"], ["updated_at", "2026-03-18 12:32:32.420249"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (0.9ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 2], ["titolo", "Udienza di verifica"], ["descrizione", "Prima udienza di verifica dello stato del beneficiario."], ["data_scadenza", "2026-04-07"], ["completata", 0], ["tipo", "udienza"], ["note", nil], ["created_at", "2026-03-18 12:32:32.423297"], ["updated_at", "2026-03-18 12:32:32.423297"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (0.9ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 3], ["titolo", "Rendiconto 2023"], ["descrizione", "Rendiconto finanziario anno 2023."], ["data_scadenza", "2026-03-25"], ["completata", 0], ["tipo", "rendiconto"], ["note", nil], ["created_at", "2026-03-18 12:32:32.426109"], ["updated_at", "2026-03-18 12:32:32.426109"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mRendiconto Create (0.9ms)[0m  [1m[32mINSERT INTO "rendiconti" ("procedimento_id", "anno", "data_presentazione", "data_approvazione", "stato", "note", "importo_entrate", "importo_uscite", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["anno", 2023], ["data_presentazione", "2024-01-15"], ["data_approvazione", "2024-02-20"], ["stato", "approvato"], ["note", "Rendiconto 2023 approvato senza rilievi."], ["importo_entrate", 25000.0], ["importo_uscite", 18500.0], ["created_at", "2026-03-18 12:32:32.434382"], ["updated_at", "2026-03-18 12:32:32.434382"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mRendiconto Create (1.1ms)[0m  [1m[32mINSERT INTO "rendiconti" ("procedimento_id", "anno", "data_presentazione", "data_approvazione", "stato", "note", "importo_entrate", "importo_uscite", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["anno", 2024], ["data_presentazione", nil], ["data_approvazione", nil], ["stato", "bozza"], ["note", nil], ["importo_entrate", 8000.0], ["importo_uscite", 4200.0], ["created_at", "2026-03-18 12:32:32.437331"], ["updated_at", "2026-03-18 12:32:32.437331"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mRendiconto Create (0.9ms)[0m  [1m[32mINSERT INTO "rendiconti" ("procedimento_id", "anno", "data_presentazione", "data_approvazione", "stato", "note", "importo_entrate", "importo_uscite", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 2], ["anno", 2023], ["data_presentazione", "2024-03-01"], ["data_approvazione", nil], ["stato", "presentato"], ["note", nil], ["importo_entrate", 15000.0], ["importo_uscite", 12000.0], ["created_at", "2026-03-18 12:32:32.440316"], ["updated_at", "2026-03-18 12:32:32.440316"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAttivita Create (0.9ms)[0m  [1m[32mINSERT INTO "attivita" ("procedimento_id", "titolo", "descrizione", "data_attivita", "tipo", "completata", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["titolo", "Apertura conto corrente dedicato"], ["descrizione", "Apertura conto corrente intestato al beneficiario presso Banca X."], ["data_attivita", "2025-12-18 12:32:32.444096"], ["tipo", "finanziaria"], ["completata", 1], ["created_at", "2026-03-18 12:32:32.447594"], ["updated_at", "2026-03-18 12:32:32.447594"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAttivita Create (0.8ms)[0m  [1m[32mINSERT INTO "attivita" ("procedimento_id", "titolo", "descrizione", "data_attivita", "tipo", "completata", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["titolo", "Visita medica di controllo"], ["descrizione", "Visita neurologica di controllo presso ASL Roma 1."], ["data_attivita", "2026-04-18 12:32:32.450102"], ["tipo", "sanitaria"], ["completata", 0], ["created_at", "2026-03-18 12:32:32.450426"], ["updated_at", "2026-03-18 12:32:32.450426"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAttivita Create (0.9ms)[0m  [1m[32mINSERT INTO "attivita" ("procedimento_id", "titolo", "descrizione", "data_attivita", "tipo", "completata", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 2], ["titolo", "Consulenza legale"], ["descrizione", "Consulenza con avvocato per pratiche immobiliari."], ["data_attivita", "2026-03-11 12:32:32.454389"], ["tipo", "legale"], ["completata", 1], ["created_at", "2026-03-18 12:32:32.454809"], ["updated_at", "2026-03-18 12:32:32.454809"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  [1m[36mProcedimento Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti"[0m
+  [1m[36mUdienza Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "udienze"[0m
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze"[0m
+  [1m[36mRendiconto Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "rendiconti"[0m
+  [1m[36mAttivita Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "attivita"[0m
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  [1m[36mProcedimento Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti"[0m
+  [1m[36mUdienza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "udienze"[0m
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?)[0m  [["completata", 0], [nil, "2026-04-17 12:32:47.373555"]]
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?)[0m  [["completata", 0], [nil, "2026-04-17 12:36:57.195234"]]
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti"[0m
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze"[0m
+  [1m[36mUdienza Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "udienze"[0m
+  [1m[36mRendiconto Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "rendiconti"[0m
+  [1m[36mAttivita Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "attivita"[0m
+Started GET "/" for ::1 at 2026-03-18 12:37:53 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by DashboardController#index as */*
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  ↳ app/controllers/dashboard_controller.rb:3:in `index'
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."stato" = ?[0m  [["stato", "attivo"]]
+  ↳ app/controllers/dashboard_controller.rb:4:in `index'
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza < ?)[0m  [["completata", 0], [nil, "2026-03-18"]]
+  ↳ app/controllers/dashboard_controller.rb:6:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering dashboard/index.html.erb within layouts/application
+  [1m[36mScadenza Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?) subquery_for_count[0m  [["completata", 0], [nil, "2026-04-17 12:37:53.576832"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:33
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:37:53.576832"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:59
+  [1m[36mScadenza Load (0.2ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:37:53.576832"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 3], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 3]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE (data_udienza >= ?) LIMIT ?[0m  [[nil, "2026-03-18 12:37:53.582017"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:88
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE (data_udienza >= ?) ORDER BY "udienze"."data_udienza" ASC LIMIT ?[0m  [[nil, "2026-03-18 12:37:53.582017"], ["LIMIT", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:91
+  Rendered dashboard/index.html.erb within layouts/application (Duration: 33.5ms | GC: 3.7ms)
+  Rendered layout layouts/application.html.erb (Duration: 286.3ms | GC: 32.2ms)
+Completed 200 OK in 362ms (Views: 293.1ms | ActiveRecord: 3.1ms (12 queries, 0 cached) | GC: 68.2ms)
+
+
+Started GET "/beneficiari" for ::1 at 2026-03-18 12:37:58 +0000
+Processing by BeneficiariController#index as */*
+  Rendering layout layouts/application.html.erb
+  Rendering beneficiari/index.html.erb within layouts/application
+  [1m[36mBeneficiario Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "beneficiari" LIMIT ?[0m  [["LIMIT", 1]]
+  ↳ app/views/beneficiari/index.html.erb:10
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" ORDER BY "beneficiari"."cognome" ASC, "beneficiari"."nome" ASC[0m
+  ↳ app/views/beneficiari/index.html.erb:29
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ?[0m  [["beneficiario_id", 2]]
+  ↳ app/views/beneficiari/index.html.erb:40
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ?[0m  [["beneficiario_id", 1]]
+  ↳ app/views/beneficiari/index.html.erb:40
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ?[0m  [["beneficiario_id", 3]]
+  ↳ app/views/beneficiari/index.html.erb:40
+  Rendered beneficiari/index.html.erb within layouts/application (Duration: 7.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.8ms | GC: 0.0ms)
+Completed 200 OK in 11ms (Views: 9.8ms | ActiveRecord: 0.4ms (5 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/scadenze" for ::1 at 2026-03-18 12:37:58 +0000
+Processing by ScadenzeController#index as */*
+  Rendering layout layouts/application.html.erb
+  Rendering scadenze/index.html.erb within layouts/application
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:37:58.684594"], ["LIMIT", 1]]
+  ↳ app/views/scadenze/index.html.erb:7
+  [1m[36mScadenza Load (0.1ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC[0m  [["completata", 0], [nil, "2026-04-17 12:37:58.684594"]]
+  ↳ app/views/scadenze/index.html.erb:21
+  [1m[36mProcedimento Load (0.2ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 3], ["id", 2]]
+  ↳ app/views/scadenze/index.html.erb:21
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 3]]
+  ↳ app/views/scadenze/index.html.erb:21
+  Rendered scadenze/index.html.erb within layouts/application (Duration: 4.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.6ms | GC: 0.0ms)
+Completed 200 OK in 8ms (Views: 6.5ms | ActiveRecord: 0.5ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/udienze" for ::1 at 2026-03-18 12:37:58 +0000
+Processing by UdienzeController#index as */*
+  Rendering layout layouts/application.html.erb
+  Rendering udienze/index.html.erb within layouts/application
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE (data_udienza >= ?) LIMIT ?[0m  [[nil, "2026-03-18 12:37:58.704978"], ["LIMIT", 1]]
+  ↳ app/views/udienze/index.html.erb:7
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE (data_udienza >= ?) ORDER BY "udienze"."data_udienza" ASC[0m  [[nil, "2026-03-18 12:37:58.704978"]]
+  ↳ app/views/udienze/index.html.erb:21
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/udienze/index.html.erb:21
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/udienze/index.html.erb:21
+  Rendered udienze/index.html.erb within layouts/application (Duration: 4.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.2ms | GC: 0.0ms)
+Completed 200 OK in 7ms (Views: 6.2ms | ActiveRecord: 0.4ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/beneficiari/1" for ::1 at 2026-03-18 12:38:03 +0000
+Processing by BeneficiariController#show as */*
+  Parameters: {"id"=>"1"}
+  [1m[36mBeneficiario Load (0.2ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/beneficiari_controller.rb:44:in `set_beneficiario'
+  Rendering layout layouts/application.html.erb
+  Rendering beneficiari/show.html.erb within layouts/application
+  [1m[36mProcedimento Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ? LIMIT ?[0m  [["beneficiario_id", 1], ["LIMIT", 1]]
+  ↳ app/views/beneficiari/show.html.erb:73
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ? ORDER BY "procedimenti"."created_at" DESC[0m  [["beneficiario_id", 1]]
+  ↳ app/views/beneficiari/show.html.erb:77
+  Rendered beneficiari/show.html.erb within layouts/application (Duration: 3.6ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.5ms | GC: 0.3ms)
+Completed 200 OK in 12ms (Views: 5.6ms | ActiveRecord: 0.4ms (3 queries, 0 cached) | GC: 4.2ms)
+
+
+Started GET "/beneficiari/1/procedimenti/1" for ::1 at 2026-03-18 12:38:03 +0000
+Processing by ProcedimentiController#show as */*
+  Parameters: {"beneficiario_id"=>"1", "id"=>"1"}
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/procedimenti_controller.rb:48:in `set_beneficiario'
+  [1m[36mProcedimento Load (0.4ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ? AND "procedimenti"."id" = ? LIMIT ?[0m  [["beneficiario_id", 1], ["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/procedimenti_controller.rb:52:in `set_procedimento'
+  Rendering layout layouts/application.html.erb
+  Rendering procedimenti/show.html.erb within layouts/application
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE "udienze"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:63
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE "udienze"."procedimento_id" = ? ORDER BY "udienze"."data_udienza" ASC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:67
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:90
+  [1m[36mScadenza Load (0.1ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."procedimento_id" = ? ORDER BY "scadenze"."data_scadenza" ASC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:94
+  [1m[36mRendiconto Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "rendiconti" WHERE "rendiconti"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:128
+  [1m[36mRendiconto Load (0.1ms)[0m  [1m[34mSELECT "rendiconti".* FROM "rendiconti" WHERE "rendiconti"."procedimento_id" = ? ORDER BY "rendiconti"."anno" DESC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:132
+  [1m[36mAttivita Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "attivita" WHERE "attivita"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:158
+  [1m[36mAttivita Load (0.1ms)[0m  [1m[34mSELECT "attivita".* FROM "attivita" WHERE "attivita"."procedimento_id" = ? ORDER BY "attivita"."data_attivita" DESC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:162
+  Rendered procedimenti/show.html.erb within layouts/application (Duration: 18.0ms | GC: 0.5ms)
+  Rendered layout layouts/application.html.erb (Duration: 19.6ms | GC: 0.5ms)
+Completed 200 OK in 28ms (Views: 19.7ms | ActiveRecord: 1.6ms (10 queries, 0 cached) | GC: 1.3ms)
+
+
+Started GET "/" for ::1 at 2026-03-18 12:41:25 +0000
+Processing by DashboardController#index as */*
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  ↳ app/controllers/dashboard_controller.rb:3:in `index'
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."stato" = ?[0m  [["stato", "attivo"]]
+  ↳ app/controllers/dashboard_controller.rb:4:in `index'
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza < ?)[0m  [["completata", 0], [nil, "2026-03-18"]]
+  ↳ app/controllers/dashboard_controller.rb:6:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering dashboard/index.html.erb within layouts/application
+  [1m[36mScadenza Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?) subquery_for_count[0m  [["completata", 0], [nil, "2026-04-17 12:41:25.924910"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:33
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:41:25.924910"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:59
+  [1m[36mScadenza Load (0.1ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:41:25.924910"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mProcedimento Load (0.2ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 3], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 3]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE (data_udienza >= ?) LIMIT ?[0m  [[nil, "2026-03-18 12:41:25.926404"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:88
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE (data_udienza >= ?) ORDER BY "udienze"."data_udienza" ASC LIMIT ?[0m  [[nil, "2026-03-18 12:41:25.926404"], ["LIMIT", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:91
+  Rendered dashboard/index.html.erb within layouts/application (Duration: 26.3ms | GC: 6.1ms)
+  Rendered layout layouts/application.html.erb (Duration: 39.9ms | GC: 7.8ms)
+Completed 200 OK in 53ms (Views: 39.1ms | ActiveRecord: 3.0ms (12 queries, 0 cached) | GC: 7.8ms)
+
+
+Started GET "/beneficiari" for ::1 at 2026-03-18 12:41:25 +0000
+Processing by BeneficiariController#index as */*
+  Rendering layout layouts/application.html.erb
+  Rendering beneficiari/index.html.erb within layouts/application
+  [1m[36mBeneficiario Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "beneficiari" LIMIT ?[0m  [["LIMIT", 1]]
+  ↳ app/views/beneficiari/index.html.erb:10
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" ORDER BY "beneficiari"."cognome" ASC, "beneficiari"."nome" ASC[0m
+  ↳ app/views/beneficiari/index.html.erb:29
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ?[0m  [["beneficiario_id", 2]]
+  ↳ app/views/beneficiari/index.html.erb:40
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ?[0m  [["beneficiario_id", 1]]
+  ↳ app/views/beneficiari/index.html.erb:40
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ?[0m  [["beneficiario_id", 3]]
+  ↳ app/views/beneficiari/index.html.erb:40
+  Rendered beneficiari/index.html.erb within layouts/application (Duration: 6.0ms | GC: 0.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 7.8ms | GC: 0.2ms)
+Completed 200 OK in 9ms (Views: 7.8ms | ActiveRecord: 0.4ms (5 queries, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/beneficiari/1/procedimenti/1" for ::1 at 2026-03-18 12:41:25 +0000
+Processing by ProcedimentiController#show as */*
+  Parameters: {"beneficiario_id"=>"1", "id"=>"1"}
+  [1m[36mBeneficiario Load (0.2ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/procedimenti_controller.rb:48:in `set_beneficiario'
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ? AND "procedimenti"."id" = ? LIMIT ?[0m  [["beneficiario_id", 1], ["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/procedimenti_controller.rb:52:in `set_procedimento'
+  Rendering layout layouts/application.html.erb
+  Rendering procedimenti/show.html.erb within layouts/application
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE "udienze"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:63
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE "udienze"."procedimento_id" = ? ORDER BY "udienze"."data_udienza" ASC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:67
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:90
+  [1m[36mScadenza Load (0.1ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."procedimento_id" = ? ORDER BY "scadenze"."data_scadenza" ASC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:94
+  [1m[36mRendiconto Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "rendiconti" WHERE "rendiconti"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:128
+  [1m[36mRendiconto Load (0.1ms)[0m  [1m[34mSELECT "rendiconti".* FROM "rendiconti" WHERE "rendiconti"."procedimento_id" = ? ORDER BY "rendiconti"."anno" DESC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:132
+  [1m[36mAttivita Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "attivita" WHERE "attivita"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:158
+  [1m[36mAttivita Load (0.1ms)[0m  [1m[34mSELECT "attivita".* FROM "attivita" WHERE "attivita"."procedimento_id" = ? ORDER BY "attivita"."data_attivita" DESC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:162
+  Rendered procedimenti/show.html.erb within layouts/application (Duration: 15.0ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 16.8ms | GC: 0.3ms)
+Completed 200 OK in 26ms (Views: 16.6ms | ActiveRecord: 1.4ms (10 queries, 0 cached) | GC: 0.6ms)
+
+
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (1.1ms)[0m  [1m[32mINSERT INTO "beneficiari" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Mario"], ["cognome", "Rossi"], ["codice_fiscale", "RSSMRA80A01H501Z"], ["data_nascita", "1980-01-01"], ["luogo_nascita", "Roma"], ["indirizzo", "Via Roma 1, 00100 Roma"], ["telefono", "06 12345678"], ["email", "[FILTERED]"], ["note", "Beneficiario con limitata capacità di gestione finanziaria."], ["created_at", "2026-03-18 12:41:47.119017"], ["updated_at", "2026-03-18 12:41:47.119017"]]
+  [1m[36mTRANSACTION (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (0.9ms)[0m  [1m[32mINSERT INTO "beneficiari" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Lucia"], ["cognome", "Bianchi"], ["codice_fiscale", "BNCLCU75B41F205X"], ["data_nascita", "1975-02-01"], ["luogo_nascita", "Milano"], ["indirizzo", "Via Milano 10, 20100 Milano"], ["telefono", "02 98765432"], ["email", "[FILTERED]"], ["note", nil], ["created_at", "2026-03-18 12:41:47.123927"], ["updated_at", "2026-03-18 12:41:47.123927"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (0.9ms)[0m  [1m[32mINSERT INTO "beneficiari" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Giuseppe"], ["cognome", "Verdi"], ["codice_fiscale", nil], ["data_nascita", "1945-06-15"], ["luogo_nascita", "Napoli"], ["indirizzo", "Via Napoli 5, 80100 Napoli"], ["telefono", nil], ["email", "[FILTERED]"], ["note", nil], ["created_at", "2026-03-18 12:41:47.128361"], ["updated_at", "2026-03-18 12:41:47.128361"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mProcedimento Create (1.4ms)[0m  [1m[32mINSERT INTO "procedimenti" ("beneficiario_id", "numero_rg", "tribunale", "giudice_tutelare", "data_apertura", "data_chiusura", "stato", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["beneficiario_id", 4], ["numero_rg", "1234/2023"], ["tribunale", "Tribunale di Roma"], ["giudice_tutelare", "Dott.ssa Giuditta Ferrara"], ["data_apertura", "2023-03-15"], ["data_chiusura", nil], ["stato", "attivo"], ["note", "Procedimento aperto per difficoltà nella gestione del patrimonio."], ["created_at", "2026-03-18 12:41:47.182608"], ["updated_at", "2026-03-18 12:41:47.182608"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mProcedimento Create (1.0ms)[0m  [1m[32mINSERT INTO "procedimenti" ("beneficiario_id", "numero_rg", "tribunale", "giudice_tutelare", "data_apertura", "data_chiusura", "stato", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["beneficiario_id", 5], ["numero_rg", "567/2022"], ["tribunale", "Tribunale di Milano"], ["giudice_tutelare", "Dott. Alberto Conti"], ["data_apertura", "2022-06-01"], ["data_chiusura", nil], ["stato", "attivo"], ["note", nil], ["created_at", "2026-03-18 12:41:47.186740"], ["updated_at", "2026-03-18 12:41:47.186740"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mProcedimento Create (1.0ms)[0m  [1m[32mINSERT INTO "procedimenti" ("beneficiario_id", "numero_rg", "tribunale", "giudice_tutelare", "data_apertura", "data_chiusura", "stato", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["beneficiario_id", 6], ["numero_rg", "89/2021"], ["tribunale", "Tribunale di Napoli"], ["giudice_tutelare", "Dott.ssa Maria Esposito"], ["data_apertura", "2021-09-10"], ["data_chiusura", nil], ["stato", "attivo"], ["note", nil], ["created_at", "2026-03-18 12:41:47.190258"], ["updated_at", "2026-03-18 12:41:47.190258"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUdienza Create (1.0ms)[0m  [1m[32mINSERT INTO "udienze" ("procedimento_id", "data_udienza", "tipo", "luogo", "note", "esito", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 4], ["data_udienza", "2026-04-17 12:41:47.194862"], ["tipo", "verifica"], ["luogo", "Tribunale di Roma, Aula 3"], ["note", "Verifica annuale delle condizioni."], ["esito", nil], ["created_at", "2026-03-18 12:41:47.199435"], ["updated_at", "2026-03-18 12:41:47.199435"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUdienza Create (0.9ms)[0m  [1m[32mINSERT INTO "udienze" ("procedimento_id", "data_udienza", "tipo", "luogo", "note", "esito", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 4], ["data_udienza", "2026-03-20 12:41:47.202436"], ["tipo", "rendiconto"], ["luogo", "Tribunale di Roma"], ["note", nil], ["esito", nil], ["created_at", "2026-03-18 12:41:47.202874"], ["updated_at", "2026-03-18 12:41:47.202874"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUdienza Create (1.1ms)[0m  [1m[32mINSERT INTO "udienze" ("procedimento_id", "data_udienza", "tipo", "luogo", "note", "esito", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 5], ["data_udienza", "2026-04-02 12:41:47.205991"], ["tipo", "prima udienza"], ["luogo", "Tribunale di Milano, Sala A"], ["note", nil], ["esito", nil], ["created_at", "2026-03-18 12:41:47.206426"], ["updated_at", "2026-03-18 12:41:47.206426"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (0.9ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 4], ["titolo", "Presentazione Rendiconto Annuale 2024"], ["descrizione", "Rendiconto annuale delle spese e entrate del beneficiario."], ["data_scadenza", "2026-03-28"], ["completata", 0], ["tipo", "rendiconto"], ["note", nil], ["created_at", "2026-03-18 12:41:47.215428"], ["updated_at", "2026-03-18 12:41:47.215428"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (0.9ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 4], ["titolo", "Rinnovo patrocinio legale"], ["descrizione", "Rinnovo dell'incarico al legale di fiducia."], ["data_scadenza", "2026-03-13"], ["completata", 0], ["tipo", "adempimento"], ["note", nil], ["created_at", "2026-03-18 12:41:47.218381"], ["updated_at", "2026-03-18 12:41:47.218381"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (1.0ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 5], ["titolo", "Udienza di verifica"], ["descrizione", "Prima udienza di verifica dello stato del beneficiario."], ["data_scadenza", "2026-04-07"], ["completata", 0], ["tipo", "udienza"], ["note", nil], ["created_at", "2026-03-18 12:41:47.221338"], ["updated_at", "2026-03-18 12:41:47.221338"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (0.9ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 6], ["titolo", "Rendiconto 2023"], ["descrizione", "Rendiconto finanziario anno 2023."], ["data_scadenza", "2026-03-25"], ["completata", 0], ["tipo", "rendiconto"], ["note", nil], ["created_at", "2026-03-18 12:41:47.224337"], ["updated_at", "2026-03-18 12:41:47.224337"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mRendiconto Create (0.9ms)[0m  [1m[32mINSERT INTO "rendiconti" ("procedimento_id", "anno", "data_presentazione", "data_approvazione", "stato", "note", "importo_entrate", "importo_uscite", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 4], ["anno", 2023], ["data_presentazione", "2024-01-15"], ["data_approvazione", "2024-02-20"], ["stato", "approvato"], ["note", "Rendiconto 2023 approvato senza rilievi."], ["importo_entrate", 25000.0], ["importo_uscite", 18500.0], ["created_at", "2026-03-18 12:41:47.236481"], ["updated_at", "2026-03-18 12:41:47.236481"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mRendiconto Create (0.9ms)[0m  [1m[32mINSERT INTO "rendiconti" ("procedimento_id", "anno", "data_presentazione", "data_approvazione", "stato", "note", "importo_entrate", "importo_uscite", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 4], ["anno", 2024], ["data_presentazione", nil], ["data_approvazione", nil], ["stato", "bozza"], ["note", nil], ["importo_entrate", 8000.0], ["importo_uscite", 4200.0], ["created_at", "2026-03-18 12:41:47.239812"], ["updated_at", "2026-03-18 12:41:47.239812"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mRendiconto Create (0.9ms)[0m  [1m[32mINSERT INTO "rendiconti" ("procedimento_id", "anno", "data_presentazione", "data_approvazione", "stato", "note", "importo_entrate", "importo_uscite", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 5], ["anno", 2023], ["data_presentazione", "2024-03-01"], ["data_approvazione", nil], ["stato", "presentato"], ["note", nil], ["importo_entrate", 15000.0], ["importo_uscite", 12000.0], ["created_at", "2026-03-18 12:41:47.242881"], ["updated_at", "2026-03-18 12:41:47.242881"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAttivita Create (1.1ms)[0m  [1m[32mINSERT INTO "attivita" ("procedimento_id", "titolo", "descrizione", "data_attivita", "tipo", "completata", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 4], ["titolo", "Apertura conto corrente dedicato"], ["descrizione", "Apertura conto corrente intestato al beneficiario presso Banca X."], ["data_attivita", "2025-12-18 12:41:47.247416"], ["tipo", "finanziaria"], ["completata", 1], ["created_at", "2026-03-18 12:41:47.251958"], ["updated_at", "2026-03-18 12:41:47.251958"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAttivita Create (0.9ms)[0m  [1m[32mINSERT INTO "attivita" ("procedimento_id", "titolo", "descrizione", "data_attivita", "tipo", "completata", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 4], ["titolo", "Visita medica di controllo"], ["descrizione", "Visita neurologica di controllo presso ASL Roma 1."], ["data_attivita", "2026-04-18 12:41:47.255031"], ["tipo", "sanitaria"], ["completata", 0], ["created_at", "2026-03-18 12:41:47.255464"], ["updated_at", "2026-03-18 12:41:47.255464"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAttivita Create (0.9ms)[0m  [1m[32mINSERT INTO "attivita" ("procedimento_id", "titolo", "descrizione", "data_attivita", "tipo", "completata", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 5], ["titolo", "Consulenza legale"], ["descrizione", "Consulenza con avvocato per pratiche immobiliari."], ["data_attivita", "2026-03-11 12:41:47.258082"], ["tipo", "legale"], ["completata", 1], ["created_at", "2026-03-18 12:41:47.258530"], ["updated_at", "2026-03-18 12:41:47.258530"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  [1m[36mProcedimento Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti"[0m
+  [1m[36mUdienza Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "udienze"[0m
+  [1m[36mScadenza Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze"[0m
+  [1m[36mRendiconto Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "rendiconti"[0m
+  [1m[36mAttivita Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "attivita"[0m
+Started GET "/" for ::1 at 2026-03-18 12:42:04 +0000
+Processing by DashboardController#index as */*
+  [1m[36mBeneficiario Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  ↳ app/controllers/dashboard_controller.rb:3:in `index'
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."stato" = ?[0m  [["stato", "attivo"]]
+  ↳ app/controllers/dashboard_controller.rb:4:in `index'
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza < ?)[0m  [["completata", 0], [nil, "2026-03-18"]]
+  ↳ app/controllers/dashboard_controller.rb:6:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering dashboard/index.html.erb within layouts/application
+  [1m[36mScadenza Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?) subquery_for_count[0m  [["completata", 0], [nil, "2026-04-17 12:42:04.086418"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:33
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:42:04.086418"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:59
+  [1m[36mScadenza Load (0.1ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:42:04.086418"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?, ?, ?, ?)[0m  [["id", 1], ["id", 4], ["id", 3], ["id", 6], ["id", 2], ["id", 5]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?, ?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 3], ["id", 4], ["id", 5], ["id", 6]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE (data_udienza >= ?) LIMIT ?[0m  [[nil, "2026-03-18 12:42:04.087397"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:88
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE (data_udienza >= ?) ORDER BY "udienze"."data_udienza" ASC LIMIT ?[0m  [[nil, "2026-03-18 12:42:04.087397"], ["LIMIT", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?, ?)[0m  [["id", 1], ["id", 4], ["id", 2], ["id", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 4], ["id", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  Rendered dashboard/index.html.erb within layouts/application (Duration: 12.3ms | GC: 3.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 18.9ms | GC: 3.6ms)
+Completed 200 OK in 23ms (Views: 18.4ms | ActiveRecord: 1.3ms (12 queries, 0 cached) | GC: 3.6ms)
+
+
+Started GET "/" for ::1 at 2026-03-18 12:42:17 +0000
+Processing by DashboardController#index as HTML
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  ↳ app/controllers/dashboard_controller.rb:3:in `index'
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."stato" = ?[0m  [["stato", "attivo"]]
+  ↳ app/controllers/dashboard_controller.rb:4:in `index'
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza < ?)[0m  [["completata", 0], [nil, "2026-03-18"]]
+  ↳ app/controllers/dashboard_controller.rb:6:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering dashboard/index.html.erb within layouts/application
+  [1m[36mScadenza Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?) subquery_for_count[0m  [["completata", 0], [nil, "2026-04-17 12:42:17.014964"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:33
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:42:17.014964"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:59
+  [1m[36mScadenza Load (0.1ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:42:17.014964"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?, ?, ?, ?)[0m  [["id", 1], ["id", 4], ["id", 3], ["id", 6], ["id", 2], ["id", 5]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?, ?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 3], ["id", 4], ["id", 5], ["id", 6]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE (data_udienza >= ?) LIMIT ?[0m  [[nil, "2026-03-18 12:42:17.016490"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:88
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE (data_udienza >= ?) ORDER BY "udienze"."data_udienza" ASC LIMIT ?[0m  [[nil, "2026-03-18 12:42:17.016490"], ["LIMIT", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?, ?)[0m  [["id", 1], ["id", 4], ["id", 2], ["id", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 4], ["id", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  Rendered dashboard/index.html.erb within layouts/application (Duration: 7.9ms | GC: 0.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.9ms | GC: 0.2ms)
+Completed 200 OK in 14ms (Views: 9.4ms | ActiveRecord: 1.1ms (12 queries, 0 cached) | GC: 0.5ms)
+
+
+Started GET "/manifest.json" for ::1 at 2026-03-18 12:42:17 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.3ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?)[0m  [["completata", 0], [nil, "2026-04-17 12:42:48.958185"]]
+  [1m[36mScadenza Pluck (0.1ms)[0m  [1m[34mSELECT "scadenze"."titolo", "scadenze"."id" FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC[0m  [["completata", 0], [nil, "2026-04-17 12:42:48.960065"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[35m (1.5ms)[0m  [1m[35mDROP TABLE IF EXISTS "attivita"[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "attivita" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_attivita" datetime(6), "tipo" varchar, "completata" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_attivita_on_procedimento_id" ON "attivita" ("procedimento_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "beneficiari"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "beneficiari" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "nome" varchar, "cognome" varchar, "codice_fiscale" varchar, "data_nascita" date, "luogo_nascita" varchar, "indirizzo" varchar, "telefono" varchar, "email" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "procedimenti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "procedimenti" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "beneficiario_id" integer NOT NULL, "numero_rg" varchar, "tribunale" varchar, "giudice_tutelare" varchar, "data_apertura" date, "data_chiusura" date, "stato" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_procedimenti_on_beneficiario_id" ON "procedimenti" ("beneficiario_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "rendiconti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "rendiconti" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "anno" integer, "data_presentazione" date, "data_approvazione" date, "stato" varchar, "note" text, "importo_entrate" decimal, "importo_uscite" decimal, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_rendiconti_on_procedimento_id" ON "rendiconti" ("procedimento_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "scadenze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "scadenze" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_scadenza" date, "completata" boolean, "tipo" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_scadenze_on_procedimento_id" ON "scadenze" ("procedimento_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "udienze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "udienze" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "data_udienza" datetime(6), "tipo" varchar, "luogo" varchar, "note" text, "esito" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_udienze_on_procedimento_id" ON "udienze" ("procedimento_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aattivita" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_attivita" datetime(6), "tipo" varchar, "completata" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_aattivita_on_procedimento_id" ON "aattivita" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aattivita" ("id","procedimento_id","titolo","descrizione","data_attivita","tipo","completata","created_at","updated_at")
+                     SELECT "id","procedimento_id","titolo","descrizione","data_attivita","tipo","completata","created_at","updated_at" FROM "attivita"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "attivita"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "attivita" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_attivita" datetime(6), "tipo" varchar, "completata" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_85a6b2073c"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimenti" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_attivita_on_procedimento_id" ON "attivita" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "attivita" ("id","procedimento_id","titolo","descrizione","data_attivita","tipo","completata","created_at","updated_at")
+                     SELECT "id","procedimento_id","titolo","descrizione","data_attivita","tipo","completata","created_at","updated_at" FROM "aattivita"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "aattivita"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aprocedimenti" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "beneficiario_id" integer NOT NULL, "numero_rg" varchar, "tribunale" varchar, "giudice_tutelare" varchar, "data_apertura" date, "data_chiusura" date, "stato" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_aprocedimenti_on_beneficiario_id" ON "aprocedimenti" ("beneficiario_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aprocedimenti" ("id","beneficiario_id","numero_rg","tribunale","giudice_tutelare","data_apertura","data_chiusura","stato","note","created_at","updated_at")
+                     SELECT "id","beneficiario_id","numero_rg","tribunale","giudice_tutelare","data_apertura","data_chiusura","stato","note","created_at","updated_at" FROM "procedimenti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "procedimenti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "procedimenti" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "beneficiario_id" integer NOT NULL, "numero_rg" varchar, "tribunale" varchar, "giudice_tutelare" varchar, "data_apertura" date, "data_chiusura" date, "stato" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_50a35c683c"
+FOREIGN KEY ("beneficiario_id")
+  REFERENCES "beneficiari" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_procedimenti_on_beneficiario_id" ON "procedimenti" ("beneficiario_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "procedimenti" ("id","beneficiario_id","numero_rg","tribunale","giudice_tutelare","data_apertura","data_chiusura","stato","note","created_at","updated_at")
+                     SELECT "id","beneficiario_id","numero_rg","tribunale","giudice_tutelare","data_apertura","data_chiusura","stato","note","created_at","updated_at" FROM "aprocedimenti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "aprocedimenti"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "arendiconti" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "anno" integer, "data_presentazione" date, "data_approvazione" date, "stato" varchar, "note" text, "importo_entrate" decimal, "importo_uscite" decimal, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_arendiconti_on_procedimento_id" ON "arendiconti" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "arendiconti" ("id","procedimento_id","anno","data_presentazione","data_approvazione","stato","note","importo_entrate","importo_uscite","created_at","updated_at")
+                     SELECT "id","procedimento_id","anno","data_presentazione","data_approvazione","stato","note","importo_entrate","importo_uscite","created_at","updated_at" FROM "rendiconti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "rendiconti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "rendiconti" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "anno" integer, "data_presentazione" date, "data_approvazione" date, "stato" varchar, "note" text, "importo_entrate" decimal, "importo_uscite" decimal, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_43d04479f3"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimenti" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_rendiconti_on_procedimento_id" ON "rendiconti" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "rendiconti" ("id","procedimento_id","anno","data_presentazione","data_approvazione","stato","note","importo_entrate","importo_uscite","created_at","updated_at")
+                     SELECT "id","procedimento_id","anno","data_presentazione","data_approvazione","stato","note","importo_entrate","importo_uscite","created_at","updated_at" FROM "arendiconti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "arendiconti"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ascadenze" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_scadenza" date, "completata" boolean, "tipo" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ascadenze_on_procedimento_id" ON "ascadenze" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "ascadenze" ("id","procedimento_id","titolo","descrizione","data_scadenza","completata","tipo","note","created_at","updated_at")
+                     SELECT "id","procedimento_id","titolo","descrizione","data_scadenza","completata","tipo","note","created_at","updated_at" FROM "scadenze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "scadenze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "scadenze" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_scadenza" date, "completata" boolean, "tipo" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_3883ce9475"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimenti" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_scadenze_on_procedimento_id" ON "scadenze" ("procedimento_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[32mINSERT INTO "scadenze" ("id","procedimento_id","titolo","descrizione","data_scadenza","completata","tipo","note","created_at","updated_at")
+                     SELECT "id","procedimento_id","titolo","descrizione","data_scadenza","completata","tipo","note","created_at","updated_at" FROM "ascadenze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "ascadenze"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "audienze" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "data_udienza" datetime(6), "tipo" varchar, "luogo" varchar, "note" text, "esito" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_audienze_on_procedimento_id" ON "audienze" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "audienze" ("id","procedimento_id","data_udienza","tipo","luogo","note","esito","created_at","updated_at")
+                     SELECT "id","procedimento_id","data_udienza","tipo","luogo","note","esito","created_at","updated_at" FROM "udienze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "udienze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "udienze" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "data_udienza" datetime(6), "tipo" varchar, "luogo" varchar, "note" text, "esito" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_a20fa7a920"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimenti" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_udienze_on_procedimento_id" ON "udienze" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "udienze" ("id","procedimento_id","data_udienza","tipo","luogo","note","esito","created_at","updated_at")
+                     SELECT "id","procedimento_id","data_udienza","tipo","luogo","note","esito","created_at","updated_at" FROM "audienze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "audienze"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20260318123146)[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20260318121942),
+(20260318121930),
+(20260318121929),
+(20260318121928),
+(20260318121927),
+(20260318121926);[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-03-18 12:43:18.734398', '2026-03-18 12:43:18.734400') RETURNING "key"[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('schema_sha1', 'e5670447cf3178adc0e4f04d4b8a8c6ec7376bbb', '2026-03-18 12:43:18.736616', '2026-03-18 12:43:18.736618') RETURNING "key"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mDROP TABLE IF EXISTS "attivita"[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "attivita" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_attivita" datetime(6), "tipo" varchar, "completata" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_attivita_on_procedimento_id" ON "attivita" ("procedimento_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "beneficiari"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "beneficiari" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "nome" varchar, "cognome" varchar, "codice_fiscale" varchar, "data_nascita" date, "luogo_nascita" varchar, "indirizzo" varchar, "telefono" varchar, "email" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "procedimenti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "procedimenti" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "beneficiario_id" integer NOT NULL, "numero_rg" varchar, "tribunale" varchar, "giudice_tutelare" varchar, "data_apertura" date, "data_chiusura" date, "stato" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_procedimenti_on_beneficiario_id" ON "procedimenti" ("beneficiario_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "rendiconti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "rendiconti" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "anno" integer, "data_presentazione" date, "data_approvazione" date, "stato" varchar, "note" text, "importo_entrate" decimal, "importo_uscite" decimal, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_rendiconti_on_procedimento_id" ON "rendiconti" ("procedimento_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "scadenze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "scadenze" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_scadenza" date, "completata" boolean, "tipo" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_scadenze_on_procedimento_id" ON "scadenze" ("procedimento_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "udienze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "udienze" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "data_udienza" datetime(6), "tipo" varchar, "luogo" varchar, "note" text, "esito" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_udienze_on_procedimento_id" ON "udienze" ("procedimento_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aattivita" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_attivita" datetime(6), "tipo" varchar, "completata" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_aattivita_on_procedimento_id" ON "aattivita" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aattivita" ("id","procedimento_id","titolo","descrizione","data_attivita","tipo","completata","created_at","updated_at")
+                     SELECT "id","procedimento_id","titolo","descrizione","data_attivita","tipo","completata","created_at","updated_at" FROM "attivita"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "attivita"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "attivita" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_attivita" datetime(6), "tipo" varchar, "completata" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_85a6b2073c"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimenti" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_attivita_on_procedimento_id" ON "attivita" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "attivita" ("id","procedimento_id","titolo","descrizione","data_attivita","tipo","completata","created_at","updated_at")
+                     SELECT "id","procedimento_id","titolo","descrizione","data_attivita","tipo","completata","created_at","updated_at" FROM "aattivita"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "aattivita"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aprocedimenti" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "beneficiario_id" integer NOT NULL, "numero_rg" varchar, "tribunale" varchar, "giudice_tutelare" varchar, "data_apertura" date, "data_chiusura" date, "stato" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_aprocedimenti_on_beneficiario_id" ON "aprocedimenti" ("beneficiario_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aprocedimenti" ("id","beneficiario_id","numero_rg","tribunale","giudice_tutelare","data_apertura","data_chiusura","stato","note","created_at","updated_at")
+                     SELECT "id","beneficiario_id","numero_rg","tribunale","giudice_tutelare","data_apertura","data_chiusura","stato","note","created_at","updated_at" FROM "procedimenti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "procedimenti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "procedimenti" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "beneficiario_id" integer NOT NULL, "numero_rg" varchar, "tribunale" varchar, "giudice_tutelare" varchar, "data_apertura" date, "data_chiusura" date, "stato" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_50a35c683c"
+FOREIGN KEY ("beneficiario_id")
+  REFERENCES "beneficiari" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_procedimenti_on_beneficiario_id" ON "procedimenti" ("beneficiario_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "procedimenti" ("id","beneficiario_id","numero_rg","tribunale","giudice_tutelare","data_apertura","data_chiusura","stato","note","created_at","updated_at")
+                     SELECT "id","beneficiario_id","numero_rg","tribunale","giudice_tutelare","data_apertura","data_chiusura","stato","note","created_at","updated_at" FROM "aprocedimenti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "aprocedimenti"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "arendiconti" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "anno" integer, "data_presentazione" date, "data_approvazione" date, "stato" varchar, "note" text, "importo_entrate" decimal, "importo_uscite" decimal, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_arendiconti_on_procedimento_id" ON "arendiconti" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "arendiconti" ("id","procedimento_id","anno","data_presentazione","data_approvazione","stato","note","importo_entrate","importo_uscite","created_at","updated_at")
+                     SELECT "id","procedimento_id","anno","data_presentazione","data_approvazione","stato","note","importo_entrate","importo_uscite","created_at","updated_at" FROM "rendiconti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "rendiconti"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "rendiconti" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "anno" integer, "data_presentazione" date, "data_approvazione" date, "stato" varchar, "note" text, "importo_entrate" decimal, "importo_uscite" decimal, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_43d04479f3"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimenti" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_rendiconti_on_procedimento_id" ON "rendiconti" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "rendiconti" ("id","procedimento_id","anno","data_presentazione","data_approvazione","stato","note","importo_entrate","importo_uscite","created_at","updated_at")
+                     SELECT "id","procedimento_id","anno","data_presentazione","data_approvazione","stato","note","importo_entrate","importo_uscite","created_at","updated_at" FROM "arendiconti"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "arendiconti"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ascadenze" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_scadenza" date, "completata" boolean, "tipo" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ascadenze_on_procedimento_id" ON "ascadenze" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "ascadenze" ("id","procedimento_id","titolo","descrizione","data_scadenza","completata","tipo","note","created_at","updated_at")
+                     SELECT "id","procedimento_id","titolo","descrizione","data_scadenza","completata","tipo","note","created_at","updated_at" FROM "scadenze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "scadenze"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "scadenze" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "titolo" varchar, "descrizione" text, "data_scadenza" date, "completata" boolean, "tipo" varchar, "note" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_3883ce9475"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimenti" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_scadenze_on_procedimento_id" ON "scadenze" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "scadenze" ("id","procedimento_id","titolo","descrizione","data_scadenza","completata","tipo","note","created_at","updated_at")
+                     SELECT "id","procedimento_id","titolo","descrizione","data_scadenza","completata","tipo","note","created_at","updated_at" FROM "ascadenze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "ascadenze"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "audienze" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "data_udienza" datetime(6), "tipo" varchar, "luogo" varchar, "note" text, "esito" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_audienze_on_procedimento_id" ON "audienze" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "audienze" ("id","procedimento_id","data_udienza","tipo","luogo","note","esito","created_at","updated_at")
+                     SELECT "id","procedimento_id","data_udienza","tipo","luogo","note","esito","created_at","updated_at" FROM "udienze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "udienze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "udienze" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "procedimento_id" integer NOT NULL, "data_udienza" datetime(6), "tipo" varchar, "luogo" varchar, "note" text, "esito" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_a20fa7a920"
+FOREIGN KEY ("procedimento_id")
+  REFERENCES "procedimenti" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_udienze_on_procedimento_id" ON "udienze" ("procedimento_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "udienze" ("id","procedimento_id","data_udienza","tipo","luogo","note","esito","created_at","updated_at")
+                     SELECT "id","procedimento_id","data_udienza","tipo","luogo","note","esito","created_at","updated_at" FROM "audienze"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "audienze"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20260318123146)[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20260318121942),
+(20260318121930),
+(20260318121929),
+(20260318121928),
+(20260318121927),
+(20260318121926);[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-03-18 12:43:18.850201', '2026-03-18 12:43:18.850203') RETURNING "key"[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Update (0.1ms)[0m  [1m[33mUPDATE "ar_internal_metadata" SET "value" = 'test', "updated_at" = '2026-03-18 12:43:18.851768' WHERE "ar_internal_metadata"."key" = 'environment'[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('schema_sha1', 'e5670447cf3178adc0e4f04d4b8a8c6ec7376bbb', '2026-03-18 12:43:18.853407', '2026-03-18 12:43:18.853408') RETURNING "key"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (1.1ms)[0m  [1m[32mINSERT INTO "beneficiari" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Mario"], ["cognome", "Rossi"], ["codice_fiscale", "RSSMRA80A01H501Z"], ["data_nascita", "1980-01-01"], ["luogo_nascita", "Roma"], ["indirizzo", "Via Roma 1, 00100 Roma"], ["telefono", "06 12345678"], ["email", "[FILTERED]"], ["note", "Beneficiario con limitata capacità di gestione finanziaria."], ["created_at", "2026-03-18 12:43:18.877056"], ["updated_at", "2026-03-18 12:43:18.877056"]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (1.0ms)[0m  [1m[32mINSERT INTO "beneficiari" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Lucia"], ["cognome", "Bianchi"], ["codice_fiscale", "BNCLCU75B41F205X"], ["data_nascita", "1975-02-01"], ["luogo_nascita", "Milano"], ["indirizzo", "Via Milano 10, 20100 Milano"], ["telefono", "02 98765432"], ["email", "[FILTERED]"], ["note", nil], ["created_at", "2026-03-18 12:43:18.881493"], ["updated_at", "2026-03-18 12:43:18.881493"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBeneficiario Create (0.9ms)[0m  [1m[32mINSERT INTO "beneficiari" ("nome", "cognome", "codice_fiscale", "data_nascita", "luogo_nascita", "indirizzo", "telefono", "email", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["nome", "Giuseppe"], ["cognome", "Verdi"], ["codice_fiscale", nil], ["data_nascita", "1945-06-15"], ["luogo_nascita", "Napoli"], ["indirizzo", "Via Napoli 5, 80100 Napoli"], ["telefono", nil], ["email", "[FILTERED]"], ["note", nil], ["created_at", "2026-03-18 12:43:18.884619"], ["updated_at", "2026-03-18 12:43:18.884619"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mProcedimento Create (1.2ms)[0m  [1m[32mINSERT INTO "procedimenti" ("beneficiario_id", "numero_rg", "tribunale", "giudice_tutelare", "data_apertura", "data_chiusura", "stato", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["beneficiario_id", 1], ["numero_rg", "1234/2023"], ["tribunale", "Tribunale di Roma"], ["giudice_tutelare", "Dott.ssa Giuditta Ferrara"], ["data_apertura", "2023-03-15"], ["data_chiusura", nil], ["stato", "attivo"], ["note", "Procedimento aperto per difficoltà nella gestione del patrimonio."], ["created_at", "2026-03-18 12:43:18.905608"], ["updated_at", "2026-03-18 12:43:18.905608"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mProcedimento Create (1.0ms)[0m  [1m[32mINSERT INTO "procedimenti" ("beneficiario_id", "numero_rg", "tribunale", "giudice_tutelare", "data_apertura", "data_chiusura", "stato", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["beneficiario_id", 2], ["numero_rg", "567/2022"], ["tribunale", "Tribunale di Milano"], ["giudice_tutelare", "Dott. Alberto Conti"], ["data_apertura", "2022-06-01"], ["data_chiusura", nil], ["stato", "attivo"], ["note", nil], ["created_at", "2026-03-18 12:43:18.910358"], ["updated_at", "2026-03-18 12:43:18.910358"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mProcedimento Create (1.1ms)[0m  [1m[32mINSERT INTO "procedimenti" ("beneficiario_id", "numero_rg", "tribunale", "giudice_tutelare", "data_apertura", "data_chiusura", "stato", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["beneficiario_id", 3], ["numero_rg", "89/2021"], ["tribunale", "Tribunale di Napoli"], ["giudice_tutelare", "Dott.ssa Maria Esposito"], ["data_apertura", "2021-09-10"], ["data_chiusura", nil], ["stato", "attivo"], ["note", nil], ["created_at", "2026-03-18 12:43:18.914290"], ["updated_at", "2026-03-18 12:43:18.914290"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUdienza Create (1.1ms)[0m  [1m[32mINSERT INTO "udienze" ("procedimento_id", "data_udienza", "tipo", "luogo", "note", "esito", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["data_udienza", "2026-04-17 12:43:18.919184"], ["tipo", "verifica"], ["luogo", "Tribunale di Roma, Aula 3"], ["note", "Verifica annuale delle condizioni."], ["esito", nil], ["created_at", "2026-03-18 12:43:18.923846"], ["updated_at", "2026-03-18 12:43:18.923846"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUdienza Create (0.9ms)[0m  [1m[32mINSERT INTO "udienze" ("procedimento_id", "data_udienza", "tipo", "luogo", "note", "esito", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["data_udienza", "2026-03-20 12:43:18.927001"], ["tipo", "rendiconto"], ["luogo", "Tribunale di Roma"], ["note", nil], ["esito", nil], ["created_at", "2026-03-18 12:43:18.927406"], ["updated_at", "2026-03-18 12:43:18.927406"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUdienza Create (1.0ms)[0m  [1m[32mINSERT INTO "udienze" ("procedimento_id", "data_udienza", "tipo", "luogo", "note", "esito", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 2], ["data_udienza", "2026-04-02 12:43:18.930321"], ["tipo", "prima udienza"], ["luogo", "Tribunale di Milano, Sala A"], ["note", nil], ["esito", nil], ["created_at", "2026-03-18 12:43:18.930809"], ["updated_at", "2026-03-18 12:43:18.930809"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (1.1ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["titolo", "Presentazione Rendiconto Annuale 2024"], ["descrizione", "Rendiconto annuale delle spese e entrate del beneficiario."], ["data_scadenza", "2026-03-28"], ["completata", 0], ["tipo", "rendiconto"], ["note", nil], ["created_at", "2026-03-18 12:43:18.940825"], ["updated_at", "2026-03-18 12:43:18.940825"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (1.2ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["titolo", "Rinnovo patrocinio legale"], ["descrizione", "Rinnovo dell'incarico al legale di fiducia."], ["data_scadenza", "2026-03-13"], ["completata", 0], ["tipo", "adempimento"], ["note", nil], ["created_at", "2026-03-18 12:43:18.944338"], ["updated_at", "2026-03-18 12:43:18.944338"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (6.9ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 2], ["titolo", "Udienza di verifica"], ["descrizione", "Prima udienza di verifica dello stato del beneficiario."], ["data_scadenza", "2026-04-07"], ["completata", 0], ["tipo", "udienza"], ["note", nil], ["created_at", "2026-03-18 12:43:18.948444"], ["updated_at", "2026-03-18 12:43:18.948444"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mScadenza Create (1.3ms)[0m  [1m[32mINSERT INTO "scadenze" ("procedimento_id", "titolo", "descrizione", "data_scadenza", "completata", "tipo", "note", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 3], ["titolo", "Rendiconto 2023"], ["descrizione", "Rendiconto finanziario anno 2023."], ["data_scadenza", "2026-03-25"], ["completata", 0], ["tipo", "rendiconto"], ["note", nil], ["created_at", "2026-03-18 12:43:18.993731"], ["updated_at", "2026-03-18 12:43:18.993731"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mRendiconto Create (1.0ms)[0m  [1m[32mINSERT INTO "rendiconti" ("procedimento_id", "anno", "data_presentazione", "data_approvazione", "stato", "note", "importo_entrate", "importo_uscite", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["anno", 2023], ["data_presentazione", "2024-01-15"], ["data_approvazione", "2024-02-20"], ["stato", "approvato"], ["note", "Rendiconto 2023 approvato senza rilievi."], ["importo_entrate", 25000.0], ["importo_uscite", 18500.0], ["created_at", "2026-03-18 12:43:19.004927"], ["updated_at", "2026-03-18 12:43:19.004927"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mRendiconto Create (1.1ms)[0m  [1m[32mINSERT INTO "rendiconti" ("procedimento_id", "anno", "data_presentazione", "data_approvazione", "stato", "note", "importo_entrate", "importo_uscite", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["anno", 2024], ["data_presentazione", nil], ["data_approvazione", nil], ["stato", "bozza"], ["note", nil], ["importo_entrate", 8000.0], ["importo_uscite", 4200.0], ["created_at", "2026-03-18 12:43:19.008300"], ["updated_at", "2026-03-18 12:43:19.008300"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mRendiconto Create (1.2ms)[0m  [1m[32mINSERT INTO "rendiconti" ("procedimento_id", "anno", "data_presentazione", "data_approvazione", "stato", "note", "importo_entrate", "importo_uscite", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 2], ["anno", 2023], ["data_presentazione", "2024-03-01"], ["data_approvazione", nil], ["stato", "presentato"], ["note", nil], ["importo_entrate", 15000.0], ["importo_uscite", 12000.0], ["created_at", "2026-03-18 12:43:19.011678"], ["updated_at", "2026-03-18 12:43:19.011678"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAttivita Create (1.0ms)[0m  [1m[32mINSERT INTO "attivita" ("procedimento_id", "titolo", "descrizione", "data_attivita", "tipo", "completata", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["titolo", "Apertura conto corrente dedicato"], ["descrizione", "Apertura conto corrente intestato al beneficiario presso Banca X."], ["data_attivita", "2025-12-18 12:43:19.016367"], ["tipo", "finanziaria"], ["completata", 1], ["created_at", "2026-03-18 12:43:19.020804"], ["updated_at", "2026-03-18 12:43:19.020804"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAttivita Create (1.0ms)[0m  [1m[32mINSERT INTO "attivita" ("procedimento_id", "titolo", "descrizione", "data_attivita", "tipo", "completata", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 1], ["titolo", "Visita medica di controllo"], ["descrizione", "Visita neurologica di controllo presso ASL Roma 1."], ["data_attivita", "2026-04-18 12:43:19.023789"], ["tipo", "sanitaria"], ["completata", 0], ["created_at", "2026-03-18 12:43:19.024148"], ["updated_at", "2026-03-18 12:43:19.024148"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAttivita Create (1.2ms)[0m  [1m[32mINSERT INTO "attivita" ("procedimento_id", "titolo", "descrizione", "data_attivita", "tipo", "completata", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["procedimento_id", 2], ["titolo", "Consulenza legale"], ["descrizione", "Consulenza con avvocato per pratiche immobiliari."], ["data_attivita", "2026-03-11 12:43:19.026851"], ["tipo", "legale"], ["completata", 1], ["created_at", "2026-03-18 12:43:19.027289"], ["updated_at", "2026-03-18 12:43:19.027289"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti"[0m
+  [1m[36mUdienza Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "udienze"[0m
+  [1m[36mScadenza Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze"[0m
+  [1m[36mRendiconto Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "rendiconti"[0m
+  [1m[36mAttivita Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "attivita"[0m
+Started GET "/" for ::1 at 2026-03-18 12:43:22 +0000
+Processing by DashboardController#index as HTML
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  ↳ app/controllers/dashboard_controller.rb:3:in `index'
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."stato" = ?[0m  [["stato", "attivo"]]
+  ↳ app/controllers/dashboard_controller.rb:4:in `index'
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza < ?)[0m  [["completata", 0], [nil, "2026-03-18"]]
+  ↳ app/controllers/dashboard_controller.rb:6:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering dashboard/index.html.erb within layouts/application
+  [1m[36mScadenza Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?) subquery_for_count[0m  [["completata", 0], [nil, "2026-04-17 12:43:22.977019"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:33
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:43:22.977019"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:59
+  [1m[36mScadenza Load (0.1ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:43:22.977019"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?, ?, ?, ?)[0m  [["id", 1], ["id", 4], ["id", 3], ["id", 6], ["id", 2], ["id", 5]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?, ?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 3], ["id", 4], ["id", 5], ["id", 6]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE (data_udienza >= ?) LIMIT ?[0m  [[nil, "2026-03-18 12:43:22.977859"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:88
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE (data_udienza >= ?) ORDER BY "udienze"."data_udienza" ASC LIMIT ?[0m  [[nil, "2026-03-18 12:43:22.977859"], ["LIMIT", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?, ?)[0m  [["id", 1], ["id", 4], ["id", 2], ["id", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 4], ["id", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  Rendered dashboard/index.html.erb within layouts/application (Duration: 11.2ms | GC: 3.1ms)
+  Rendered layout layouts/application.html.erb (Duration: 24.6ms | GC: 4.0ms)
+Completed 200 OK in 28ms (Views: 24.0ms | ActiveRecord: 1.1ms (12 queries, 0 cached) | GC: 4.0ms)
+
+
+Started GET "/manifest.json" for ::1 at 2026-03-18 12:43:23 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 0.6ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  [1m[36mScadenza Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze"[0m
+Started GET "/" for ::1 at 2026-03-18 12:44:02 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by DashboardController#index as */*
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  ↳ app/controllers/dashboard_controller.rb:3:in `index'
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."stato" = ?[0m  [["stato", "attivo"]]
+  ↳ app/controllers/dashboard_controller.rb:4:in `index'
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza < ?)[0m  [["completata", 0], [nil, "2026-03-18"]]
+  ↳ app/controllers/dashboard_controller.rb:6:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering dashboard/index.html.erb within layouts/application
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?) subquery_for_count[0m  [["completata", 0], [nil, "2026-04-17 12:44:02.848941"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:33
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:44:02.848941"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:59
+  [1m[36mScadenza Load (0.1ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:44:02.848941"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 3], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 3]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE (data_udienza >= ?) LIMIT ?[0m  [[nil, "2026-03-18 12:44:02.850945"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:88
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE (data_udienza >= ?) ORDER BY "udienze"."data_udienza" ASC LIMIT ?[0m  [[nil, "2026-03-18 12:44:02.850945"], ["LIMIT", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:91
+  Rendered dashboard/index.html.erb within layouts/application (Duration: 29.6ms | GC: 1.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 85.8ms | GC: 7.9ms)
+Completed 200 OK in 151ms (Views: 86.2ms | ActiveRecord: 3.2ms (12 queries, 0 cached) | GC: 46.2ms)
+
+
+Started GET "/" for ::1 at 2026-03-18 12:44:07 +0000
+Processing by DashboardController#index as HTML
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  ↳ app/controllers/dashboard_controller.rb:3:in `index'
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."stato" = ?[0m  [["stato", "attivo"]]
+  ↳ app/controllers/dashboard_controller.rb:4:in `index'
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza < ?)[0m  [["completata", 0], [nil, "2026-03-18"]]
+  ↳ app/controllers/dashboard_controller.rb:6:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering dashboard/index.html.erb within layouts/application
+  [1m[36mScadenza Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?) subquery_for_count[0m  [["completata", 0], [nil, "2026-04-17 12:44:07.801781"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:33
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:44:07.801781"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:59
+  [1m[36mScadenza Load (0.1ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:44:07.801781"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 3], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 3]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE (data_udienza >= ?) LIMIT ?[0m  [[nil, "2026-03-18 12:44:07.802597"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:88
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE (data_udienza >= ?) ORDER BY "udienze"."data_udienza" ASC LIMIT ?[0m  [[nil, "2026-03-18 12:44:07.802597"], ["LIMIT", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:91
+  Rendered dashboard/index.html.erb within layouts/application (Duration: 7.9ms | GC: 0.6ms)
+  Rendered layout layouts/application.html.erb (Duration: 11.7ms | GC: 0.8ms)
+Completed 200 OK in 15ms (Views: 11.2ms | ActiveRecord: 1.1ms (12 queries, 0 cached) | GC: 0.8ms)
+
+
+Started GET "/manifest.json" for ::1 at 2026-03-18 12:44:07 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.3ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 1.1ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/beneficiari" for ::1 at 2026-03-18 12:44:17 +0000
+Processing by BeneficiariController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering beneficiari/index.html.erb within layouts/application
+  [1m[36mBeneficiario Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "beneficiari" LIMIT ?[0m  [["LIMIT", 1]]
+  ↳ app/views/beneficiari/index.html.erb:10
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" ORDER BY "beneficiari"."cognome" ASC, "beneficiari"."nome" ASC[0m
+  ↳ app/views/beneficiari/index.html.erb:29
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ?[0m  [["beneficiario_id", 2]]
+  ↳ app/views/beneficiari/index.html.erb:40
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ?[0m  [["beneficiario_id", 1]]
+  ↳ app/views/beneficiari/index.html.erb:40
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ?[0m  [["beneficiario_id", 3]]
+  ↳ app/views/beneficiari/index.html.erb:40
+  Rendered beneficiari/index.html.erb within layouts/application (Duration: 8.0ms | GC: 0.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.8ms | GC: 0.4ms)
+Completed 200 OK in 11ms (Views: 9.8ms | ActiveRecord: 0.4ms (5 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/manifest.json" for ::1 at 2026-03-18 12:44:18 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.6ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/beneficiari/1" for ::1 at 2026-03-18 12:44:27 +0000
+Processing by BeneficiariController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mBeneficiario Load (0.2ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/beneficiari_controller.rb:44:in `set_beneficiario'
+  Rendering layout layouts/application.html.erb
+  Rendering beneficiari/show.html.erb within layouts/application
+  [1m[36mProcedimento Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ? LIMIT ?[0m  [["beneficiario_id", 1], ["LIMIT", 1]]
+  ↳ app/views/beneficiari/show.html.erb:73
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ? ORDER BY "procedimenti"."created_at" DESC[0m  [["beneficiario_id", 1]]
+  ↳ app/views/beneficiari/show.html.erb:77
+  Rendered beneficiari/show.html.erb within layouts/application (Duration: 3.4ms | GC: 0.1ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.5ms | GC: 0.1ms)
+Completed 200 OK in 8ms (Views: 5.7ms | ActiveRecord: 0.3ms (3 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/manifest.json" for ::1 at 2026-03-18 12:44:27 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/beneficiari/1/procedimenti/1" for ::1 at 2026-03-18 12:44:46 +0000
+Processing by ProcedimentiController#show as HTML
+  Parameters: {"beneficiario_id"=>"1", "id"=>"1"}
+  [1m[36mBeneficiario Load (0.2ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/procedimenti_controller.rb:48:in `set_beneficiario'
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ? AND "procedimenti"."id" = ? LIMIT ?[0m  [["beneficiario_id", 1], ["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/procedimenti_controller.rb:52:in `set_procedimento'
+  Rendering layout layouts/application.html.erb
+  Rendering procedimenti/show.html.erb within layouts/application
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE "udienze"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:63
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE "udienze"."procedimento_id" = ? ORDER BY "udienze"."data_udienza" ASC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:67
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:90
+  [1m[36mScadenza Load (0.1ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."procedimento_id" = ? ORDER BY "scadenze"."data_scadenza" ASC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:94
+  [1m[36mRendiconto Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "rendiconti" WHERE "rendiconti"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:128
+  [1m[36mRendiconto Load (0.1ms)[0m  [1m[34mSELECT "rendiconti".* FROM "rendiconti" WHERE "rendiconti"."procedimento_id" = ? ORDER BY "rendiconti"."anno" DESC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:132
+  [1m[36mAttivita Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "attivita" WHERE "attivita"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:158
+  [1m[36mAttivita Load (0.1ms)[0m  [1m[34mSELECT "attivita".* FROM "attivita" WHERE "attivita"."procedimento_id" = ? ORDER BY "attivita"."data_attivita" DESC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:162
+  Rendered procedimenti/show.html.erb within layouts/application (Duration: 17.4ms | GC: 0.6ms)
+  Rendered layout layouts/application.html.erb (Duration: 19.1ms | GC: 0.6ms)
+Completed 200 OK in 28ms (Views: 19.0ms | ActiveRecord: 1.4ms (10 queries, 0 cached) | GC: 0.8ms)
+
+
+Started GET "/manifest.json" for ::1 at 2026-03-18 12:44:46 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+

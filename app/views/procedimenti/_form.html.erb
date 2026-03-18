@@ -1,0 +1,48 @@
+<%= form_with model: [@beneficiario, procedimento], class: "space-y-6" do |f| %>
+  <% if procedimento.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <p class="font-medium text-red-800 mb-2"><%= procedimento.errors.count %> errori:</p>
+      <ul class="list-disc list-inside text-sm text-red-700">
+        <% procedimento.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :numero_rg, "Numero RG", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :numero_rg, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.label :tribunale, "Tribunale", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :tribunale, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.label :giudice_tutelare, "Giudice Tutelare", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :giudice_tutelare, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.label :stato, "Stato", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :stato, Procedimento::STATI.map { |s| [s.capitalize, s] }, { prompt: "Seleziona stato" }, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.label :data_apertura, "Data Apertura", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.date_field :data_apertura, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.label :data_chiusura, "Data Chiusura", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.date_field :data_chiusura, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+    </div>
+    <div>
+      <%= f.label :note, "Note", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_area :note, rows: 3, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <%= link_to "Annulla", beneficiario_path(@beneficiario), class: "bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium" %>
+    <%= f.submit procedimento.new_record? ? "Crea Procedimento" : "Salva Modifiche", class: "bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium cursor-pointer" %>
+  </div>
+<% end %>
