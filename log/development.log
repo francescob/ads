@@ -309,3 +309,144 @@ Migrating to RenameTablesItalianPlurals (20260318123146)
   [1m[36mProcedimento Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti"[0m
   [1m[36mUdienza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "udienze"[0m
   [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?)[0m  [["completata", 0], [nil, "2026-04-17 12:32:47.373555"]]
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?)[0m  [["completata", 0], [nil, "2026-04-17 12:36:57.195234"]]
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti"[0m
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze"[0m
+  [1m[36mUdienza Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "udienze"[0m
+  [1m[36mRendiconto Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "rendiconti"[0m
+  [1m[36mAttivita Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "attivita"[0m
+Started GET "/" for ::1 at 2026-03-18 12:37:53 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by DashboardController#index as */*
+  [1m[36mBeneficiario Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "beneficiari"[0m
+  ↳ app/controllers/dashboard_controller.rb:3:in `index'
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."stato" = ?[0m  [["stato", "attivo"]]
+  ↳ app/controllers/dashboard_controller.rb:4:in `index'
+  [1m[36mScadenza Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza < ?)[0m  [["completata", 0], [nil, "2026-03-18"]]
+  ↳ app/controllers/dashboard_controller.rb:6:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering dashboard/index.html.erb within layouts/application
+  [1m[36mScadenza Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?) subquery_for_count[0m  [["completata", 0], [nil, "2026-04-17 12:37:53.576832"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:33
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:37:53.576832"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:59
+  [1m[36mScadenza Load (0.2ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:37:53.576832"], ["LIMIT", 10]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 3], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 3]]
+  ↳ app/views/dashboard/index.html.erb:62
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE (data_udienza >= ?) LIMIT ?[0m  [[nil, "2026-03-18 12:37:53.582017"], ["LIMIT", 1]]
+  ↳ app/views/dashboard/index.html.erb:88
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE (data_udienza >= ?) ORDER BY "udienze"."data_udienza" ASC LIMIT ?[0m  [[nil, "2026-03-18 12:37:53.582017"], ["LIMIT", 5]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:91
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/dashboard/index.html.erb:91
+  Rendered dashboard/index.html.erb within layouts/application (Duration: 33.5ms | GC: 3.7ms)
+  Rendered layout layouts/application.html.erb (Duration: 286.3ms | GC: 32.2ms)
+Completed 200 OK in 362ms (Views: 293.1ms | ActiveRecord: 3.1ms (12 queries, 0 cached) | GC: 68.2ms)
+
+
+Started GET "/beneficiari" for ::1 at 2026-03-18 12:37:58 +0000
+Processing by BeneficiariController#index as */*
+  Rendering layout layouts/application.html.erb
+  Rendering beneficiari/index.html.erb within layouts/application
+  [1m[36mBeneficiario Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "beneficiari" LIMIT ?[0m  [["LIMIT", 1]]
+  ↳ app/views/beneficiari/index.html.erb:10
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" ORDER BY "beneficiari"."cognome" ASC, "beneficiari"."nome" ASC[0m
+  ↳ app/views/beneficiari/index.html.erb:29
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ?[0m  [["beneficiario_id", 2]]
+  ↳ app/views/beneficiari/index.html.erb:40
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ?[0m  [["beneficiario_id", 1]]
+  ↳ app/views/beneficiari/index.html.erb:40
+  [1m[36mProcedimento Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ?[0m  [["beneficiario_id", 3]]
+  ↳ app/views/beneficiari/index.html.erb:40
+  Rendered beneficiari/index.html.erb within layouts/application (Duration: 7.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.8ms | GC: 0.0ms)
+Completed 200 OK in 11ms (Views: 9.8ms | ActiveRecord: 0.4ms (5 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/scadenze" for ::1 at 2026-03-18 12:37:58 +0000
+Processing by ScadenzeController#index as */*
+  Rendering layout layouts/application.html.erb
+  Rendering scadenze/index.html.erb within layouts/application
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) LIMIT ?[0m  [["completata", 0], [nil, "2026-04-17 12:37:58.684594"], ["LIMIT", 1]]
+  ↳ app/views/scadenze/index.html.erb:7
+  [1m[36mScadenza Load (0.1ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."completata" = ? AND (data_scadenza <= ?) ORDER BY "scadenze"."data_scadenza" ASC[0m  [["completata", 0], [nil, "2026-04-17 12:37:58.684594"]]
+  ↳ app/views/scadenze/index.html.erb:21
+  [1m[36mProcedimento Load (0.2ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 3], ["id", 2]]
+  ↳ app/views/scadenze/index.html.erb:21
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?, ?)[0m  [["id", 1], ["id", 2], ["id", 3]]
+  ↳ app/views/scadenze/index.html.erb:21
+  Rendered scadenze/index.html.erb within layouts/application (Duration: 4.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.6ms | GC: 0.0ms)
+Completed 200 OK in 8ms (Views: 6.5ms | ActiveRecord: 0.5ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/udienze" for ::1 at 2026-03-18 12:37:58 +0000
+Processing by UdienzeController#index as */*
+  Rendering layout layouts/application.html.erb
+  Rendering udienze/index.html.erb within layouts/application
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE (data_udienza >= ?) LIMIT ?[0m  [[nil, "2026-03-18 12:37:58.704978"], ["LIMIT", 1]]
+  ↳ app/views/udienze/index.html.erb:7
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE (data_udienza >= ?) ORDER BY "udienze"."data_udienza" ASC[0m  [[nil, "2026-03-18 12:37:58.704978"]]
+  ↳ app/views/udienze/index.html.erb:21
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/udienze/index.html.erb:21
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" IN (?, ?)[0m  [["id", 1], ["id", 2]]
+  ↳ app/views/udienze/index.html.erb:21
+  Rendered udienze/index.html.erb within layouts/application (Duration: 4.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.2ms | GC: 0.0ms)
+Completed 200 OK in 7ms (Views: 6.2ms | ActiveRecord: 0.4ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/beneficiari/1" for ::1 at 2026-03-18 12:38:03 +0000
+Processing by BeneficiariController#show as */*
+  Parameters: {"id"=>"1"}
+  [1m[36mBeneficiario Load (0.2ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/beneficiari_controller.rb:44:in `set_beneficiario'
+  Rendering layout layouts/application.html.erb
+  Rendering beneficiari/show.html.erb within layouts/application
+  [1m[36mProcedimento Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ? LIMIT ?[0m  [["beneficiario_id", 1], ["LIMIT", 1]]
+  ↳ app/views/beneficiari/show.html.erb:73
+  [1m[36mProcedimento Load (0.1ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ? ORDER BY "procedimenti"."created_at" DESC[0m  [["beneficiario_id", 1]]
+  ↳ app/views/beneficiari/show.html.erb:77
+  Rendered beneficiari/show.html.erb within layouts/application (Duration: 3.6ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.5ms | GC: 0.3ms)
+Completed 200 OK in 12ms (Views: 5.6ms | ActiveRecord: 0.4ms (3 queries, 0 cached) | GC: 4.2ms)
+
+
+Started GET "/beneficiari/1/procedimenti/1" for ::1 at 2026-03-18 12:38:03 +0000
+Processing by ProcedimentiController#show as */*
+  Parameters: {"beneficiario_id"=>"1", "id"=>"1"}
+  [1m[36mBeneficiario Load (0.1ms)[0m  [1m[34mSELECT "beneficiari".* FROM "beneficiari" WHERE "beneficiari"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/procedimenti_controller.rb:48:in `set_beneficiario'
+  [1m[36mProcedimento Load (0.4ms)[0m  [1m[34mSELECT "procedimenti".* FROM "procedimenti" WHERE "procedimenti"."beneficiario_id" = ? AND "procedimenti"."id" = ? LIMIT ?[0m  [["beneficiario_id", 1], ["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/procedimenti_controller.rb:52:in `set_procedimento'
+  Rendering layout layouts/application.html.erb
+  Rendering procedimenti/show.html.erb within layouts/application
+  [1m[36mUdienza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "udienze" WHERE "udienze"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:63
+  [1m[36mUdienza Load (0.1ms)[0m  [1m[34mSELECT "udienze".* FROM "udienze" WHERE "udienze"."procedimento_id" = ? ORDER BY "udienze"."data_udienza" ASC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:67
+  [1m[36mScadenza Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "scadenze" WHERE "scadenze"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:90
+  [1m[36mScadenza Load (0.1ms)[0m  [1m[34mSELECT "scadenze".* FROM "scadenze" WHERE "scadenze"."procedimento_id" = ? ORDER BY "scadenze"."data_scadenza" ASC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:94
+  [1m[36mRendiconto Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "rendiconti" WHERE "rendiconti"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:128
+  [1m[36mRendiconto Load (0.1ms)[0m  [1m[34mSELECT "rendiconti".* FROM "rendiconti" WHERE "rendiconti"."procedimento_id" = ? ORDER BY "rendiconti"."anno" DESC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:132
+  [1m[36mAttivita Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "attivita" WHERE "attivita"."procedimento_id" = ? LIMIT ?[0m  [["procedimento_id", 1], ["LIMIT", 1]]
+  ↳ app/views/procedimenti/show.html.erb:158
+  [1m[36mAttivita Load (0.1ms)[0m  [1m[34mSELECT "attivita".* FROM "attivita" WHERE "attivita"."procedimento_id" = ? ORDER BY "attivita"."data_attivita" DESC[0m  [["procedimento_id", 1]]
+  ↳ app/views/procedimenti/show.html.erb:162
+  Rendered procedimenti/show.html.erb within layouts/application (Duration: 18.0ms | GC: 0.5ms)
+  Rendered layout layouts/application.html.erb (Duration: 19.6ms | GC: 0.5ms)
+Completed 200 OK in 28ms (Views: 19.7ms | ActiveRecord: 1.6ms (10 queries, 0 cached) | GC: 1.3ms)
+
+

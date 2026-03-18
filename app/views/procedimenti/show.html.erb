@@ -107,7 +107,7 @@
               </div>
             </div>
             <div class="flex items-center space-x-4">
-              <span class="text-sm <%= s.completata ? 'text-gray-400' : s.data_scadenza < Date.today ? 'text-red-600 font-medium' : 'text-yellow-600' %>">
+              <span class="text-sm <%= s.completata ? 'text-gray-400' : s.data_scadenza < Date.current ? 'text-red-600 font-medium' : 'text-yellow-600' %>">
                 <%= s.data_scadenza.strftime("%d/%m/%Y") %>
               </span>
               <%= link_to "Modifica", edit_beneficiario_procedimento_scadenza_path(@beneficiario, @procedimento, s), class: "text-yellow-600 text-xs hover:underline" %>
