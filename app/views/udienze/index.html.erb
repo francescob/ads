@@ -1,0 +1,36 @@
+<% content_for :title, "Prossime Udienze - ADS" %>
+
+<div class="space-y-6">
+  <h1 class="text-3xl font-bold text-gray-900">Prossime Udienze</h1>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <% if @udienze.empty? %>
+      <p class="px-6 py-12 text-center text-gray-500">Nessuna udienza in programma.</p>
+    <% else %>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Beneficiario</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Luogo</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Azioni</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% @udienze.each do |u| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 text-sm font-medium text-blue-900"><%= u.data_udienza.strftime("%d/%m/%Y %H:%M") %></td>
+              <td class="px-6 py-4 text-sm text-gray-600"><%= u.tipo&.capitalize || "—" %></td>
+              <td class="px-6 py-4 text-sm text-gray-900"><%= u.procedimento.beneficiario.nome_completo %></td>
+              <td class="px-6 py-4 text-sm text-gray-600"><%= u.luogo.presence || "—" %></td>
+              <td class="px-6 py-4 text-right">
+                <%= link_to "Modifica", edit_beneficiario_procedimento_udienza_path(u.procedimento.beneficiario, u.procedimento, u), class: "text-yellow-600 hover:underline text-sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>

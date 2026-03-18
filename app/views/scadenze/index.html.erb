@@ -1,0 +1,39 @@
+<% content_for :title, "Scadenze - ADS" %>
+
+<div class="space-y-6">
+  <h1 class="text-3xl font-bold text-gray-900">Scadenze Imminenti</h1>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <% if @scadenze.empty? %>
+      <p class="px-6 py-12 text-center text-gray-500">Nessuna scadenza imminente. ✅</p>
+    <% else %>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Titolo</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Beneficiario</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Scadenza</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Azioni</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% @scadenze.each do |s| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 text-sm font-medium text-gray-900"><%= s.titolo %></td>
+              <td class="px-6 py-4 text-sm text-gray-600"><%= s.procedimento.beneficiario.nome_completo %></td>
+              <td class="px-6 py-4 text-sm text-gray-600"><%= s.tipo&.capitalize || "—" %></td>
+              <td class="px-6 py-4 text-sm <%= s.data_scadenza < Date.today ? 'text-red-600 font-medium' : 'text-yellow-600' %>">
+                <%= s.data_scadenza.strftime("%d/%m/%Y") %>
+                <% if s.data_scadenza < Date.today %><span class="ml-1 text-xs">SCADUTA</span><% end %>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <%= link_to "Modifica", edit_beneficiario_procedimento_scadenza_path(s.procedimento.beneficiario, s.procedimento, s), class: "text-yellow-600 hover:underline text-sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>

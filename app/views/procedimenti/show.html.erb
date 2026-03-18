@@ -1,0 +1,177 @@
+<% content_for :title, "Procedimento - ADS" %>
+
+<div class="space-y-6">
+  <nav class="text-sm text-gray-500">
+    <%= link_to "Beneficiari", beneficiari_path, class: "hover:underline" %> /
+    <%= link_to @beneficiario.nome_completo, @beneficiario, class: "hover:underline" %> /
+    Procedimento <%= @procedimento.numero_rg.present? ? "RG #{@procedimento.numero_rg}" : "##{@procedimento.id}" %>
+  </nav>
+
+  <div class="flex items-start justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">
+        <%= @procedimento.numero_rg.present? ? "Procedimento RG #{@procedimento.numero_rg}" : "Procedimento ##{@procedimento.id}" %>
+      </h1>
+      <p class="text-gray-500 mt-1">Beneficiario: <%= @beneficiario.nome_completo %></p>
+    </div>
+    <%= link_to "Modifica", edit_beneficiario_procedimento_path(@beneficiario, @procedimento), class: "bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-400 text-sm font-medium" %>
+  </div>
+
+  <!-- Procedimento details -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div>
+        <dt class="text-xs font-medium text-gray-500 uppercase">Tribunale</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= @procedimento.tribunale.presence || "—" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs font-medium text-gray-500 uppercase">Giudice Tutelare</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= @procedimento.giudice_tutelare.presence || "—" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs font-medium text-gray-500 uppercase">Stato</dt>
+        <dd class="mt-1">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+            <%= @procedimento.stato == 'attivo' ? 'bg-green-100 text-green-800' : @procedimento.stato == 'chiuso' ? 'bg-gray-100 text-gray-800' : 'bg-yellow-100 text-yellow-800' %>">
+            <%= @procedimento.stato&.capitalize || "—" %>
+          </span>
+        </dd>
+      </div>
+      <div>
+        <dt class="text-xs font-medium text-gray-500 uppercase">Data Apertura</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= @procedimento.data_apertura&.strftime("%d/%m/%Y") || "—" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs font-medium text-gray-500 uppercase">Data Chiusura</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= @procedimento.data_chiusura&.strftime("%d/%m/%Y") || "—" %></dd>
+      </div>
+    </dl>
+    <% if @procedimento.note.present? %>
+      <div class="mt-4 pt-4 border-t border-gray-100">
+        <dt class="text-xs font-medium text-gray-500 uppercase mb-1">Note</dt>
+        <dd class="text-sm text-gray-700"><%= simple_format(@procedimento.note) %></dd>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Udienze -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+      <h2 class="text-lg font-semibold text-gray-900">Udienze</h2>
+      <%= link_to "+ Nuova", new_beneficiario_procedimento_udienza_path(@beneficiario, @procedimento), class: "text-blue-600 text-sm hover:underline" %>
+    </div>
+    <% if @udienze.empty? %>
+      <p class="px-6 py-4 text-gray-500 text-sm">Nessuna udienza registrata.</p>
+    <% else %>
+      <div class="divide-y divide-gray-100">
+        <% @udienze.each do |u| %>
+          <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50">
+            <div>
+              <p class="text-sm font-medium text-gray-900"><%= u.tipo&.capitalize || "Udienza" %></p>
+              <p class="text-xs text-gray-500"><%= u.luogo.presence || "" %></p>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span class="text-sm text-blue-600"><%= u.data_udienza.strftime("%d/%m/%Y %H:%M") %></span>
+              <%= link_to "Modifica", edit_beneficiario_procedimento_udienza_path(@beneficiario, @procedimento, u), class: "text-yellow-600 text-xs hover:underline" %>
+              <%= button_to "Elimina", beneficiario_procedimento_udienza_path(@beneficiario, @procedimento, u), method: :delete, data: { turbo_confirm: "Eliminare questa udienza?" }, class: "text-red-600 text-xs bg-transparent border-none cursor-pointer" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Scadenze -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+      <h2 class="text-lg font-semibold text-gray-900">Scadenze</h2>
+      <%= link_to "+ Nuova", new_beneficiario_procedimento_scadenza_path(@beneficiario, @procedimento), class: "text-blue-600 text-sm hover:underline" %>
+    </div>
+    <% if @scadenze.empty? %>
+      <p class="px-6 py-4 text-gray-500 text-sm">Nessuna scadenza registrata.</p>
+    <% else %>
+      <div class="divide-y divide-gray-100">
+        <% @scadenze.each do |s| %>
+          <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50">
+            <div class="flex items-center space-x-3">
+              <%= button_to beneficiario_procedimento_scadenza_path(@beneficiario, @procedimento, s),
+                  method: :patch,
+                  params: { scadenza: { completata: !s.completata } },
+                  class: "text-lg bg-transparent border-none cursor-pointer",
+                  title: s.completata ? "Segna come non completata" : "Segna come completata" do %>
+                <%= s.completata ? "✅" : "⬜" %>
+              <% end %>
+              <div>
+                <p class="text-sm font-medium <%= s.completata ? 'line-through text-gray-400' : 'text-gray-900' %>"><%= s.titolo %></p>
+                <p class="text-xs text-gray-500"><%= s.tipo&.capitalize %></p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span class="text-sm <%= s.completata ? 'text-gray-400' : s.data_scadenza < Date.today ? 'text-red-600 font-medium' : 'text-yellow-600' %>">
+                <%= s.data_scadenza.strftime("%d/%m/%Y") %>
+              </span>
+              <%= link_to "Modifica", edit_beneficiario_procedimento_scadenza_path(@beneficiario, @procedimento, s), class: "text-yellow-600 text-xs hover:underline" %>
+              <%= button_to "Elimina", beneficiario_procedimento_scadenza_path(@beneficiario, @procedimento, s), method: :delete, data: { turbo_confirm: "Eliminare questa scadenza?" }, class: "text-red-600 text-xs bg-transparent border-none cursor-pointer" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Rendiconti -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+      <h2 class="text-lg font-semibold text-gray-900">Rendiconti</h2>
+      <%= link_to "+ Nuovo", new_beneficiario_procedimento_rendiconto_path(@beneficiario, @procedimento), class: "text-blue-600 text-sm hover:underline" %>
+    </div>
+    <% if @rendiconti.empty? %>
+      <p class="px-6 py-4 text-gray-500 text-sm">Nessun rendiconto registrato.</p>
+    <% else %>
+      <div class="divide-y divide-gray-100">
+        <% @rendiconti.each do |r| %>
+          <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50">
+            <div>
+              <p class="text-sm font-medium text-gray-900">Rendiconto <%= r.anno || "—" %></p>
+              <p class="text-xs text-gray-500">Saldo: € <%= number_with_precision(r.saldo, precision: 2) %></p>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
+                <%= r.stato == 'approvato' ? 'bg-green-100 text-green-800' : r.stato == 'respinto' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-700' %>">
+                <%= r.stato&.capitalize || "—" %>
+              </span>
+              <%= link_to "Modifica", edit_beneficiario_procedimento_rendiconto_path(@beneficiario, @procedimento, r), class: "text-yellow-600 text-xs hover:underline" %>
+              <%= button_to "Elimina", beneficiario_procedimento_rendiconto_path(@beneficiario, @procedimento, r), method: :delete, data: { turbo_confirm: "Eliminare questo rendiconto?" }, class: "text-red-600 text-xs bg-transparent border-none cursor-pointer" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Attività -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+      <h2 class="text-lg font-semibold text-gray-900">Attività</h2>
+      <%= link_to "+ Nuova", new_beneficiario_procedimento_attivita_path(@beneficiario, @procedimento), class: "text-blue-600 text-sm hover:underline" %>
+    </div>
+    <% if @attivita.empty? %>
+      <p class="px-6 py-4 text-gray-500 text-sm">Nessuna attività registrata.</p>
+    <% else %>
+      <div class="divide-y divide-gray-100">
+        <% @attivita.each do |a| %>
+          <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50">
+            <div>
+              <p class="text-sm font-medium <%= a.completata ? 'line-through text-gray-400' : 'text-gray-900' %>"><%= a.titolo %></p>
+              <p class="text-xs text-gray-500"><%= a.tipo&.capitalize %> <%= a.data_attivita ? "- #{a.data_attivita.strftime('%d/%m/%Y')}" : "" %></p>
+            </div>
+            <div class="flex items-center space-x-4">
+              <%= link_to "Modifica", edit_beneficiario_procedimento_attivita_path(@beneficiario, @procedimento, a), class: "text-yellow-600 text-xs hover:underline" %>
+              <%= button_to "Elimina", beneficiario_procedimento_attivita_path(@beneficiario, @procedimento, a), method: :delete, data: { turbo_confirm: "Eliminare questa attività?" }, class: "text-red-600 text-xs bg-transparent border-none cursor-pointer" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

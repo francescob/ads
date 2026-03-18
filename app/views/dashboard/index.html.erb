@@ -1,0 +1,109 @@
+<% content_for :title, "Dashboard - ADS" %>
+
+<div class="space-y-8">
+  <!-- Stats cards -->
+  <div>
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Dashboard</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500">Beneficiari</p>
+            <p class="text-3xl font-bold text-blue-900 mt-1"><%= @beneficiari_count %></p>
+          </div>
+          <span class="text-4xl">👤</span>
+        </div>
+        <%= link_to "Vedi tutti →", beneficiari_path, class: "text-blue-600 text-sm mt-3 block hover:underline" %>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500">Procedimenti Attivi</p>
+            <p class="text-3xl font-bold text-green-700 mt-1"><%= @procedimenti_attivi %></p>
+          </div>
+          <span class="text-4xl">📋</span>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500">Scadenze in Arrivo</p>
+            <p class="text-3xl font-bold text-yellow-600 mt-1"><%= @scadenze_in_scadenza.count %></p>
+          </div>
+          <span class="text-4xl">📅</span>
+        </div>
+        <%= link_to "Vedi tutte →", scadenze_path, class: "text-blue-600 text-sm mt-3 block hover:underline" %>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500">Scadenze Scadute</p>
+            <p class="text-3xl font-bold text-red-600 mt-1"><%= @scadenze_scadute %></p>
+          </div>
+          <span class="text-4xl">⚠️</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Upcoming deadlines -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-900">Prossime Scadenze</h2>
+      </div>
+      <div class="divide-y divide-gray-50">
+        <% if @scadenze_in_scadenza.empty? %>
+          <p class="px-6 py-4 text-gray-500 text-sm">Nessuna scadenza imminente.</p>
+        <% else %>
+          <% @scadenze_in_scadenza.each do |scadenza| %>
+            <div class="px-6 py-4 flex items-start justify-between">
+              <div>
+                <p class="font-medium text-gray-900 text-sm"><%= scadenza.titolo %></p>
+                <p class="text-xs text-gray-500 mt-1">
+                  <%= scadenza.procedimento.beneficiario.nome_completo %>
+                  <% if scadenza.data_scadenza < Date.today %>
+                    <span class="text-red-600 font-medium ml-2">SCADUTA</span>
+                  <% end %>
+                </p>
+              </div>
+              <span class="text-sm font-medium <%= scadenza.data_scadenza < Date.today ? 'text-red-600' : 'text-yellow-600' %>">
+                <%= l(scadenza.data_scadenza, format: :short) rescue scadenza.data_scadenza.strftime("%d/%m/%Y") %>
+              </span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Upcoming hearings -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-900">Prossime Udienze</h2>
+      </div>
+      <div class="divide-y divide-gray-50">
+        <% if @prossime_udienze.empty? %>
+          <p class="px-6 py-4 text-gray-500 text-sm">Nessuna udienza programmata.</p>
+        <% else %>
+          <% @prossime_udienze.each do |udienza| %>
+            <div class="px-6 py-4 flex items-start justify-between">
+              <div>
+                <p class="font-medium text-gray-900 text-sm"><%= udienza.tipo&.humanize || "Udienza" %></p>
+                <p class="text-xs text-gray-500 mt-1">
+                  <%= udienza.procedimento.beneficiario.nome_completo %>
+                  <% if udienza.luogo.present? %> - <%= udienza.luogo %><% end %>
+                </p>
+              </div>
+              <span class="text-sm font-medium text-blue-600">
+                <%= udienza.data_udienza.strftime("%d/%m/%Y %H:%M") %>
+              </span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
