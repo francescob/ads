@@ -3,6 +3,8 @@ class Beneficiario < ApplicationRecord
 
   has_many :procedimenti, dependent: :destroy
   has_many :contatti, dependent: :destroy
+  has_many :conti, dependent: :destroy
+  has_many :movimenti, through: :conti
 
   normalizes :codice_fiscale, with: ->(cf) { cf.strip.upcase.presence }
   normalizes :email, with: ->(email) { email.strip.downcase.presence }

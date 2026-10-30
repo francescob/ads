@@ -1,0 +1,94 @@
+<% content_for :title, "Rendiconto #{@rendiconto.anno} - #{@beneficiario.nome_completo}" %>
+<% inizio = @rendiconto.periodo.first - 1; fine = @rendiconto.periodo.last %>
+<div class="space-y-6 max-w-4xl">
+  <div class="no-print flex items-center justify-between">
+    <nav class="text-sm text-gray-500">
+      <%= link_to @beneficiario.nome_completo, @beneficiario, class: "hover:underline" %> /
+      <%= link_to "Procedimento #{@procedimento.titolo}", beneficiario_procedimento_path(@beneficiario, @procedimento), class: "hover:underline" %> /
+      Rendiconto <%= @rendiconto.anno %>
+    </nav>
+    <div class="flex space-x-3">
+      <%= button_to "Ricalcola da movimenti", ricalcola_beneficiario_procedimento_rendiconto_path(@beneficiario, @procedimento, @rendiconto),
+            data: { turbo_confirm: "Sovrascrivere entrate e uscite con i totali dei movimenti #{@rendiconto.anno}?" }, class: "btn-secondary" %>
+      <%= link_to "CSV movimenti", beneficiario_procedimento_rendiconto_path(@beneficiario, @procedimento, @rendiconto, format: :csv), class: "btn-secondary" %>
+      <%= link_to "Modifica", edit_beneficiario_procedimento_rendiconto_path(@beneficiario, @procedimento, @rendiconto), class: "btn-secondary" %>
+      <button type="button" onclick="window.print()" class="btn-primary">Stampa / PDF</button>
+    </div>
+  </div>
+
+  <div class="card p-8 space-y-6 print:shadow-none print:border-0">
+    <header class="text-center space-y-1">
+      <p class="text-sm text-gray-600"><%= @procedimento.tribunale.presence || "Tribunale" %> — Ufficio del Giudice Tutelare</p>
+      <% if @procedimento.numero_rg.present? %><p class="text-sm text-gray-600">R.G. <%= @procedimento.numero_rg %></p><% end %>
+      <h1 class="text-xl font-bold text-gray-900 pt-2">Rendiconto annuale <%= @rendiconto.anno %></h1>
+      <p class="text-sm text-gray-700">
+        Beneficiario: <strong><%= @beneficiario.nome_completo %></strong>
+        <% if @beneficiario.codice_fiscale %> — C.F. <%= @beneficiario.codice_fiscale %><% end %>
+      </p>
+      <p class="text-xs text-gray-500">Periodo dal <%= data_it(@rendiconto.periodo.first) %> al <%= data_it(fine) %> · Stato: <%= etichetta(@rendiconto.stato) %></p>
+    </header>
+
+    <section>
+      <h2 class="font-semibold text-gray-900 mb-2">1. Situazione patrimoniale (conti)</h2>
+      <table class="min-w-full text-sm border border-gray-200">
+        <thead class="bg-gray-50">
+          <tr><th class="px-3 py-2 text-left">Conto</th><th class="px-3 py-2 text-right">Saldo al <%= data_it(inizio) %></th><th class="px-3 py-2 text-right">Saldo al <%= data_it(fine) %></th></tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% tot_inizio = 0; tot_fine = 0 %>
+          <% @conti.each do |c| %>
+            <% si = c.saldo(al: inizio); sf = c.saldo(al: fine); tot_inizio += si; tot_fine += sf %>
+            <tr><td class="px-3 py-2"><%= c.nome %> <span class="text-gray-500"><%= c.istituto %></span></td><td class="px-3 py-2 text-right"><%= euro(si) %></td><td class="px-3 py-2 text-right"><%= euro(sf) %></td></tr>
+          <% end %>
+          <tr class="font-semibold"><td class="px-3 py-2">Totale</td><td class="px-3 py-2 text-right"><%= euro(tot_inizio) %></td><td class="px-3 py-2 text-right"><%= euro(tot_fine) %></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <% [ [ "2. Entrate", "entrata", @rendiconto.importo_entrate ], [ "3. Uscite", "uscita", @rendiconto.importo_uscite ] ].each do |titolo, verso, totale| %>
+        <div>
+          <h2 class="font-semibold text-gray-900 mb-2"><%= titolo %></h2>
+          <table class="min-w-full text-sm border border-gray-200">
+            <tbody class="divide-y divide-gray-100">
+              <% @totali.select { |(v, _), _| v == verso }.each do |(_, categoria), importo| %>
+                <tr><td class="px-3 py-2"><%= categoria ? etichetta(categoria) : "Non classificate" %></td><td class="px-3 py-2 text-right"><%= euro(importo) %></td></tr>
+              <% end %>
+              <tr class="font-semibold"><td class="px-3 py-2">Totale dichiarato</td><td class="px-3 py-2 text-right"><%= euro(totale) %></td></tr>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+    </section>
+
+    <p class="text-right font-semibold text-gray-900">Saldo del periodo (entrate − uscite): <%= euro(@rendiconto.saldo) %></p>
+
+    <% if @rendiconto.note.present? %>
+      <section>
+        <h2 class="font-semibold text-gray-900 mb-1">Note</h2>
+        <div class="text-sm text-gray-700"><%= simple_format(@rendiconto.note) %></div>
+      </section>
+    <% end %>
+
+    <section class="break-before-page">
+      <h2 class="font-semibold text-gray-900 mb-2">Allegato: elenco movimenti</h2>
+      <% if @movimenti.empty? %>
+        <p class="text-sm text-gray-500">Nessun movimento registrato nel periodo.</p>
+      <% else %>
+        <table class="min-w-full text-xs border border-gray-200">
+          <thead class="bg-gray-50"><tr><th class="px-2 py-1 text-left">Data</th><th class="px-2 py-1 text-left">Conto</th><th class="px-2 py-1 text-left">Descrizione</th><th class="px-2 py-1 text-left">Categoria</th><th class="px-2 py-1 text-right">Importo</th></tr></thead>
+          <tbody class="divide-y divide-gray-100">
+            <% @movimenti.each do |m| %>
+              <tr><td class="px-2 py-1"><%= data_it(m.data) %></td><td class="px-2 py-1"><%= m.conto.nome %></td><td class="px-2 py-1"><%= m.descrizione %></td><td class="px-2 py-1"><%= etichetta(m.categoria) %></td><td class="px-2 py-1 text-right"><%= euro(m.importo_con_segno) %></td></tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    </section>
+
+    <footer class="pt-10 grid grid-cols-2 text-sm text-gray-700">
+      <p>Luogo e data ____________________</p>
+      <p class="text-right">L'Amministratore di sostegno<br><br>____________________</p>
+    </footer>
+  </div>
+</div>

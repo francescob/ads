@@ -170,6 +170,20 @@ proc2.attivita.create!(
   completata: true
 )
 
+# Contatti, conti e movimenti
+mario.contatti.create!(nome: "Anna Rossi", tipo: "familiare", ruolo: "sorella", telefono: "333 1234567")
+mario.contatti.create!(nome: "Dott.ssa Neri", tipo: "servizi_sociali", ruolo: "assistente sociale", email: "neri@comune.example.it")
+conto = mario.conti.create!(nome: "Conto corrente pensione", tipo: "conto_corrente", istituto: "Banca Esempio",
+                            saldo_iniziale: 4_500, data_saldo_iniziale: Date.new(Date.current.year - 1, 1, 1))
+(1..12).each do |mese|
+  data = Date.new(Date.current.year - 1, mese, 1)
+  conto.movimenti.create!(data: data, descrizione: "Pensione #{I18n.l(data, format: '%B')}", verso: "entrata", importo: 1_150, categoria: "pensione")
+  conto.movimenti.create!(data: data + 4, descrizione: "Affitto", verso: "uscita", importo: 550, categoria: "affitto")
+  conto.movimenti.create!(data: data + 14, descrizione: "Utenze", verso: "uscita", importo: 120, categoria: "utenze")
+end
+proc1.istanze.create!(oggetto: "Autorizzazione acquisto apparecchio acustico", tipo: "autorizzazione_spesa",
+                      stato: "depositata", data_deposito: 2.weeks.ago.to_date, importo: 1_800)
+
 puts "Dati di esempio creati con successo!"
 puts "  - #{Beneficiario.count} beneficiari"
 puts "  - #{Procedimento.count} procedimenti"
@@ -177,3 +191,5 @@ puts "  - #{Udienza.count} udienze"
 puts "  - #{Scadenza.count} scadenze"
 puts "  - #{Rendiconto.count} rendiconti"
 puts "  - #{Attivita.count} attività"
+puts "  - #{Movimento.count} movimenti"
+puts "Accesso: #{ENV.fetch("ADMIN_EMAIL", "admin@example.com")} / #{admin_password}"

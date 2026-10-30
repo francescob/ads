@@ -1,0 +1,63 @@
+<% content_for :title, "#{@conto.nome} - ADS" %>
+<div class="space-y-6">
+  <nav class="text-sm text-gray-500">
+    <%= link_to "Beneficiari", beneficiari_path, class: "hover:underline" %> /
+    <%= link_to @beneficiario.nome_completo, @beneficiario, class: "hover:underline" %> / <%= @conto.nome %>
+  </nav>
+
+  <div class="flex items-start justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900"><%= @conto.nome %></h1>
+      <p class="text-gray-500 mt-1"><%= [ etichetta(@conto.tipo), @conto.istituto.presence, @conto.iban ].compact.join(" · ") %></p>
+    </div>
+    <div class="flex space-x-3">
+      <%= link_to "Modifica", edit_beneficiario_conto_path(@beneficiario, @conto), class: "btn-secondary" %>
+      <%= link_to "+ Entrata", new_beneficiario_conto_movimento_path(@beneficiario, @conto, verso: "entrata"), class: "btn-primary" %>
+      <%= link_to "+ Uscita", new_beneficiario_conto_movimento_path(@beneficiario, @conto, verso: "uscita"), class: "btn-primary" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <% [ [ "Saldo al 1/1/#{@anno}", @saldo_inizio ], [ "Entrate #{@anno}", @movimenti.entrate.sum(:importo) ],
+         [ "Uscite #{@anno}", @movimenti.uscite.sum(:importo) ], [ "Saldo al 31/12/#{@anno}", @saldo_fine ] ].each do |label, valore| %>
+      <div class="card p-4">
+        <p class="text-xs font-medium text-gray-500 uppercase"><%= label %></p>
+        <p class="mt-1 text-xl font-semibold <%= valore.negative? ? 'text-red-600' : 'text-gray-900' %>"><%= euro(valore) %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <%= form_with url: beneficiario_conto_path(@beneficiario, @conto), method: :get, class: "flex items-center gap-2" do |f| %>
+        <%= f.label :anno, "Anno", class: "text-sm text-gray-600" %>
+        <%= f.number_field :anno, value: @anno, class: "form-input w-28" %>
+        <%= f.submit "Mostra", name: nil, class: "btn-secondary" %>
+      <% end %>
+      <%= link_to "Esporta CSV", beneficiario_conto_path(@beneficiario, @conto, anno: @anno, format: :csv), class: "text-blue-600 text-sm hover:underline" %>
+    </div>
+    <% if @movimenti.empty? %>
+      <p class="px-6 py-4 text-gray-500 text-sm">Nessun movimento nel <%= @anno %>.</p>
+    <% else %>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr><th class="th">Data</th><th class="th">Descrizione</th><th class="th">Categoria</th><th class="th text-right">Importo</th><th class="th"></th></tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% @movimenti.each do |m| %>
+            <tr class="hover:bg-gray-50">
+              <td class="td whitespace-nowrap"><%= data_it(m.data) %></td>
+              <td class="td text-gray-900"><%= m.descrizione %></td>
+              <td class="td"><%= etichetta(m.categoria) %></td>
+              <td class="td text-right whitespace-nowrap font-medium <%= m.entrata? ? 'text-green-700' : 'text-red-700' %>"><%= euro(m.importo_con_segno) %></td>
+              <td class="td text-right whitespace-nowrap space-x-3">
+                <%= link_to "Modifica", edit_beneficiario_conto_movimento_path(@beneficiario, @conto, m), class: "link-edit" %>
+                <%= button_to "Elimina", beneficiario_conto_movimento_path(@beneficiario, @conto, m), method: :delete, form_class: "inline", data: { turbo_confirm: "Eliminare questo movimento?" }, class: "link-delete" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>

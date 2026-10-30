@@ -8,4 +8,6 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular "documento", "documenti"
   inflect.irregular "contatto", "contatti"
   inflect.irregular "istanza", "istanze"
+  inflect.irregular "conto", "conti"
+  inflect.irregular "movimento", "movimenti"
 end

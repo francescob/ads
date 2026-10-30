@@ -132,8 +132,8 @@
         <% @rendiconti.each do |r| %>
           <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50">
             <div>
-              <p class="text-sm font-medium text-gray-900">Rendiconto <%= r.anno || "—" %></p>
-              <p class="text-xs text-gray-500">Saldo: € <%= number_with_precision(r.saldo, precision: 2) %></p>
+              <%= link_to "Rendiconto #{r.anno}", beneficiario_procedimento_rendiconto_path(@beneficiario, @procedimento, r), class: "text-sm font-medium text-blue-700 hover:underline" %>
+              <p class="text-xs text-gray-500">Saldo: <%= euro(r.saldo) %></p>
             </div>
             <div class="flex items-center space-x-4">
               <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium

@@ -7,8 +7,14 @@ Rails.application.routes.draw do
 
   resources :beneficiari do
     resources :contatti, only: %i[new create edit update destroy]
+    resources :conti, except: :index do
+      resources :movimenti, only: %i[new create edit update destroy]
+    end
     resources :procedimenti, except: :index do
-      resources :udienze, :scadenze, :rendiconti, :attivita, :istanze, only: %i[new create edit update destroy]
+      resources :udienze, :scadenze, :attivita, :istanze, only: %i[new create edit update destroy]
+      resources :rendiconti, except: :index do
+        post :ricalcola, on: :member
+      end
       resources :documenti, except: :index
     end
   end

@@ -98,6 +98,32 @@
     <% end %>
   </div>
 
+  <!-- Conti -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="text-lg font-semibold text-gray-900">Conti e patrimonio</h2>
+      <%= link_to "+ Nuovo", new_beneficiario_conto_path(@beneficiario), class: "text-blue-600 text-sm hover:underline" %>
+    </div>
+    <% if @conti.empty? %>
+      <p class="px-6 py-4 text-gray-500 text-sm">Nessun conto registrato.</p>
+    <% else %>
+      <div class="divide-y divide-gray-100">
+        <% @conti.each do |c| %>
+          <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50">
+            <div>
+              <%= link_to c.nome, beneficiario_conto_path(@beneficiario, c), class: "text-sm font-medium text-blue-700 hover:underline" %>
+              <p class="text-xs text-gray-500"><%= [ etichetta(c.tipo), c.istituto.presence, (c.attivo? ? nil : "chiuso") ].compact.join(" · ") %></p>
+            </div>
+            <span class="text-sm font-semibold text-gray-900"><%= euro(c.saldo) %></span>
+          </div>
+        <% end %>
+        <div class="px-6 py-3 flex justify-between text-sm font-semibold bg-gray-50">
+          <span>Totale</span><span><%= euro(@conti.sum(&:saldo)) %></span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
   <!-- Contatti -->
   <div class="card">
     <div class="card-header">

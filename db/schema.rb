@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_10_30_110300) do
+ActiveRecord::Schema[7.2].define(version: 2026_10_30_120000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -82,6 +82,21 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_30_110300) do
     t.index ["beneficiario_id"], name: "index_contatti_on_beneficiario_id"
   end
 
+  create_table "conti", force: :cascade do |t|
+    t.integer "beneficiario_id", null: false
+    t.string "nome", null: false
+    t.string "tipo"
+    t.string "istituto"
+    t.string "iban"
+    t.decimal "saldo_iniziale", precision: 12, scale: 2, default: "0.0", null: false
+    t.date "data_saldo_iniziale"
+    t.boolean "attivo", default: true, null: false
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["beneficiario_id"], name: "index_conti_on_beneficiario_id"
+  end
+
   create_table "documenti", force: :cascade do |t|
     t.integer "procedimento_id", null: false
     t.string "titolo", null: false
@@ -107,6 +122,20 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_30_110300) do
     t.datetime "updated_at", null: false
     t.index ["procedimento_id"], name: "index_istanze_on_procedimento_id"
     t.index ["stato"], name: "index_istanze_on_stato"
+  end
+
+  create_table "movimenti", force: :cascade do |t|
+    t.integer "conto_id", null: false
+    t.date "data", null: false
+    t.string "descrizione", null: false
+    t.string "verso", null: false
+    t.decimal "importo", precision: 12, scale: 2, null: false
+    t.string "categoria"
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conto_id", "data"], name: "index_movimenti_on_conto_id_and_data"
+    t.index ["conto_id"], name: "index_movimenti_on_conto_id"
   end
 
   create_table "procedimenti", force: :cascade do |t|
@@ -190,8 +219,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_30_110300) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "attivita", "procedimenti"
   add_foreign_key "contatti", "beneficiari"
+  add_foreign_key "conti", "beneficiari"
   add_foreign_key "documenti", "procedimenti"
   add_foreign_key "istanze", "procedimenti"
+  add_foreign_key "movimenti", "conti"
   add_foreign_key "procedimenti", "beneficiari"
   add_foreign_key "rendiconti", "procedimenti"
   add_foreign_key "scadenze", "procedimenti"
