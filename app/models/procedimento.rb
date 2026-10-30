@@ -6,6 +6,8 @@ class Procedimento < ApplicationRecord
   has_many :scadenze, dependent: :destroy
   has_many :rendiconti, dependent: :destroy
   has_many :attivita, dependent: :destroy
+  has_many :documenti, dependent: :destroy
+  has_many :istanze, dependent: :destroy
 
   validates :stato, inclusion: { in: STATI }
   validates :data_chiusura, comparison: { greater_than_or_equal_to: :data_apertura },

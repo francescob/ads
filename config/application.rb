@@ -34,6 +34,8 @@ module AdsApp
     # in config/environments, which are processed later.
     #
     config.time_zone = "Rome"
+    # I file sono serviti solo tramite DocumentiController, dietro login
+    config.active_storage.draw_routes = false
     config.i18n.default_locale = :it
     config.i18n.available_locales = %i[it en]
     # config.eager_load_paths << Rails.root.join("extras")

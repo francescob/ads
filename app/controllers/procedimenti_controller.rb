@@ -7,6 +7,8 @@ class ProcedimentiController < ApplicationController
     @scadenze = @procedimento.scadenze.order(:data_scadenza)
     @rendiconti = @procedimento.rendiconti.order(anno: :desc)
     @attivita = @procedimento.attivita.order(data_attivita: :desc)
+    @istanze = @procedimento.istanze.order(created_at: :desc)
+    @documenti = @procedimento.documenti.with_attached_file.order(data_documento: :desc, created_at: :desc)
   end
 
   def new

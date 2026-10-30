@@ -5,4 +5,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular "udienza", "udienze"
   inflect.irregular "scadenza", "scadenze"
   inflect.irregular "rendiconto", "rendiconti"
+  inflect.irregular "documento", "documenti"
+  inflect.irregular "contatto", "contatti"
+  inflect.irregular "istanza", "istanze"
 end

@@ -2,6 +2,7 @@ class Beneficiario < ApplicationRecord
   CODICE_FISCALE_FORMAT = /\A[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z]\z/
 
   has_many :procedimenti, dependent: :destroy
+  has_many :contatti, dependent: :destroy
 
   normalizes :codice_fiscale, with: ->(cf) { cf.strip.upcase.presence }
   normalizes :email, with: ->(email) { email.strip.downcase.presence }

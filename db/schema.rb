@@ -10,7 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_10_30_100000) do
+ActiveRecord::Schema[7.2].define(version: 2026_10_30_110300) do
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
   create_table "attivita", force: :cascade do |t|
     t.integer "procedimento_id", null: false
     t.string "titolo"
@@ -38,6 +66,47 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_30_100000) do
     t.datetime "updated_at", null: false
     t.index ["codice_fiscale"], name: "index_beneficiari_on_codice_fiscale", unique: true, where: "codice_fiscale IS NOT NULL AND codice_fiscale <> ''"
     t.index ["cognome", "nome"], name: "index_beneficiari_on_cognome_and_nome"
+  end
+
+  create_table "contatti", force: :cascade do |t|
+    t.integer "beneficiario_id", null: false
+    t.string "nome", null: false
+    t.string "tipo"
+    t.string "ruolo"
+    t.string "telefono"
+    t.string "email"
+    t.string "indirizzo"
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["beneficiario_id"], name: "index_contatti_on_beneficiario_id"
+  end
+
+  create_table "documenti", force: :cascade do |t|
+    t.integer "procedimento_id", null: false
+    t.string "titolo", null: false
+    t.string "categoria"
+    t.date "data_documento"
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["procedimento_id"], name: "index_documenti_on_procedimento_id"
+  end
+
+  create_table "istanze", force: :cascade do |t|
+    t.integer "procedimento_id", null: false
+    t.string "oggetto", null: false
+    t.string "tipo"
+    t.string "stato", default: "bozza", null: false
+    t.date "data_deposito"
+    t.date "data_decisione"
+    t.decimal "importo", precision: 12, scale: 2
+    t.text "esito"
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["procedimento_id"], name: "index_istanze_on_procedimento_id"
+    t.index ["stato"], name: "index_istanze_on_stato"
   end
 
   create_table "procedimenti", force: :cascade do |t|
@@ -117,7 +186,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_30_100000) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "attivita", "procedimenti"
+  add_foreign_key "contatti", "beneficiari"
+  add_foreign_key "documenti", "procedimenti"
+  add_foreign_key "istanze", "procedimenti"
   add_foreign_key "procedimenti", "beneficiari"
   add_foreign_key "rendiconti", "procedimenti"
   add_foreign_key "scadenze", "procedimenti"

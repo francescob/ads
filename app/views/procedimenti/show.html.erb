@@ -174,4 +174,66 @@
       </div>
     <% end %>
   </div>
+
+  <!-- Istanze al giudice -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="text-lg font-semibold text-gray-900">Istanze al Giudice Tutelare</h2>
+      <%= link_to "+ Nuova", new_beneficiario_procedimento_istanza_path(@beneficiario, @procedimento), class: "text-blue-600 text-sm hover:underline" %>
+    </div>
+    <% if @istanze.empty? %>
+      <p class="px-6 py-4 text-gray-500 text-sm">Nessuna istanza registrata.</p>
+    <% else %>
+      <div class="divide-y divide-gray-100">
+        <% @istanze.each do |i| %>
+          <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50">
+            <div>
+              <p class="text-sm font-medium text-gray-900"><%= i.oggetto %></p>
+              <p class="text-xs text-gray-500">
+                <%= etichetta(i.tipo) %> · depositata <%= data_it(i.data_deposito) %>
+                <% if i.importo %> · <%= euro(i.importo) %><% end %>
+              </p>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
+                <%= { "autorizzata" => "bg-green-100 text-green-800", "respinta" => "bg-red-100 text-red-800", "depositata" => "bg-blue-100 text-blue-800" }.fetch(i.stato, "bg-gray-100 text-gray-700") %>">
+                <%= etichetta(i.stato) %>
+              </span>
+              <%= link_to "Modifica", edit_beneficiario_procedimento_istanza_path(@beneficiario, @procedimento, i), class: "link-edit" %>
+              <%= button_to "Elimina", beneficiario_procedimento_istanza_path(@beneficiario, @procedimento, i), method: :delete, data: { turbo_confirm: "Eliminare questa istanza?" }, class: "link-delete" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Documenti -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="text-lg font-semibold text-gray-900">Documenti</h2>
+      <%= link_to "+ Carica", new_beneficiario_procedimento_documento_path(@beneficiario, @procedimento), class: "text-blue-600 text-sm hover:underline" %>
+    </div>
+    <% if @documenti.empty? %>
+      <p class="px-6 py-4 text-gray-500 text-sm">Nessun documento caricato.</p>
+    <% else %>
+      <div class="divide-y divide-gray-100">
+        <% @documenti.each do |d| %>
+          <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50">
+            <div>
+              <%= link_to d.titolo, beneficiario_procedimento_documento_path(@beneficiario, @procedimento, d), target: "_blank", class: "text-sm font-medium text-blue-700 hover:underline" %>
+              <p class="text-xs text-gray-500">
+                <%= etichetta(d.categoria) %> · <%= data_it(d.data_documento) %> · <%= d.file.filename %> (<%= number_to_human_size(d.file.byte_size) %>)
+              </p>
+            </div>
+            <div class="flex items-center space-x-4">
+              <%= link_to "Scarica", beneficiario_procedimento_documento_path(@beneficiario, @procedimento, d, download: 1), class: "text-blue-600 text-xs hover:underline" %>
+              <%= link_to "Modifica", edit_beneficiario_procedimento_documento_path(@beneficiario, @procedimento, d), class: "link-edit" %>
+              <%= button_to "Elimina", beneficiario_procedimento_documento_path(@beneficiario, @procedimento, d), method: :delete, data: { turbo_confirm: "Eliminare questo documento?" }, class: "link-delete" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 </div>

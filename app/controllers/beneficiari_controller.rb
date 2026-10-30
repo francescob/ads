@@ -7,6 +7,7 @@ class BeneficiariController < ApplicationController
 
   def show
     @procedimenti = @beneficiario.procedimenti.order(created_at: :desc)
+    @contatti = @beneficiario.contatti.order(:nome)
   end
 
   def new

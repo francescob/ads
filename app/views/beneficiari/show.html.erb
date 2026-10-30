@@ -97,4 +97,33 @@
       </div>
     <% end %>
   </div>
+
+  <!-- Contatti -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="text-lg font-semibold text-gray-900">Rete di contatti</h2>
+      <%= link_to "+ Nuovo", new_beneficiario_contatto_path(@beneficiario), class: "text-blue-600 text-sm hover:underline" %>
+    </div>
+    <% if @contatti.empty? %>
+      <p class="px-6 py-4 text-gray-500 text-sm">Nessun contatto (familiari, servizi sociali, medici, banca...).</p>
+    <% else %>
+      <div class="divide-y divide-gray-100">
+        <% @contatti.each do |c| %>
+          <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50">
+            <div>
+              <p class="text-sm font-medium text-gray-900"><%= c.nome %> <span class="text-xs text-gray-500"><%= [ etichetta(c.tipo), c.ruolo.presence ].compact.join(" · ") %></span></p>
+              <p class="text-xs text-gray-500">
+                <% if c.telefono.present? %><%= link_to c.telefono, "tel:#{c.telefono}", class: "hover:underline" %><% end %>
+                <% if c.email.present? %> · <%= mail_to c.email, class: "hover:underline" %><% end %>
+              </p>
+            </div>
+            <div class="flex items-center space-x-4">
+              <%= link_to "Modifica", edit_beneficiario_contatto_path(@beneficiario, c), class: "link-edit" %>
+              <%= button_to "Elimina", beneficiario_contatto_path(@beneficiario, c), method: :delete, data: { turbo_confirm: "Eliminare questo contatto?" }, class: "link-delete" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 </div>
