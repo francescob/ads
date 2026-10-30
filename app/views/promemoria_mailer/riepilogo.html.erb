@@ -1,0 +1,30 @@
+<p>Ciao <%= @user.nome %>,</p>
+
+<% if @agenda.scadute.any? %>
+  <h3 style="color:#b91c1c">Scadenze scadute</h3>
+  <ul>
+    <% @agenda.scadute.each do |s| %>
+      <li><%= l(s.data_scadenza) %> — <strong><%= s.titolo %></strong> (<%= s.procedimento.beneficiario.nome_completo %>)</li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if @agenda.scadenze_prossime.any? %>
+  <h3>Scadenze nei prossimi <%= @agenda.giorni %> giorni</h3>
+  <ul>
+    <% @agenda.scadenze_prossime.each do |s| %>
+      <li><%= l(s.data_scadenza) %> — <strong><%= s.titolo %></strong> (<%= s.procedimento.beneficiario.nome_completo %>)</li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if @agenda.udienze_prossime.any? %>
+  <h3>Udienze</h3>
+  <ul>
+    <% @agenda.udienze_prossime.each do |u| %>
+      <li><%= l(u.data_udienza) %> — <%= u.tipo&.humanize || "Udienza" %> <%= u.luogo %> (<%= u.procedimento.beneficiario.nome_completo %>)</li>
+    <% end %>
+  </ul>
+<% end %>
+
+<p><%= link_to "Apri ADS", root_url %></p>

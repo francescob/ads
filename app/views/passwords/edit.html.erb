@@ -1,0 +1,37 @@
+<% content_for :title, "Profilo - ADS" %>
+<div class="max-w-xl space-y-8">
+  <h1 class="text-2xl font-bold text-gray-900">Profilo</h1>
+  <h2 class="text-lg font-semibold text-gray-900 -mb-4">Cambia password</h2>
+  <%= form_with url: password_path, method: :patch, class: "card p-6 space-y-4" do |f| %>
+    <div>
+      <%= f.label :password_attuale, "Password attuale", class: "form-label" %>
+      <%= f.password_field :password_attuale, required: true, autocomplete: "current-password", class: "form-input" %>
+    </div>
+    <div>
+      <%= f.label :password, "Nuova password (min. 10 caratteri)", class: "form-label" %>
+      <%= f.password_field :password, required: true, autocomplete: "new-password", class: "form-input" %>
+    </div>
+    <div>
+      <%= f.label :password_confirmation, "Conferma nuova password", class: "form-label" %>
+      <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password", class: "form-input" %>
+    </div>
+    <%= f.submit "Aggiorna password", class: "btn-primary" %>
+  <% end %>
+
+  <div class="card p-6 space-y-3">
+    <h2 class="text-lg font-semibold text-gray-900">Calendario</h2>
+    <p class="text-sm text-gray-600">Aggiungi questo indirizzo come calendario “da URL” in Google Calendar, Outlook o Apple Calendario per vedere scadenze e udienze. Non condividerlo: chi lo possiede vede gli appuntamenti.</p>
+    <input type="text" readonly value="<%= calendario_url(Current.user.calendar_token) %>" class="form-input font-mono text-xs" onclick="this.select()">
+    <%= button_to "Rigenera link", rigenera_calendario_path, data: { turbo_confirm: "Il link attuale smetterà di funzionare. Continuare?" }, class: "btn-secondary" %>
+  </div>
+
+  <div class="card p-6 space-y-3">
+    <h2 class="text-lg font-semibold text-gray-900">Promemoria email</h2>
+    <%= form_with url: password_path, method: :patch, class: "flex items-center gap-3" do |f| %>
+      <%= hidden_field_tag :solo_preferenze, 1 %>
+      <%= f.check_box :riceve_promemoria, { checked: Current.user.riceve_promemoria?, class: "h-4 w-4" }, "1", "0" %>
+      <%= f.label :riceve_promemoria, "Ricevi ogni giorno il riepilogo di scadenze e udienze", class: "text-sm text-gray-700" %>
+      <%= f.submit "Salva", class: "btn-secondary" %>
+    <% end %>
+  </div>
+</div>

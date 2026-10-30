@@ -1,0 +1,15 @@
+<% if @totale_pagine.to_i > 1 %>
+  <nav class="no-print flex items-center justify-between px-6 py-3 border-t border-gray-100 text-sm" aria-label="Paginazione">
+    <% if pagina_corrente > 1 %>
+      <%= link_to "← Precedente", request.query_parameters.merge(pagina: pagina_corrente - 1), class: "text-blue-600 hover:underline" %>
+    <% else %>
+      <span></span>
+    <% end %>
+    <span class="text-gray-500">Pagina <%= pagina_corrente %> di <%= @totale_pagine %></span>
+    <% if pagina_corrente < @totale_pagine %>
+      <%= link_to "Successiva →", request.query_parameters.merge(pagina: pagina_corrente + 1), class: "text-blue-600 hover:underline" %>
+    <% else %>
+      <span></span>
+    <% end %>
+  </nav>
+<% end %>

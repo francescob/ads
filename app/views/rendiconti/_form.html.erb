@@ -1,0 +1,41 @@
+<%= form_with model: [@beneficiario, @procedimento, rendiconto], class: "space-y-6" do |f| %>
+  <%= render "shared/errors", record: rendiconto %>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :anno, "Anno", class: "form-label" %>
+        <%= f.number_field :anno, class: "form-input" %>
+      </div>
+      <div>
+        <%= f.label :stato, "Stato", class: "form-label" %>
+        <%= f.select :stato, Rendiconto::STATI.map { |s| [s.capitalize, s] }, { prompt: "Seleziona stato" }, class: "form-input" %>
+      </div>
+      <div>
+        <%= f.label :importo_entrate, "Importo Entrate (€)", class: "form-label" %>
+        <%= f.number_field :importo_entrate, step: 0.01, class: "form-input" %>
+      </div>
+      <div>
+        <%= f.label :importo_uscite, "Importo Uscite (€)", class: "form-label" %>
+        <%= f.number_field :importo_uscite, step: 0.01, class: "form-input" %>
+      </div>
+      <div>
+        <%= f.label :data_presentazione, "Data Presentazione", class: "form-label" %>
+        <%= f.date_field :data_presentazione, class: "form-input" %>
+      </div>
+      <div>
+        <%= f.label :data_approvazione, "Data Approvazione", class: "form-label" %>
+        <%= f.date_field :data_approvazione, class: "form-input" %>
+      </div>
+    </div>
+    <div>
+      <%= f.label :note, "Note", class: "form-label" %>
+      <%= f.text_area :note, rows: 3, class: "form-input" %>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <%= link_to "Annulla", beneficiario_procedimento_path(@beneficiario, @procedimento), class: "btn-secondary" %>
+    <%= f.submit rendiconto.new_record? ? "Crea Rendiconto" : "Salva Modifiche", class: "btn-primary" %>
+  </div>
+<% end %>

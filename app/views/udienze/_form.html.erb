@@ -1,0 +1,33 @@
+<%= form_with model: [@beneficiario, @procedimento, udienza], class: "space-y-6" do |f| %>
+  <%= render "shared/errors", record: udienza %>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :data_udienza, "Data e Ora Udienza *", class: "form-label" %>
+        <%= f.datetime_local_field :data_udienza, class: "form-input" %>
+      </div>
+      <div>
+        <%= f.label :tipo, "Tipo", class: "form-label" %>
+        <%= f.select :tipo, Udienza::TIPI, { prompt: "Seleziona tipo" }, class: "form-input" %>
+      </div>
+      <div class="sm:col-span-2">
+        <%= f.label :luogo, "Luogo", class: "form-label" %>
+        <%= f.text_field :luogo, class: "form-input" %>
+      </div>
+    </div>
+    <div>
+      <%= f.label :note, "Note", class: "form-label" %>
+      <%= f.text_area :note, rows: 3, class: "form-input" %>
+    </div>
+    <div>
+      <%= f.label :esito, "Esito", class: "form-label" %>
+      <%= f.text_area :esito, rows: 3, class: "form-input" %>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <%= link_to "Annulla", beneficiario_procedimento_path(@beneficiario, @procedimento), class: "btn-secondary" %>
+    <%= f.submit udienza.new_record? ? "Crea Udienza" : "Salva Modifiche", class: "btn-primary" %>
+  </div>
+<% end %>

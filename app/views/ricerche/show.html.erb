@@ -1,0 +1,36 @@
+<% content_for :title, "Ricerca - ADS" %>
+<div class="space-y-6">
+  <h1 class="text-3xl font-bold text-gray-900">Ricerca</h1>
+  <%= form_with url: ricerca_path, method: :get, class: "flex gap-2" do |f| %>
+    <%= f.search_field :q, value: @q, autofocus: true, placeholder: "Nome, codice fiscale, R.G., documento, istanza...", class: "form-input flex-1" %>
+    <%= f.submit "Cerca", name: nil, class: "btn-primary" %>
+  <% end %>
+
+  <% if @q.length < 2 %>
+    <p class="text-gray-500 text-sm">Inserisci almeno 2 caratteri.</p>
+  <% else %>
+    <% risultati = {
+         "Beneficiari" => @beneficiari.map { |b| [ b.nome_completo, b.codice_fiscale, beneficiario_path(b) ] },
+         "Procedimenti" => @procedimenti.map { |p| [ "#{p.titolo} — #{p.beneficiario.nome_completo}", p.tribunale, beneficiario_procedimento_path(p.beneficiario, p) ] },
+         "Contatti" => @contatti.map { |c| [ c.nome, "#{etichetta(c.tipo)} di #{c.beneficiario.nome_completo}", beneficiario_path(c.beneficiario) ] },
+         "Documenti" => @documenti.map { |d| [ d.titolo, d.procedimento.beneficiario.nome_completo, beneficiario_procedimento_path(d.procedimento.beneficiario, d.procedimento) ] },
+         "Istanze" => @istanze.map { |i| [ i.oggetto, "#{etichetta(i.stato)} — #{i.procedimento.beneficiario.nome_completo}", beneficiario_procedimento_path(i.procedimento.beneficiario, i.procedimento) ] }
+       }.reject { |_, v| v.empty? } %>
+    <% if risultati.empty? %>
+      <p class="text-gray-500">Nessun risultato per “<%= @q %>”.</p>
+    <% end %>
+    <% risultati.each do |gruppo, elementi| %>
+      <div class="card">
+        <div class="card-header"><h2 class="text-lg font-semibold text-gray-900"><%= gruppo %></h2></div>
+        <div class="divide-y divide-gray-100">
+          <% elementi.each do |titolo, sotto, path| %>
+            <%= link_to path, class: "block px-6 py-3 hover:bg-gray-50" do %>
+              <p class="text-sm font-medium text-blue-700"><%= titolo %></p>
+              <% if sotto.present? %><p class="text-xs text-gray-500"><%= sotto %></p><% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

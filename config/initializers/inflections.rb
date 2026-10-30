@@ -1,0 +1,15 @@
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.irregular "attivita", "attivita"
+  inflect.irregular "beneficiario", "beneficiari"
+  inflect.irregular "procedimento", "procedimenti"
+  inflect.irregular "udienza", "udienze"
+  inflect.irregular "scadenza", "scadenze"
+  inflect.irregular "rendiconto", "rendiconti"
+  inflect.irregular "documento", "documenti"
+  inflect.irregular "contatto", "contatti"
+  inflect.irregular "istanza", "istanze"
+  inflect.irregular "conto", "conti"
+  inflect.irregular "movimento", "movimenti"
+  inflect.irregular "modifica", "modifiche"
+  inflect.irregular "ricerca", "ricerche"
+end

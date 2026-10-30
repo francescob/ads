@@ -1,0 +1,41 @@
+<% content_for :title, "Registro modifiche - ADS" %>
+<div class="space-y-6">
+  <h1 class="text-3xl font-bold text-gray-900">Registro modifiche<% if @beneficiario %> — <%= @beneficiario.nome_completo %><% end %></h1>
+
+  <%= form_with url: modifiche_path, method: :get, class: "flex flex-wrap gap-2" do |f| %>
+    <%= f.hidden_field :beneficiario_id, value: params[:beneficiario_id] if params[:beneficiario_id].present? %>
+    <%= f.select :user_id, options_from_collection_for_select(User.order(:nome), :id, :nome, params[:user_id]), { include_blank: "Tutti gli utenti" }, class: "form-input w-auto" %>
+    <%= f.select :tipo, options_for_select(Modifica.distinct.order(:record_type).pluck(:record_type).map { |t| [ t.constantize.model_name.human, t ] }, params[:tipo]), { include_blank: "Tutti i tipi" }, class: "form-input w-auto" %>
+    <%= f.submit "Filtra", name: nil, class: "btn-secondary" %>
+  <% end %>
+
+  <div class="card">
+    <% if @modifiche.empty? %>
+      <p class="px-6 py-12 text-center text-gray-500">Nessuna modifica registrata.</p>
+    <% else %>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr><th class="th">Quando</th><th class="th">Utente</th><th class="th">Azione</th><th class="th">Elemento</th><th class="th">Dettagli</th></tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% @modifiche.each do |m| %>
+            <tr class="align-top">
+              <td class="td whitespace-nowrap"><%= data_it(m.created_at) %></td>
+              <td class="td"><%= m.user&.nome || "Sistema" %></td>
+              <td class="td"><%= Modifica::ETICHETTE_AZIONI[m.azione] %></td>
+              <td class="td"><span class="text-gray-500"><%= m.record_type.constantize.model_name.human %>:</span> <%= m.descrizione_record %></td>
+              <td class="td text-xs">
+                <% if m.azione == "update" %>
+                  <% m.cambiamenti.each do |campo, (prima, dopo)| %>
+                    <div><span class="font-medium"><%= m.record_type.constantize.human_attribute_name(campo) %></span>: <span class="line-through text-gray-400"><%= prima.to_s.truncate(60) %></span> → <%= dopo.to_s.truncate(60) %></div>
+                  <% end %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+    <%= render "shared/paginazione" %>
+  </div>
+</div>

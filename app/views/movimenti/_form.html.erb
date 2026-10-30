@@ -1,0 +1,36 @@
+<%= form_with model: [ @beneficiario, @conto, movimento ], class: "space-y-6" do |f| %>
+  <%= render "shared/errors", record: movimento %>
+  <div class="card p-6 space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :verso, "Tipo *", class: "form-label" %>
+        <%= f.select :verso, opzioni(Movimento::VERSI), {}, class: "form-input" %>
+      </div>
+      <div>
+        <%= f.label :data, "Data *", class: "form-label" %>
+        <%= f.date_field :data, class: "form-input" %>
+      </div>
+      <div class="sm:col-span-2">
+        <%= f.label :descrizione, "Descrizione *", class: "form-label" %>
+        <%= f.text_field :descrizione, class: "form-input" %>
+      </div>
+      <div>
+        <%= f.label :importo, "Importo (€) *", class: "form-label" %>
+        <%= f.number_field :importo, step: 0.01, min: 0.01, class: "form-input" %>
+      </div>
+      <div>
+        <%= f.label :categoria, "Categoria", class: "form-label" %>
+        <%= f.select :categoria, { "Entrate" => opzioni(Movimento::CATEGORIE_ENTRATA), "Uscite" => opzioni(Movimento::CATEGORIE_USCITA) },
+              { include_blank: "—" }, class: "form-input" %>
+      </div>
+    </div>
+    <div>
+      <%= f.label :note, "Note", class: "form-label" %>
+      <%= f.text_area :note, rows: 2, class: "form-input" %>
+    </div>
+  </div>
+  <div class="flex justify-end space-x-3">
+    <%= link_to "Annulla", beneficiario_conto_path(@beneficiario, @conto), class: "btn-secondary" %>
+    <%= f.submit movimento.new_record? ? "Registra" : "Salva Modifiche", class: "btn-primary" %>
+  </div>
+<% end %>
