@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+@layer components {
+  .card { @apply bg-white rounded-xl shadow-sm border border-gray-200; }
+  .card-header { @apply px-6 py-4 border-b border-gray-100 flex justify-between items-center; }
+  .form-label { @apply block text-sm font-medium text-gray-700 mb-1; }
+  .form-input { @apply w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500; }
+  .btn-primary { @apply bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium cursor-pointer; }
+  .btn-secondary { @apply bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium cursor-pointer; }
+  .link-edit { @apply text-yellow-600 text-xs hover:underline; }
+  .link-delete { @apply text-red-600 text-xs bg-transparent border-none cursor-pointer; }
+  .th { @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase; }
+  .td { @apply px-6 py-4 text-sm text-gray-700; }
+}
+
+@media print {
+  .no-print { display: none !important; }
+}

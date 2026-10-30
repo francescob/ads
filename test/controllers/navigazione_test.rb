@@ -2,6 +2,7 @@ require "test_helper"
 
 class NavigazioneTest < ActionDispatch::IntegrationTest
   setup do
+    accedi
     @procedimento = crea_procedimento
     @beneficiario = @procedimento.beneficiario
     @procedimento.scadenze.create!(titolo: "Rendiconto annuale", data_scadenza: 5.days.from_now.to_date)

@@ -1,0 +1,11 @@
+<%= form_with url: session_path, class: "card p-6 space-y-4" do |f| %>
+  <div>
+    <%= f.label :email_address, "Email", class: "form-label" %>
+    <%= f.email_field :email_address, required: true, autofocus: true, autocomplete: "username", value: params[:email_address], class: "form-input" %>
+  </div>
+  <div>
+    <%= f.label :password, "Password", class: "form-label" %>
+    <%= f.password_field :password, required: true, autocomplete: "current-password", class: "form-input" %>
+  </div>
+  <%= f.submit "Accedi", class: "btn-primary w-full" %>
+<% end %>

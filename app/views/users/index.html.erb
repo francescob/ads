@@ -1,0 +1,25 @@
+<% content_for :title, "Utenti - ADS" %>
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-gray-900">Utenti</h1>
+    <%= link_to "+ Nuovo Utente", new_user_path, class: "btn-primary" %>
+  </div>
+  <div class="card">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr><th class="th">Nome</th><th class="th">Email</th><th class="th">Ruolo</th><th class="th">Stato</th><th class="th"></th></tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% @users.each do |u| %>
+          <tr>
+            <td class="td font-medium text-gray-900"><%= u.nome %></td>
+            <td class="td"><%= u.email_address %></td>
+            <td class="td"><%= u.ruolo.capitalize %></td>
+            <td class="td"><%= u.attivo? ? "Attivo" : "Disattivato" %></td>
+            <td class="td text-right"><%= link_to "Modifica", edit_user_path(u), class: "link-edit" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

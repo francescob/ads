@@ -1,5 +1,12 @@
 puts "Creazione dati di esempio..."
 
+admin_password = ENV.fetch("ADMIN_PASSWORD", "cambiami-subito")
+User.find_or_create_by!(email_address: ENV.fetch("ADMIN_EMAIL", "admin@example.com")) do |u|
+  u.nome = "Amministratore"
+  u.ruolo = "admin"
+  u.password = admin_password
+end
+
 # Beneficiari
 mario = Beneficiario.create!(
   nome: "Mario",

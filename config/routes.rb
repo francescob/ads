@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   root "dashboard#index"
 
+  resource :session, only: %i[new create destroy]
+  resource :password, only: %i[edit update]
+  resources :users, only: %i[index new create edit update]
+
   resources :beneficiari do
     resources :procedimenti, except: :index do
       resources :udienze, :scadenze, :rendiconti, :attivita, only: %i[new create edit update destroy]

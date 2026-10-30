@@ -10,5 +10,18 @@ module ActiveSupport
       beneficiario = Beneficiario.create!(nome: "Mario", cognome: "Rossi")
       beneficiario.procedimenti.create!(numero_rg: "123/2026", **attrs)
     end
+
+    def crea_utente(ruolo: "operatore", email: "#{ruolo}@example.com")
+      User.create!(nome: ruolo.capitalize, email_address: email, password: "password-sicura", ruolo: ruolo)
+    end
+  end
+end
+
+module ActionDispatch
+  class IntegrationTest
+    def accedi(user = crea_utente)
+      post session_path, params: { email_address: user.email_address, password: "password-sicura" }
+      user
+    end
   end
 end

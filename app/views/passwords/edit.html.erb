@@ -1,0 +1,19 @@
+<% content_for :title, "Cambia password - ADS" %>
+<div class="max-w-md">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">Cambia password</h1>
+  <%= form_with url: password_path, method: :patch, class: "card p-6 space-y-4" do |f| %>
+    <div>
+      <%= f.label :password_attuale, "Password attuale", class: "form-label" %>
+      <%= f.password_field :password_attuale, required: true, autocomplete: "current-password", class: "form-input" %>
+    </div>
+    <div>
+      <%= f.label :password, "Nuova password (min. 10 caratteri)", class: "form-label" %>
+      <%= f.password_field :password, required: true, autocomplete: "new-password", class: "form-input" %>
+    </div>
+    <div>
+      <%= f.label :password_confirmation, "Conferma nuova password", class: "form-label" %>
+      <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password", class: "form-input" %>
+    </div>
+    <%= f.submit "Aggiorna password", class: "btn-primary" %>
+  <% end %>
+</div>
