@@ -12,7 +12,7 @@
     <%= f.submit "Cerca", name: nil, class: "bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium cursor-pointer" %>
   <% end %>
 
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+  <div class="card">
     <% if @beneficiari.empty? && params[:q].present? %>
       <p class="px-6 py-12 text-center text-gray-500">Nessun beneficiario corrisponde a "<%= params[:q] %>".</p>
     <% elsif @beneficiari.empty? %>

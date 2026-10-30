@@ -55,8 +55,8 @@
   </div>
 
   <!-- Udienze -->
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+  <div class="card">
+    <div class="card-header">
       <h2 class="text-lg font-semibold text-gray-900">Udienze</h2>
       <%= link_to "+ Nuova", new_beneficiario_procedimento_udienza_path(@beneficiario, @procedimento), class: "text-blue-600 text-sm hover:underline" %>
     </div>
@@ -72,8 +72,8 @@
             </div>
             <div class="flex items-center space-x-4">
               <span class="text-sm text-blue-600"><%= data_it(u.data_udienza) %></span>
-              <%= link_to "Modifica", edit_beneficiario_procedimento_udienza_path(@beneficiario, @procedimento, u), class: "text-yellow-600 text-xs hover:underline" %>
-              <%= button_to "Elimina", beneficiario_procedimento_udienza_path(@beneficiario, @procedimento, u), method: :delete, data: { turbo_confirm: "Eliminare questa udienza?" }, class: "text-red-600 text-xs bg-transparent border-none cursor-pointer" %>
+              <%= link_to "Modifica", edit_beneficiario_procedimento_udienza_path(@beneficiario, @procedimento, u), class: "link-edit" %>
+              <%= button_to "Elimina", beneficiario_procedimento_udienza_path(@beneficiario, @procedimento, u), method: :delete, data: { turbo_confirm: "Eliminare questa udienza?" }, class: "link-delete" %>
             </div>
           </div>
         <% end %>
@@ -82,8 +82,8 @@
   </div>
 
   <!-- Scadenze -->
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+  <div class="card">
+    <div class="card-header">
       <h2 class="text-lg font-semibold text-gray-900">Scadenze</h2>
       <%= link_to "+ Nuova", new_beneficiario_procedimento_scadenza_path(@beneficiario, @procedimento), class: "text-blue-600 text-sm hover:underline" %>
     </div>
@@ -110,8 +110,8 @@
               <span class="text-sm <%= s.completata ? 'text-gray-400' : s.scaduta? ? 'text-red-600 font-medium' : 'text-yellow-600' %>">
                 <%= data_it(s.data_scadenza) %>
               </span>
-              <%= link_to "Modifica", edit_beneficiario_procedimento_scadenza_path(@beneficiario, @procedimento, s), class: "text-yellow-600 text-xs hover:underline" %>
-              <%= button_to "Elimina", beneficiario_procedimento_scadenza_path(@beneficiario, @procedimento, s), method: :delete, data: { turbo_confirm: "Eliminare questa scadenza?" }, class: "text-red-600 text-xs bg-transparent border-none cursor-pointer" %>
+              <%= link_to "Modifica", edit_beneficiario_procedimento_scadenza_path(@beneficiario, @procedimento, s), class: "link-edit" %>
+              <%= button_to "Elimina", beneficiario_procedimento_scadenza_path(@beneficiario, @procedimento, s), method: :delete, data: { turbo_confirm: "Eliminare questa scadenza?" }, class: "link-delete" %>
             </div>
           </div>
         <% end %>
@@ -120,8 +120,8 @@
   </div>
 
   <!-- Rendiconti -->
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+  <div class="card">
+    <div class="card-header">
       <h2 class="text-lg font-semibold text-gray-900">Rendiconti</h2>
       <%= link_to "+ Nuovo", new_beneficiario_procedimento_rendiconto_path(@beneficiario, @procedimento), class: "text-blue-600 text-sm hover:underline" %>
     </div>
@@ -140,8 +140,8 @@
                 <%= r.stato == 'approvato' ? 'bg-green-100 text-green-800' : r.stato == 'respinto' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-700' %>">
                 <%= r.stato&.capitalize || "—" %>
               </span>
-              <%= link_to "Modifica", edit_beneficiario_procedimento_rendiconto_path(@beneficiario, @procedimento, r), class: "text-yellow-600 text-xs hover:underline" %>
-              <%= button_to "Elimina", beneficiario_procedimento_rendiconto_path(@beneficiario, @procedimento, r), method: :delete, data: { turbo_confirm: "Eliminare questo rendiconto?" }, class: "text-red-600 text-xs bg-transparent border-none cursor-pointer" %>
+              <%= link_to "Modifica", edit_beneficiario_procedimento_rendiconto_path(@beneficiario, @procedimento, r), class: "link-edit" %>
+              <%= button_to "Elimina", beneficiario_procedimento_rendiconto_path(@beneficiario, @procedimento, r), method: :delete, data: { turbo_confirm: "Eliminare questo rendiconto?" }, class: "link-delete" %>
             </div>
           </div>
         <% end %>
@@ -150,8 +150,8 @@
   </div>
 
   <!-- Attività -->
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+  <div class="card">
+    <div class="card-header">
       <h2 class="text-lg font-semibold text-gray-900">Attività</h2>
       <%= link_to "+ Nuova", new_beneficiario_procedimento_attivita_path(@beneficiario, @procedimento), class: "text-blue-600 text-sm hover:underline" %>
     </div>
@@ -166,8 +166,8 @@
               <p class="text-xs text-gray-500"><%= a.tipo&.capitalize %> <% if a.data_attivita %>- <%= data_it(a.data_attivita.to_date) %><% end %></p>
             </div>
             <div class="flex items-center space-x-4">
-              <%= link_to "Modifica", edit_beneficiario_procedimento_attivita_path(@beneficiario, @procedimento, a), class: "text-yellow-600 text-xs hover:underline" %>
-              <%= button_to "Elimina", beneficiario_procedimento_attivita_path(@beneficiario, @procedimento, a), method: :delete, data: { turbo_confirm: "Eliminare questa attività?" }, class: "text-red-600 text-xs bg-transparent border-none cursor-pointer" %>
+              <%= link_to "Modifica", edit_beneficiario_procedimento_attivita_path(@beneficiario, @procedimento, a), class: "link-edit" %>
+              <%= button_to "Elimina", beneficiario_procedimento_attivita_path(@beneficiario, @procedimento, a), method: :delete, data: { turbo_confirm: "Eliminare questa attività?" }, class: "link-delete" %>
             </div>
           </div>
         <% end %>

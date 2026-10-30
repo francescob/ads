@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_10_30_120000) do
+ActiveRecord::Schema[7.2].define(version: 2026_10_30_130000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -178,6 +178,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_30_120000) do
     t.text "note"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "ricorrenza"
     t.index ["completata", "data_scadenza"], name: "index_scadenze_on_completata_and_data_scadenza"
     t.index ["procedimento_id"], name: "index_scadenze_on_procedimento_id"
   end
@@ -212,6 +213,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_30_120000) do
     t.boolean "attivo", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "calendar_token"
+    t.boolean "riceve_promemoria", default: true, null: false
+    t.index ["calendar_token"], name: "index_users_on_calendar_token", unique: true
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 

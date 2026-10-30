@@ -1,0 +1,16 @@
+Ciao <%= @user.nome %>,
+<% { "SCADENZE SCADUTE" => @agenda.scadute, "SCADENZE NEI PROSSIMI #{@agenda.giorni} GIORNI" => @agenda.scadenze_prossime }.each do |titolo, scadenze| %>
+<% next if scadenze.empty? %>
+<%= titolo %>
+<% scadenze.each do |s| %>
+- <%= l(s.data_scadenza) %> <%= s.titolo %> (<%= s.procedimento.beneficiario.nome_completo %>)
+<% end %>
+<% end %>
+<% if @agenda.udienze_prossime.any? %>
+UDIENZE
+<% @agenda.udienze_prossime.each do |u| %>
+- <%= l(u.data_udienza) %> <%= u.tipo&.humanize || "Udienza" %> <%= u.luogo %> (<%= u.procedimento.beneficiario.nome_completo %>)
+<% end %>
+<% end %>
+
+<%= root_url %>

@@ -15,7 +15,17 @@ class Procedimento < ApplicationRecord
 
   scope :attivi, -> { where(stato: "attivo") }
 
+  after_create_commit :crea_scadenza_rendiconto, if: :data_apertura?
+
   def titolo
     numero_rg.present? ? "RG #{numero_rg}" : "##{id}"
+  end
+
+  private
+
+  # Il rendiconto va depositato ogni anno: lo mettiamo subito in scadenzario.
+  def crea_scadenza_rendiconto
+    scadenze.create!(titolo: "Deposito rendiconto annuale", tipo: "rendiconto", ricorrenza: "annuale",
+                     data_scadenza: data_apertura.next_year)
   end
 end

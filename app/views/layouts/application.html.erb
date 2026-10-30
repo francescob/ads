@@ -36,7 +36,7 @@
             <% end %>
             <% if Current.user %>
               <span class="border-l border-blue-700 h-6"></span>
-              <%= link_to Current.user.nome, edit_password_path, title: "Cambia password", class: "text-blue-200 hover:text-white text-sm" %>
+              <%= link_to Current.user.nome, edit_password_path, title: "Profilo", class: "text-blue-200 hover:text-white text-sm" %>
               <%= button_to "Esci", session_path, method: :delete, class: "text-blue-100 hover:text-white text-sm bg-transparent border-none cursor-pointer" %>
             <% end %>
           </div>
