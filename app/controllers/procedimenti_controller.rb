@@ -51,6 +51,6 @@ class ProcedimentiController < ApplicationController
   end
 
   def procedimento_params
-    params.require(:procedimento).permit(:numero_rg, :tribunale, :giudice_tutelare, :data_apertura, :data_chiusura, :stato, :note)
+    params.expect(procedimento: [ :numero_rg, :tribunale, :giudice_tutelare, :data_apertura, :data_chiusura, :stato, :note ])
   end
 end

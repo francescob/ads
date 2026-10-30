@@ -40,6 +40,6 @@ class IstanzeController < ApplicationController
   end
 
   def istanza_params
-    params.require(:istanza).permit(:oggetto, :tipo, :stato, :data_deposito, :data_decisione, :importo, :esito, :note)
+    params.expect(istanza: [ :oggetto, :tipo, :stato, :data_deposito, :data_decisione, :importo, :esito, :note ])
   end
 end

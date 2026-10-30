@@ -47,6 +47,6 @@ class MovimentiController < ApplicationController
   end
 
   def movimento_params
-    params.require(:movimento).permit(:data, :descrizione, :verso, :importo, :categoria, :note)
+    params.expect(movimento: [ :data, :descrizione, :verso, :importo, :categoria, :note ])
   end
 end

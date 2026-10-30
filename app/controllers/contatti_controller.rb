@@ -42,6 +42,6 @@ class ContattiController < ApplicationController
   end
 
   def contatto_params
-    params.require(:contatto).permit(:nome, :tipo, :ruolo, :telefono, :email, :indirizzo, :note)
+    params.expect(contatto: [ :nome, :tipo, :ruolo, :telefono, :email, :indirizzo, :note ])
   end
 end

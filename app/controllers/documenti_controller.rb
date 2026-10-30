@@ -50,6 +50,6 @@ class DocumentiController < ApplicationController
   end
 
   def documento_params
-    params.require(:documento).permit(:titolo, :categoria, :data_documento, :note, :file)
+    params.expect(documento: [ :titolo, :categoria, :data_documento, :note, :file ])
   end
 end

@@ -25,9 +25,10 @@ class Procedimento < ApplicationRecord
 
   private
 
-  # Il rendiconto va depositato ogni anno: lo mettiamo subito in scadenzario.
+  # Il rendiconto va depositato ogni anno: mettiamo in scadenzario il prossimo anniversario.
   def crea_scadenza_rendiconto
-    scadenze.create!(titolo: "Deposito rendiconto annuale", tipo: "rendiconto", ricorrenza: "annuale",
-                     data_scadenza: data_apertura.next_year)
+    data = data_apertura.next_year
+    data = data.next_year while data < Date.current
+    scadenze.create!(titolo: "Deposito rendiconto annuale", tipo: "rendiconto", ricorrenza: "annuale", data_scadenza: data)
   end
 end

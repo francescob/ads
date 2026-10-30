@@ -53,6 +53,6 @@ class ScadenzeController < ApplicationController
   end
 
   def scadenza_params
-    params.require(:scadenza).permit(:titolo, :descrizione, :data_scadenza, :completata, :tipo, :ricorrenza, :note)
+    params.expect(scadenza: [ :titolo, :descrizione, :data_scadenza, :completata, :tipo, :ricorrenza, :note ])
   end
 end

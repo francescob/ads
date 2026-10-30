@@ -49,4 +49,9 @@ class NavigazioneTest < ActionDispatch::IntegrationTest
     delete beneficiario_procedimento_path(@beneficiario, @procedimento)
     assert_redirected_to beneficiario_path(@beneficiario)
   end
+
+  test "parametri malformati danno 400, non 500" do
+    post beneficiari_path, params: { beneficiario: "stringa" }
+    assert_response :bad_request
+  end
 end

@@ -40,6 +40,6 @@ class AttivitaController < ApplicationController
   end
 
   def attivita_params
-    params.require(:attivita).permit(:titolo, :descrizione, :data_attivita, :tipo, :completata, :note)
+    params.expect(attivita: [ :titolo, :descrizione, :data_attivita, :tipo, :completata, :note ])
   end
 end

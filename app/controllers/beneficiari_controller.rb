@@ -49,6 +49,6 @@ class BeneficiariController < ApplicationController
   end
 
   def beneficiario_params
-    params.require(:beneficiario).permit(:nome, :cognome, :codice_fiscale, :data_nascita, :luogo_nascita, :indirizzo, :telefono, :email, :note)
+    params.expect(beneficiario: [ :nome, :cognome, :codice_fiscale, :data_nascita, :luogo_nascita, :indirizzo, :telefono, :email, :note ])
   end
 end

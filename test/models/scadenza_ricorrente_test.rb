@@ -19,4 +19,11 @@ class ScadenzaRicorrenteTest < ActiveSupport::TestCase
     assert_equal Date.new(2027, 2, 10), scadenza.data_scadenza
     assert_equal "annuale", scadenza.ricorrenza
   end
+
+  test "per procedimenti aperti da anni la scadenza è il prossimo anniversario" do
+    travel_to Date.new(2026, 10, 30) do
+      procedimento = crea_procedimento(data_apertura: Date.new(2020, 3, 15))
+      assert_equal Date.new(2027, 3, 15), procedimento.scadenze.sole.data_scadenza
+    end
+  end
 end

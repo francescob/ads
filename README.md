@@ -1,6 +1,6 @@
 # ADS - Amministrazione di Sostegno
 
-A Ruby on Rails 7.2 application for managing Italian legal guardianship cases (*Amministrazione di Sostegno*).
+A Ruby on Rails 8.1 application for managing Italian legal guardianship cases (*Amministrazione di Sostegno*).
 
 ## Features
 
@@ -20,8 +20,8 @@ A Ruby on Rails 7.2 application for managing Italian legal guardianship cases (*
 
 ## Requirements
 
-- Ruby 3.3
-- Rails 7.2
+- Ruby 4.0
+- Rails 8.1
 - SQLite3
 
 ## Setup
@@ -49,7 +49,7 @@ bin/brakeman         # Security scan
 
 ## Tech Stack
 
-- Rails 7.2 with Hotwire (Turbo + Stimulus)
+- Rails 8.1 with Hotwire (Turbo + Stimulus), Propshaft
 - Tailwind CSS v4
 - SQLite3
 - Importmap

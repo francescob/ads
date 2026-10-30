@@ -57,6 +57,6 @@ class ContiController < ApplicationController
   end
 
   def conto_params
-    params.require(:conto).permit(:nome, :tipo, :istituto, :iban, :saldo_iniziale, :data_saldo_iniziale, :attivo, :note)
+    params.expect(conto: [ :nome, :tipo, :istituto, :iban, :saldo_iniziale, :data_saldo_iniziale, :attivo, :note ])
   end
 end

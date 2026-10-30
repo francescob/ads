@@ -47,6 +47,6 @@ class UdienzeController < ApplicationController
   end
 
   def udienza_params
-    params.require(:udienza).permit(:data_udienza, :tipo, :luogo, :note, :esito)
+    params.expect(udienza: [ :data_udienza, :tipo, :luogo, :note, :esito ])
   end
 end

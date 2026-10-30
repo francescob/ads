@@ -60,6 +60,6 @@ class RendicontiController < ApplicationController
   end
 
   def rendiconto_params
-    params.require(:rendiconto).permit(:anno, :data_presentazione, :data_approvazione, :stato, :note, :importo_entrate, :importo_uscite)
+    params.expect(rendiconto: [ :anno, :data_presentazione, :data_approvazione, :stato, :note, :importo_entrate, :importo_uscite ])
   end
 end
