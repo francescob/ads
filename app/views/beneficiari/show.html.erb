@@ -28,7 +28,7 @@
       <% if @beneficiario.data_nascita %>
         <div>
           <dt class="text-xs font-medium text-gray-500 uppercase">Data di Nascita</dt>
-          <dd class="mt-1 text-sm text-gray-900"><%= @beneficiario.data_nascita.strftime("%d/%m/%Y") %></dd>
+          <dd class="mt-1 text-sm text-gray-900"><%= data_it(@beneficiario.data_nascita) %></dd>
         </div>
       <% end %>
       <% if @beneficiario.luogo_nascita.present? %>
@@ -82,7 +82,7 @@
                 <% if p.tribunale.present? %> - <%= p.tribunale %><% end %>
               </p>
               <p class="text-xs text-gray-500 mt-0.5">
-                Aperto il <%= p.data_apertura&.strftime("%d/%m/%Y") || "—" %>
+                Aperto il <%= data_it(p.data_apertura) %>
               </p>
             </div>
             <div class="flex items-center space-x-3">

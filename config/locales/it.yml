@@ -1,0 +1,34 @@
+it:
+  date:
+    formats:
+      default: "%d/%m/%Y"
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+  activerecord:
+    models:
+      beneficiario: Beneficiario
+      procedimento: Procedimento
+      udienza: Udienza
+      scadenza: Scadenza
+      rendiconto: Rendiconto
+      attivita: Attività
+    attributes:
+      beneficiario:
+        codice_fiscale: Codice fiscale
+        data_nascita: Data di nascita
+      procedimento:
+        numero_rg: Numero R.G.
+        data_apertura: Data apertura
+        data_chiusura: Data chiusura
+      udienza:
+        data_udienza: Data udienza
+      scadenza:
+        data_scadenza: Data scadenza
+      rendiconto:
+        data_presentazione: Data presentazione
+        data_approvazione: Data approvazione
+        importo_entrate: Entrate
+        importo_uscite: Uscite
+      attivita:
+        data_attivita: Data attività

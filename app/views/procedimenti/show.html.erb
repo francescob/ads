@@ -39,11 +39,11 @@
       </div>
       <div>
         <dt class="text-xs font-medium text-gray-500 uppercase">Data Apertura</dt>
-        <dd class="mt-1 text-sm text-gray-900"><%= @procedimento.data_apertura&.strftime("%d/%m/%Y") || "—" %></dd>
+        <dd class="mt-1 text-sm text-gray-900"><%= data_it(@procedimento.data_apertura) %></dd>
       </div>
       <div>
         <dt class="text-xs font-medium text-gray-500 uppercase">Data Chiusura</dt>
-        <dd class="mt-1 text-sm text-gray-900"><%= @procedimento.data_chiusura&.strftime("%d/%m/%Y") || "—" %></dd>
+        <dd class="mt-1 text-sm text-gray-900"><%= data_it(@procedimento.data_chiusura) %></dd>
       </div>
     </dl>
     <% if @procedimento.note.present? %>
@@ -71,7 +71,7 @@
               <p class="text-xs text-gray-500"><%= u.luogo.presence || "" %></p>
             </div>
             <div class="flex items-center space-x-4">
-              <span class="text-sm text-blue-600"><%= u.data_udienza.strftime("%d/%m/%Y %H:%M") %></span>
+              <span class="text-sm text-blue-600"><%= data_it(u.data_udienza) %></span>
               <%= link_to "Modifica", edit_beneficiario_procedimento_udienza_path(@beneficiario, @procedimento, u), class: "text-yellow-600 text-xs hover:underline" %>
               <%= button_to "Elimina", beneficiario_procedimento_udienza_path(@beneficiario, @procedimento, u), method: :delete, data: { turbo_confirm: "Eliminare questa udienza?" }, class: "text-red-600 text-xs bg-transparent border-none cursor-pointer" %>
             </div>
@@ -107,8 +107,8 @@
               </div>
             </div>
             <div class="flex items-center space-x-4">
-              <span class="text-sm <%= s.completata ? 'text-gray-400' : s.data_scadenza < Date.current ? 'text-red-600 font-medium' : 'text-yellow-600' %>">
-                <%= s.data_scadenza.strftime("%d/%m/%Y") %>
+              <span class="text-sm <%= s.completata ? 'text-gray-400' : s.scaduta? ? 'text-red-600 font-medium' : 'text-yellow-600' %>">
+                <%= data_it(s.data_scadenza) %>
               </span>
               <%= link_to "Modifica", edit_beneficiario_procedimento_scadenza_path(@beneficiario, @procedimento, s), class: "text-yellow-600 text-xs hover:underline" %>
               <%= button_to "Elimina", beneficiario_procedimento_scadenza_path(@beneficiario, @procedimento, s), method: :delete, data: { turbo_confirm: "Eliminare questa scadenza?" }, class: "text-red-600 text-xs bg-transparent border-none cursor-pointer" %>
@@ -163,7 +163,7 @@
           <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50">
             <div>
               <p class="text-sm font-medium <%= a.completata ? 'line-through text-gray-400' : 'text-gray-900' %>"><%= a.titolo %></p>
-              <p class="text-xs text-gray-500"><%= a.tipo&.capitalize %> <%= a.data_attivita ? "- #{a.data_attivita.strftime('%d/%m/%Y')}" : "" %></p>
+              <p class="text-xs text-gray-500"><%= a.tipo&.capitalize %> <% if a.data_attivita %>- <%= data_it(a.data_attivita.to_date) %><% end %></p>
             </div>
             <div class="flex items-center space-x-4">
               <%= link_to "Modifica", edit_beneficiario_procedimento_attivita_path(@beneficiario, @procedimento, a), class: "text-yellow-600 text-xs hover:underline" %>

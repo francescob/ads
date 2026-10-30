@@ -71,7 +71,7 @@
                 </p>
               </div>
               <span class="text-sm font-medium <%= scadenza.data_scadenza < Date.current ? 'text-red-600' : 'text-yellow-600' %>">
-                <%= scadenza.data_scadenza.strftime("%d/%m/%Y") %>
+                <%= data_it(scadenza.data_scadenza) %>
               </span>
             </div>
           <% end %>
@@ -98,7 +98,7 @@
                 </p>
               </div>
               <span class="text-sm font-medium text-blue-600">
-                <%= udienza.data_udienza.strftime("%d/%m/%Y %H:%M") %>
+                <%= data_it(udienza.data_udienza) %>
               </span>
             </div>
           <% end %>

@@ -20,7 +20,7 @@
         <tbody class="divide-y divide-gray-200">
           <% @udienze.each do |u| %>
             <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 text-sm font-medium text-blue-900"><%= u.data_udienza.strftime("%d/%m/%Y %H:%M") %></td>
+              <td class="px-6 py-4 text-sm font-medium text-blue-900"><%= data_it(u.data_udienza) %></td>
               <td class="px-6 py-4 text-sm text-gray-600"><%= u.tipo&.capitalize || "—" %></td>
               <td class="px-6 py-4 text-sm text-gray-900"><%= u.procedimento.beneficiario.nome_completo %></td>
               <td class="px-6 py-4 text-sm text-gray-600"><%= u.luogo.presence || "—" %></td>

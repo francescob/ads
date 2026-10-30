@@ -6,8 +6,16 @@
     <%= link_to "+ Nuovo Beneficiario", new_beneficiario_path, class: "bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-800 font-medium text-sm" %>
   </div>
 
+  <%= form_with url: beneficiari_path, method: :get, class: "flex gap-2" do |f| %>
+    <%= f.search_field :q, value: params[:q], placeholder: "Cerca per nome, cognome o codice fiscale",
+          class: "flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    <%= f.submit "Cerca", name: nil, class: "bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium cursor-pointer" %>
+  <% end %>
+
   <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-    <% if @beneficiari.empty? %>
+    <% if @beneficiari.empty? && params[:q].present? %>
+      <p class="px-6 py-12 text-center text-gray-500">Nessun beneficiario corrisponde a "<%= params[:q] %>".</p>
+    <% elsif @beneficiari.empty? %>
       <div class="px-6 py-12 text-center">
         <span class="text-5xl">👤</span>
         <p class="mt-4 text-gray-500">Nessun beneficiario registrato.</p>
@@ -30,7 +38,7 @@
             <tr class="hover:bg-gray-50">
               <td class="px-6 py-4 whitespace-nowrap">
                 <p class="font-medium text-gray-900"><%= b.nome_completo %></p>
-                <% if b.data_nascita %><p class="text-xs text-gray-500">Nato il <%= b.data_nascita.strftime("%d/%m/%Y") %></p><% end %>
+                <% if b.data_nascita %><p class="text-xs text-gray-500">Nato il <%= data_it(b.data_nascita) %></p><% end %>
               </td>
               <td class="px-6 py-4 text-sm text-gray-600"><%= b.codice_fiscale.presence || "—" %></td>
               <td class="px-6 py-4 text-sm text-gray-600"><%= b.telefono.presence || "—" %></td>

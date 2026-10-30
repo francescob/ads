@@ -52,3 +52,5 @@ group :development do
   gem "web-console"
 end
 
+
+gem "rails-i18n", "~> 7.0"

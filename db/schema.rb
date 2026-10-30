@@ -10,16 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_18_123146) do
+ActiveRecord::Schema[7.2].define(version: 2026_10_30_090000) do
   create_table "attivita", force: :cascade do |t|
     t.integer "procedimento_id", null: false
     t.string "titolo"
     t.text "descrizione"
     t.datetime "data_attivita"
     t.string "tipo"
-    t.boolean "completata"
+    t.boolean "completata", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "note"
     t.index ["procedimento_id"], name: "index_attivita_on_procedimento_id"
   end
 
@@ -35,6 +36,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_18_123146) do
     t.text "note"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["codice_fiscale"], name: "index_beneficiari_on_codice_fiscale", unique: true, where: "codice_fiscale IS NOT NULL AND codice_fiscale <> ''"
+    t.index ["cognome", "nome"], name: "index_beneficiari_on_cognome_and_nome"
   end
 
   create_table "procedimenti", force: :cascade do |t|
@@ -44,11 +47,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_18_123146) do
     t.string "giudice_tutelare"
     t.date "data_apertura"
     t.date "data_chiusura"
-    t.string "stato"
+    t.string "stato", default: "attivo"
     t.text "note"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["beneficiario_id"], name: "index_procedimenti_on_beneficiario_id"
+    t.index ["stato"], name: "index_procedimenti_on_stato"
   end
 
   create_table "rendiconti", force: :cascade do |t|
@@ -56,12 +60,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_18_123146) do
     t.integer "anno"
     t.date "data_presentazione"
     t.date "data_approvazione"
-    t.string "stato"
+    t.string "stato", default: "bozza"
     t.text "note"
-    t.decimal "importo_entrate"
-    t.decimal "importo_uscite"
+    t.decimal "importo_entrate", precision: 12, scale: 2
+    t.decimal "importo_uscite", precision: 12, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["procedimento_id", "anno"], name: "index_rendiconti_on_procedimento_id_and_anno", unique: true
     t.index ["procedimento_id"], name: "index_rendiconti_on_procedimento_id"
   end
 
@@ -70,11 +75,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_18_123146) do
     t.string "titolo"
     t.text "descrizione"
     t.date "data_scadenza"
-    t.boolean "completata"
+    t.boolean "completata", default: false, null: false
     t.string "tipo"
     t.text "note"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["completata", "data_scadenza"], name: "index_scadenze_on_completata_and_data_scadenza"
     t.index ["procedimento_id"], name: "index_scadenze_on_procedimento_id"
   end
 
@@ -87,6 +93,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_18_123146) do
     t.text "esito"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["data_udienza"], name: "index_udienze_on_data_udienza"
     t.index ["procedimento_id"], name: "index_udienze_on_procedimento_id"
   end
 

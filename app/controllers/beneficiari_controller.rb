@@ -1,8 +1,8 @@
 class BeneficiariController < ApplicationController
-  before_action :set_beneficiario, only: [:show, :edit, :update, :destroy]
+  before_action :set_beneficiario, only: %i[show edit update destroy]
 
   def index
-    @beneficiari = Beneficiario.order(:cognome, :nome)
+    @beneficiari = Beneficiario.ordinati.cerca(params[:q])
   end
 
   def show

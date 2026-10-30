@@ -1,10 +1,17 @@
 class Scadenza < ApplicationRecord
-  belongs_to :procedimento
-  
-  validates :titolo, :data_scadenza, presence: true
-  
   TIPI = %w[rendiconto udienza adempimento altro].freeze
-  
-  scope :in_scadenza, -> { where(completata: false).where("data_scadenza <= ?", 30.days.from_now).order(:data_scadenza) }
-  scope :scadute, -> { where(completata: false).where("data_scadenza < ?", Date.current) }
+  GIORNI_PREAVVISO = 30
+
+  belongs_to :procedimento
+
+  validates :titolo, :data_scadenza, presence: true
+  validates :tipo, inclusion: { in: TIPI }, allow_blank: true
+
+  scope :aperte, -> { where(completata: false) }
+  scope :in_scadenza, -> { aperte.where(data_scadenza: ..GIORNI_PREAVVISO.days.from_now.to_date).order(:data_scadenza) }
+  scope :scadute, -> { aperte.where(data_scadenza: ...Date.current) }
+
+  def scaduta?
+    !completata? && data_scadenza.present? && data_scadenza < Date.current
+  end
 end

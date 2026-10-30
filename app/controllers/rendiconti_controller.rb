@@ -1,13 +1,8 @@
 class RendicontiController < ApplicationController
-  before_action :set_context
-  before_action :set_rendiconto, only: [:show, :edit, :update, :destroy]
+  include ProcedimentoScoped
 
-  def index
-    @rendiconti = @procedimento.rendiconti.order(anno: :desc)
-  end
-
-  def show
-  end
+  before_action :set_procedimento
+  before_action :set_rendiconto, only: %i[edit update destroy]
 
   def new
     @rendiconto = @procedimento.rendiconti.build
@@ -19,7 +14,7 @@ class RendicontiController < ApplicationController
   def create
     @rendiconto = @procedimento.rendiconti.build(rendiconto_params)
     if @rendiconto.save
-      redirect_to beneficiario_procedimento_path(@beneficiario, @procedimento), notice: "Rendiconto creato con successo."
+      redirect_to_procedimento "Rendiconto creato con successo."
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +22,7 @@ class RendicontiController < ApplicationController
 
   def update
     if @rendiconto.update(rendiconto_params)
-      redirect_to beneficiario_procedimento_path(@beneficiario, @procedimento), notice: "Rendiconto aggiornato con successo."
+      redirect_to_procedimento "Rendiconto aggiornato con successo."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -35,15 +30,10 @@ class RendicontiController < ApplicationController
 
   def destroy
     @rendiconto.destroy
-    redirect_to beneficiario_procedimento_path(@beneficiario, @procedimento), notice: "Rendiconto eliminato.", status: :see_other
+    redirect_to_procedimento "Rendiconto eliminato.", status: :see_other
   end
 
   private
-
-  def set_context
-    @beneficiario = Beneficiario.find(params[:beneficiario_id])
-    @procedimento = @beneficiario.procedimenti.find(params[:procedimento_id])
-  end
 
   def set_rendiconto
     @rendiconto = @procedimento.rendiconti.find(params[:id])

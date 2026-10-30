@@ -1,10 +1,6 @@
 class ProcedimentiController < ApplicationController
   before_action :set_beneficiario
-  before_action :set_procedimento, only: [:show, :edit, :update, :destroy]
-
-  def index
-    @procedimenti = @beneficiario.procedimenti.order(created_at: :desc)
-  end
+  before_action :set_procedimento, only: %i[show edit update destroy]
 
   def show
     @udienze = @procedimento.udienze.order(:data_udienza)
@@ -39,7 +35,7 @@ class ProcedimentiController < ApplicationController
 
   def destroy
     @procedimento.destroy
-    redirect_to beneficiario_procedimenti_path(@beneficiario), notice: "Procedimento eliminato.", status: :see_other
+    redirect_to @beneficiario, notice: "Procedimento eliminato.", status: :see_other
   end
 
   private

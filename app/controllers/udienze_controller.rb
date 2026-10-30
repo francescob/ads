@@ -1,12 +1,11 @@
 class UdienzeController < ApplicationController
-  before_action :set_context, except: [:index]
-  before_action :set_udienza, only: [:show, :edit, :update, :destroy]
+  include ProcedimentoScoped
+
+  before_action :set_procedimento, except: :index
+  before_action :set_udienza, only: %i[edit update destroy]
 
   def index
-    @udienze = Udienza.where("data_udienza >= ?", Time.now).order(:data_udienza).includes(procedimento: :beneficiario)
-  end
-
-  def show
+    @udienze = Udienza.future.includes(procedimento: :beneficiario)
   end
 
   def new
@@ -19,7 +18,7 @@ class UdienzeController < ApplicationController
   def create
     @udienza = @procedimento.udienze.build(udienza_params)
     if @udienza.save
-      redirect_to beneficiario_procedimento_path(@beneficiario, @procedimento), notice: "Udienza creata con successo."
+      redirect_to_procedimento "Udienza creata con successo."
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +26,7 @@ class UdienzeController < ApplicationController
 
   def update
     if @udienza.update(udienza_params)
-      redirect_to beneficiario_procedimento_path(@beneficiario, @procedimento), notice: "Udienza aggiornata con successo."
+      redirect_to_procedimento "Udienza aggiornata con successo."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -35,15 +34,10 @@ class UdienzeController < ApplicationController
 
   def destroy
     @udienza.destroy
-    redirect_to beneficiario_procedimento_path(@beneficiario, @procedimento), notice: "Udienza eliminata.", status: :see_other
+    redirect_to_procedimento "Udienza eliminata.", status: :see_other
   end
 
   private
-
-  def set_context
-    @beneficiario = Beneficiario.find(params[:beneficiario_id])
-    @procedimento = @beneficiario.procedimenti.find(params[:procedimento_id])
-  end
 
   def set_udienza
     @udienza = @procedimento.udienze.find(params[:id])

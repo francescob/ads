@@ -31,7 +31,13 @@ rails server
 
 ```bash
 bin/dev              # Starts server with Tailwind watcher
+bin/rails test       # Test suite
+bin/rubocop          # Lint
+bin/brakeman         # Security scan
 ```
+
+`config/master.key` is not versioned: generate your own with
+`EDITOR=true bin/rails credentials:edit` (or set `RAILS_MASTER_KEY`).
 
 ## Tech Stack
 

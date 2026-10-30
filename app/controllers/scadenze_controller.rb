@@ -1,12 +1,11 @@
 class ScadenzeController < ApplicationController
-  before_action :set_context, except: [:index]
-  before_action :set_scadenza, only: [:show, :edit, :update, :destroy]
+  include ProcedimentoScoped
+
+  before_action :set_procedimento, except: :index
+  before_action :set_scadenza, only: %i[edit update destroy]
 
   def index
     @scadenze = Scadenza.in_scadenza.includes(procedimento: :beneficiario)
-  end
-
-  def show
   end
 
   def new
@@ -19,7 +18,7 @@ class ScadenzeController < ApplicationController
   def create
     @scadenza = @procedimento.scadenze.build(scadenza_params)
     if @scadenza.save
-      redirect_to beneficiario_procedimento_path(@beneficiario, @procedimento), notice: "Scadenza creata con successo."
+      redirect_to_procedimento "Scadenza creata con successo."
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +26,7 @@ class ScadenzeController < ApplicationController
 
   def update
     if @scadenza.update(scadenza_params)
-      redirect_to beneficiario_procedimento_path(@beneficiario, @procedimento), notice: "Scadenza aggiornata con successo."
+      redirect_to_procedimento "Scadenza aggiornata con successo."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -35,15 +34,10 @@ class ScadenzeController < ApplicationController
 
   def destroy
     @scadenza.destroy
-    redirect_to beneficiario_procedimento_path(@beneficiario, @procedimento), notice: "Scadenza eliminata.", status: :see_other
+    redirect_to_procedimento "Scadenza eliminata.", status: :see_other
   end
 
   private
-
-  def set_context
-    @beneficiario = Beneficiario.find(params[:beneficiario_id])
-    @procedimento = @beneficiario.procedimenti.find(params[:procedimento_id])
-  end
 
   def set_scadenza
     @scadenza = @procedimento.scadenze.find(params[:id])
