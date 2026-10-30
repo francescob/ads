@@ -1,11 +1,16 @@
 <% content_for :title, "Scadenze - ADS" %>
 
 <div class="space-y-6">
-  <h1 class="text-3xl font-bold text-gray-900">Scadenze Imminenti</h1>
+  <h1 class="text-3xl font-bold text-gray-900">Scadenze</h1>
+  <div class="flex gap-2 text-sm">
+    <% ScadenzeController::FILTRI.each_key do |f| %>
+      <%= link_to f.capitalize, scadenze_path(filtro: f), class: "px-3 py-1.5 rounded-full #{f == @filtro ? 'bg-blue-900 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'}" %>
+    <% end %>
+  </div>
 
   <div class="card">
     <% if @scadenze.empty? %>
-      <p class="px-6 py-12 text-center text-gray-500">Nessuna scadenza imminente. ✅</p>
+      <p class="px-6 py-12 text-center text-gray-500">Nessuna scadenza in questo elenco. ✅</p>
     <% else %>
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
@@ -35,5 +40,6 @@
         </tbody>
       </table>
     <% end %>
+    <%= render "shared/paginazione" %>
   </div>
 </div>

@@ -16,6 +16,9 @@
       <% end %>
     </div>
     <div class="flex space-x-3">
+      <% if Current.user.admin? %>
+        <%= link_to "Cronologia", modifiche_path(beneficiario_id: @beneficiario.id), class: "btn-secondary" %>
+      <% end %>
       <%= link_to "Modifica", edit_beneficiario_path(@beneficiario), class: "bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-400 text-sm font-medium" %>
       <%= link_to "+ Nuovo Procedimento", new_beneficiario_procedimento_path(@beneficiario), class: "bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium" %>
     </div>
@@ -139,8 +142,8 @@
             <div>
               <p class="text-sm font-medium text-gray-900"><%= c.nome %> <span class="text-xs text-gray-500"><%= [ etichetta(c.tipo), c.ruolo.presence ].compact.join(" · ") %></span></p>
               <p class="text-xs text-gray-500">
-                <% if c.telefono.present? %><%= link_to c.telefono, "tel:#{c.telefono}", class: "hover:underline" %><% end %>
-                <% if c.email.present? %> · <%= mail_to c.email, class: "hover:underline" %><% end %>
+                <%= safe_join([ (link_to(c.telefono, "tel:#{c.telefono}", class: "hover:underline") if c.telefono.present?),
+                                (mail_to(c.email, nil, class: "hover:underline") if c.email.present?) ].compact, " · ") %>
               </p>
             </div>
             <div class="flex items-center space-x-4">

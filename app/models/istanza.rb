@@ -1,4 +1,6 @@
 class Istanza < ApplicationRecord
+  include Tracciabile
+
   TIPI = %w[autorizzazione_spesa atto_straordinario vendita_immobile investimento consenso_sanitario modifica_decreto altro].freeze
   STATI = %w[bozza depositata autorizzata respinta].freeze
 

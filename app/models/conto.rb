@@ -1,4 +1,6 @@
 class Conto < ApplicationRecord
+  include Tracciabile
+
   TIPI = %w[conto_corrente libretto_postale deposito_titoli carta_prepagata contanti altro].freeze
 
   belongs_to :beneficiario

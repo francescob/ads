@@ -1,4 +1,6 @@
 class Contatto < ApplicationRecord
+  include Tracciabile
+
   TIPI = %w[familiare servizi_sociali medico struttura banca legale altro].freeze
 
   belongs_to :beneficiario

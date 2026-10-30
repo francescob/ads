@@ -33,8 +33,12 @@
             <%= link_to "Udienze", udienze_path, class: "text-blue-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
             <% if Current.user&.admin? %>
               <%= link_to "Utenti", users_path, class: "text-blue-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+              <%= link_to "Registro", modifiche_path, class: "text-blue-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
             <% end %>
             <% if Current.user %>
+              <%= form_with url: ricerca_path, method: :get, class: "hidden lg:block" do |f| %>
+                <%= f.search_field :q, placeholder: "Cerca…", class: "rounded-md bg-blue-800 text-white placeholder-blue-300 text-sm px-3 py-1.5 w-40 focus:w-56 transition-all border-none" %>
+              <% end %>
               <span class="border-l border-blue-700 h-6"></span>
               <%= link_to Current.user.nome, edit_password_path, title: "Profilo", class: "text-blue-200 hover:text-white text-sm" %>
               <%= button_to "Esci", session_path, method: :delete, class: "text-blue-100 hover:text-white text-sm bg-transparent border-none cursor-pointer" %>

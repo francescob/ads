@@ -1,11 +1,20 @@
 class ScadenzeController < ApplicationController
   include ProcedimentoScoped
+  include Paginazione
+
+  FILTRI = {
+    "imminenti" => -> { Scadenza.in_scadenza },
+    "scadute" => -> { Scadenza.scadute.order(:data_scadenza) },
+    "aperte" => -> { Scadenza.aperte.order(:data_scadenza) },
+    "completate" => -> { Scadenza.where(completata: true).order(data_scadenza: :desc) }
+  }.freeze
 
   before_action :set_procedimento, except: :index
   before_action :set_scadenza, only: %i[edit update destroy]
 
   def index
-    @scadenze = Scadenza.in_scadenza.includes(procedimento: :beneficiario)
+    @filtro = FILTRI.key?(params[:filtro]) ? params[:filtro] : "imminenti"
+    @scadenze = pagina(FILTRI[@filtro].call.includes(procedimento: :beneficiario))
   end
 
   def new

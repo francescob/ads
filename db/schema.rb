@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_10_30_130000) do
+ActiveRecord::Schema[7.2].define(version: 2026_10_30_140000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -124,6 +124,21 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_30_130000) do
     t.index ["stato"], name: "index_istanze_on_stato"
   end
 
+  create_table "modifiche", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "beneficiario_id"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.string "descrizione_record"
+    t.string "azione", null: false
+    t.json "cambiamenti", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.index ["beneficiario_id"], name: "index_modifiche_on_beneficiario_id"
+    t.index ["created_at"], name: "index_modifiche_on_created_at"
+    t.index ["record_type", "record_id"], name: "index_modifiche_on_record_type_and_record_id"
+    t.index ["user_id"], name: "index_modifiche_on_user_id"
+  end
+
   create_table "movimenti", force: :cascade do |t|
     t.integer "conto_id", null: false
     t.date "data", null: false
@@ -226,6 +241,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_10_30_130000) do
   add_foreign_key "conti", "beneficiari"
   add_foreign_key "documenti", "procedimenti"
   add_foreign_key "istanze", "procedimenti"
+  add_foreign_key "modifiche", "users", on_delete: :nullify
   add_foreign_key "movimenti", "conti"
   add_foreign_key "procedimenti", "beneficiari"
   add_foreign_key "rendiconti", "procedimenti"

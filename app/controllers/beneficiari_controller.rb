@@ -1,8 +1,10 @@
 class BeneficiariController < ApplicationController
+  include Paginazione
+
   before_action :set_beneficiario, only: %i[show edit update destroy]
 
   def index
-    @beneficiari = Beneficiario.ordinati.cerca(params[:q])
+    @beneficiari = pagina(Beneficiario.ordinati.cerca(params[:q]))
   end
 
   def show

@@ -1,11 +1,16 @@
-<% content_for :title, "Prossime Udienze - ADS" %>
+<% content_for :title, "Udienze - ADS" %>
 
 <div class="space-y-6">
-  <h1 class="text-3xl font-bold text-gray-900">Prossime Udienze</h1>
+  <h1 class="text-3xl font-bold text-gray-900">Udienze</h1>
+  <div class="flex gap-2 text-sm">
+    <% [ [ "Prossime", nil ], [ "Passate", "passate" ] ].each do |label, periodo| %>
+      <%= link_to label, udienze_path(periodo: periodo), class: "px-3 py-1.5 rounded-full #{(periodo == "passate") == @passate ? 'bg-blue-900 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'}" %>
+    <% end %>
+  </div>
 
   <div class="card">
     <% if @udienze.empty? %>
-      <p class="px-6 py-12 text-center text-gray-500">Nessuna udienza in programma.</p>
+      <p class="px-6 py-12 text-center text-gray-500"><%= @passate ? "Nessuna udienza passata." : "Nessuna udienza in programma." %></p>
     <% else %>
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
@@ -32,5 +37,6 @@
         </tbody>
       </table>
     <% end %>
+    <%= render "shared/paginazione" %>
   </div>
 </div>

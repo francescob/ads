@@ -10,10 +10,17 @@ A Ruby on Rails 7.2 application for managing Italian legal guardianship cases (*
 - **Scadenze** (Deadlines): Track upcoming and overdue deadlines with alerts
 - **Rendiconti** (Financial Reports): Manage annual financial accountings
 - **Attività** (Activities): Log legal, medical, financial, and personal activities
+- **Istanze** (Petitions): Requests to the giudice tutelare with status and outcome
+- **Documenti**: Uploaded files per proceeding, downloadable only after login
+- **Contatti**: Network of family, social services, doctors, bank for each beneficiary
+- **Conti e movimenti**: Accounts, balances at any date, income/expense entries, CSV export
+- **Rendiconto stampabile**: Annual statement computed from movements, print/PDF from the browser
+- **Promemoria**: Daily email digest, recurring deadlines, personal iCal feed
+- **Utenti e registro**: Login, admin/operatore roles, audit log of every change, global search
 
 ## Requirements
 
-- Ruby 3.2+
+- Ruby 3.3
 - Rails 7.2
 - SQLite3
 
@@ -22,7 +29,8 @@ A Ruby on Rails 7.2 application for managing Italian legal guardianship cases (*
 ```bash
 bundle install
 rails db:migrate
-rails db:seed        # Load sample data
+rails db:seed        # Sample data + admin user (ADMIN_EMAIL / ADMIN_PASSWORD,
+                     # default admin@example.com / cambiami-subito)
 rails tailwindcss:build
 rails server
 ```
@@ -45,3 +53,14 @@ bin/brakeman         # Security scan
 - Tailwind CSS v4
 - SQLite3
 - Importmap
+
+## Promemoria email
+
+Schedule the daily digest with cron (or any scheduler):
+
+```cron
+0 7 * * * cd /app && bin/rails ads:promemoria
+```
+
+Production environment variables: `APP_HOST`, `MAIL_FROM`, `SMTP_ADDRESS`,
+`SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`.

@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   resource :session, only: %i[new create destroy]
   resource :password, only: %i[edit update]
   resources :users, only: %i[index new create edit update]
+  resources :modifiche, only: :index
+  resource :ricerca, only: :show
   get "calendario/:token", to: "calendari#show", as: :calendario, format: false, constraints: { token: /[^\/]+/ }
   post "calendario/rigenera", to: "calendari#rigenera", as: :rigenera_calendario
 

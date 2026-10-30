@@ -1,4 +1,6 @@
 class Movimento < ApplicationRecord
+  include Tracciabile
+
   VERSI = %w[entrata uscita].freeze
   CATEGORIE_ENTRATA = %w[pensione indennita_accompagnamento stipendio affitti_attivi rimborsi interessi altre_entrate].freeze
   CATEGORIE_USCITA = %w[retta_struttura affitto utenze spese_sanitarie spese_alimentari spese_personali assistenza_badante

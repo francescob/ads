@@ -1,4 +1,6 @@
 class Documento < ApplicationRecord
+  include Tracciabile
+
   CATEGORIE = %w[decreto istanza ricorso verbale certificato_medico contabile identita altro].freeze
   DIMENSIONE_MASSIMA = 25.megabytes
 

@@ -1,4 +1,6 @@
 class Rendiconto < ApplicationRecord
+  include Tracciabile
+
   STATI = %w[bozza presentato approvato respinto].freeze
 
   belongs_to :procedimento

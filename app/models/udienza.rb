@@ -1,4 +1,6 @@
 class Udienza < ApplicationRecord
+  include Tracciabile
+
   TIPI = [ "prima udienza", "verifica", "rendiconto", "altra" ].freeze
 
   belongs_to :procedimento

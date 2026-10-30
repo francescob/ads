@@ -1,4 +1,6 @@
 class Beneficiario < ApplicationRecord
+  include Tracciabile
+
   CODICE_FISCALE_FORMAT = /\A[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z]\z/
 
   has_many :procedimenti, dependent: :destroy

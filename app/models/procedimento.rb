@@ -1,4 +1,6 @@
 class Procedimento < ApplicationRecord
+  include Tracciabile
+
   STATI = %w[attivo chiuso sospeso].freeze
 
   belongs_to :beneficiario

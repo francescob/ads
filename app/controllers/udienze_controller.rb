@@ -1,11 +1,14 @@
 class UdienzeController < ApplicationController
   include ProcedimentoScoped
+  include Paginazione
 
   before_action :set_procedimento, except: :index
   before_action :set_udienza, only: %i[edit update destroy]
 
   def index
-    @udienze = Udienza.future.includes(procedimento: :beneficiario)
+    @passate = params[:periodo] == "passate"
+    scope = @passate ? Udienza.where(data_udienza: ...Time.current).order(data_udienza: :desc) : Udienza.future
+    @udienze = pagina(scope.includes(procedimento: :beneficiario))
   end
 
   def new

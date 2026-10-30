@@ -1,4 +1,6 @@
 class Scadenza < ApplicationRecord
+  include Tracciabile
+
   TIPI = %w[rendiconto udienza adempimento altro].freeze
   GIORNI_PREAVVISO = 30
   RICORRENZE = { "mensile" => 1, "trimestrale" => 3, "semestrale" => 6, "annuale" => 12 }.freeze

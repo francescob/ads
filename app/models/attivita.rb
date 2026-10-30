@@ -1,4 +1,6 @@
 class Attivita < ApplicationRecord
+  include Tracciabile
+
   TIPI = %w[legale sanitaria finanziaria personale altra].freeze
 
   belongs_to :procedimento

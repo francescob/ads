@@ -10,4 +10,6 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular "istanza", "istanze"
   inflect.irregular "conto", "conti"
   inflect.irregular "movimento", "movimenti"
+  inflect.irregular "modifica", "modifiche"
+  inflect.irregular "ricerca", "ricerche"
 end
