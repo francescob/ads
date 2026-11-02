@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   def current_beneficiary
     @current_beneficiary ||= current_user.beneficiaries.find(params[:beneficiary_id] || params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to beneficiaries_path, alert: t('errors.beneficiary_not_found')
+    redirect_to beneficiaries_path, alert: t("errors.beneficiary_not_found")
   end
 
   def user_beneficiaries

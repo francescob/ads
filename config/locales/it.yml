@@ -55,6 +55,14 @@ it:
       - Dic
   
   activerecord:
+    errors:
+      messages:
+        must_be_after_start_date: deve essere successiva alla data di inizio
+        cannot_exceed_initial_amount: non può superare l'importo iniziale
+        invalid_transition: non può passare da %{from} a %{to}
+        content_type_not_allowed: "deve essere un file %{allowed}"
+        file_too_large: "non può superare %{max}"
+        exceeds_extraordinary_limit: "supera il limite per spese straordinarie (%{limit}) fissato dal decreto di nomina"
     models:
       user: Utente
       beneficiary: Beneficiario
@@ -426,6 +434,12 @@ it:
     updated: Decreto aggiornato con successo.
     deleted: Decreto eliminato con successo.
     no_appointments: Nessun decreto di nomina trovato.
+    has_reports: Impossibile eliminare un decreto con rendiconti collegati.
+    mandate_expiry_deadline:
+      title: Scadenza incarico (decreto %{decree}) - valutare istanza di proroga
+    annual_report_deadline:
+      title: Rendiconto annuale %{year}
+      description: Rendiconto dell'anno %{year} da depositare presso %{court}
 
   reports:
     title: Rendiconti
@@ -436,6 +450,11 @@ it:
     deleted: Rendiconto eliminato con successo.
     status_updated: Stato aggiornato con successo.
     status_update_failed: Impossibile aggiornare lo stato.
+    transitions:
+      draft: Riporta in bozza
+      completed: Completa
+      filed: Deposita
+      approved: Approva
     pdf_generating: Generazione PDF in corso...
     no_reports: Nessun rendiconto trovato.
     opening_balance: Saldo Iniziale

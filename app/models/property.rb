@@ -1,4 +1,6 @@
 class Property < ApplicationRecord
+  include OwnedThroughBeneficiary
+
   belongs_to :beneficiary
 
   # Tipi di immobile
@@ -29,7 +31,7 @@ class Property < ApplicationRecord
 
   # Metodi helper
   def full_address
-    parts = [address, zip_code, city, province].compact.reject(&:blank?)
+    parts = [ address, zip_code, city, province ].compact.reject(&:blank?)
     parts.join(", ")
   end
 
@@ -70,11 +72,11 @@ class Property < ApplicationRecord
 
   def ownership_fraction_valid
     return if ownership_numerator.nil? || ownership_denominator.nil?
-    
+
     if ownership_denominator.zero?
       errors.add(:ownership_denominator, "non può essere zero")
     end
-    
+
     if ownership_numerator > ownership_denominator
       errors.add(:ownership_numerator, "non può essere maggiore del denominatore")
     end

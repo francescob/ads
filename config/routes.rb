@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  root to: 'dashboard#index'
+  root to: "dashboard#index"
+
+  get "files/:id", to: "files#show", as: :file
 
   # Notifications
-  resources :notifications, only: [:index, :destroy] do
+  resources :notifications, only: [ :index, :destroy ] do
     member do
       patch :mark_as_read
     end
@@ -23,7 +25,7 @@ Rails.application.routes.draw do
         patch :update_status
       end
     end
-    resources :assets, path: 'patrimony', shallow: true
+    resources :assets, path: "patrimony", shallow: true
     resources :properties,     shallow: true
     resources :liabilities,    shallow: true
     resources :recurring_incomes, shallow: true do
@@ -47,9 +49,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :deadlines, only: [:index]
+  resources :deadlines, only: [ :index ]
 
-  get 'calendar', to: 'deadlines#calendar'
+  get "calendar", to: "deadlines#calendar"
 
   namespace :exports do
     get :report_pdf,  defaults: { format: :pdf }

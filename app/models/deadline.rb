@@ -1,4 +1,6 @@
 class Deadline < ApplicationRecord
+  include OwnedThroughBeneficiary
+
   belongs_to :beneficiary
 
   enum :deadline_type, { report: 0, hearing: 1, renewal: 2, administrative: 3, medical: 4, other_deadline: 5 }
@@ -7,20 +9,22 @@ class Deadline < ApplicationRecord
 
   validates :title, :due_date, presence: true
 
-  scope :open, -> { where(status: :open) }
-  scope :overdue, -> { where(status: :overdue) }
-  scope :upcoming, -> { open.where(due_date: Date.today..7.days.from_now) }
+  # `open` and `overdue` scopes come from the enum. Until the nightly job flips
+  # them to `overdue`, open deadlines with a past due date are overdue too.
+  scope :past_due, -> { overdue.or(open.where(due_date: ...Date.current)) }
+  scope :open_or_overdue, -> { where(status: [ :open, :overdue ]) }
+  scope :upcoming, ->(days = 7) { open.where(due_date: Date.current..days.days.from_now.to_date) }
   scope :by_priority, -> { order(priority: :asc) }
 
   def priority_color
     case priority
-    when 'high' then 'red'
-    when 'medium' then 'orange'
-    when 'low' then 'green'
+    when "high" then "red"
+    when "medium" then "orange"
+    when "low" then "green"
     end
   end
 
   def overdue?
-    open? && due_date < Date.today
+    super || (open? && due_date.present? && due_date < Date.current)
   end
 end

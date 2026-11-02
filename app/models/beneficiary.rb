@@ -22,16 +22,16 @@ class Beneficiary < ApplicationRecord
   validates :first_name, :last_name, presence: true
 
   def self.ransackable_attributes(auth_object = nil)
-    ["city", "created_at", "date_of_birth", "diagnosis", "doctor_contact", "first_name", "gender", "health_condition", "id", "id_value", "last_name", "notes", "place_of_birth", "province", "referring_doctor", "status", "street_address", "tax_code", "updated_at", "user_id", "zip_code"]
+    [ "city", "created_at", "date_of_birth", "diagnosis", "doctor_contact", "first_name", "gender", "health_condition", "id", "id_value", "last_name", "notes", "place_of_birth", "province", "referring_doctor", "status", "street_address", "tax_code", "updated_at", "user_id", "zip_code" ]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["user", "appointments", "reports", "assets", "liabilities", "recurring_incomes", "recurring_expenses", "properties", "deadlines", "hearings", "documents", "communications", "contacts"]
+    [ "user", "appointments", "reports", "assets", "liabilities", "recurring_incomes", "recurring_expenses", "properties", "deadlines", "hearings", "documents", "communications", "contacts" ]
   end
 
   scope :active, -> { where(status: :active) }
   scope :closed, -> { where(status: :closed) }
-  scope :search_by_name, ->(q) { where('first_name LIKE ? OR last_name LIKE ?', "%#{q}%", "%#{q}%") }
+  scope :search_by_name, ->(q) { where("first_name LIKE ? OR last_name LIKE ?", "%#{q}%", "%#{q}%") }
 
   def full_name
     "#{first_name} #{last_name}"
@@ -45,9 +45,7 @@ class Beneficiary < ApplicationRecord
     liabilities.sum(:remaining_balance)
   end
 
-  def net_asset_total
-    assets.sum(:current_value)
-  end
+  alias_method :net_asset_total, :total_assets
 
   def net_worth
     total_patrimony - total_liabilities
