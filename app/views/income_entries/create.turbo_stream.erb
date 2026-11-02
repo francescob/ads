@@ -1,0 +1,18 @@
+<%= turbo_stream.append "income_entries" do %>
+  <%= render partial: 'income_entries/income_entry', locals: { income_entry: @income_entry } %>
+<% end %>
+
+<%= turbo_stream.replace "new_income_entry" do %>
+  <%= turbo_frame_tag 'new_income_entry' do %>
+    <div class="bg-slate-50 rounded-lg p-4 border border-dashed border-slate-300">
+      <h4 class="text-sm font-medium text-slate-700 mb-3"><%= t('reports.add_income') %></h4>
+      <%= render 'income_entries/form', income_entry: @report.income_entries.build, report: @report %>
+    </div>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.replace "report-summary" do %>
+  <%= turbo_frame_tag 'report-summary' do %>
+    <%= render 'reports/summary' %>
+  <% end %>
+<% end %>

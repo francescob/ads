@@ -1,0 +1,41 @@
+<%= native_navbar_tag("Calendario") %>
+
+<div>
+  <%= page_header(t('deadlines.calendar')) %>
+
+  <div class="bg-white shadow rounded-lg p-6" data-controller="calendar">
+    <!-- Month navigation -->
+    <div class="flex items-center justify-between mb-6">
+      <%= link_to calendar_path(month: @month.prev_month.strftime('%Y-%m-01')), class: 'p-2 rounded-md hover:bg-slate-100' do %>
+        <svg class="h-5 w-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+      <% end %>
+      <h2 class="text-lg font-semibold text-slate-900"><%= I18n.l(@month, format: '%B %Y') %></h2>
+      <%= link_to calendar_path(month: @month.next_month.strftime('%Y-%m-01')), class: 'p-2 rounded-md hover:bg-slate-100' do %>
+        <svg class="h-5 w-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+      <% end %>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="grid grid-cols-7 gap-px bg-slate-200 rounded-lg overflow-hidden">
+      <% %w[Lun Mar Mer Gio Ven Sab Dom].each do |day| %>
+        <div class="bg-slate-50 py-2 text-center text-xs font-medium text-slate-500 uppercase"><%= day %></div>
+      <% end %>
+
+      <% start_date = @month.beginning_of_month.beginning_of_week(:monday) %>
+      <% end_date = @month.end_of_month.end_of_week(:monday) %>
+      <% (start_date..end_date).each do |date| %>
+        <% day_deadlines = @deadlines.select { |d| d.due_date == date } %>
+        <% day_hearings = @hearings.select { |h| h.hearing_date.to_date == date } %>
+        <div class="bg-white min-h-[80px] p-1 <%= 'opacity-50' unless date.month == @month.month %> <%= 'ring-2 ring-blue-500 ring-inset' if date == Date.today %>">
+          <p class="text-xs font-medium text-slate-<%= date == Date.today ? '900' : '500' %> mb-1"><%= date.day %></p>
+          <% day_deadlines.each do |dl| %>
+            <div class="text-xs px-1 py-0.5 mb-0.5 rounded bg-<%= dl.priority_color %>-100 text-<%= dl.priority_color %>-800 truncate" title="<%= dl.title %>"><%= dl.title %></div>
+          <% end %>
+          <% day_hearings.each do |hr| %>
+            <div class="text-xs px-1 py-0.5 mb-0.5 rounded bg-purple-100 text-purple-800 truncate" title="<%= hr.subject %>">Udienza: <%= hr.subject %></div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+<% content_for(:breadcrumb_extra) { t('contacts.new') } %>
+<div>
+  <%= page_header(t('contacts.new')) %>
+  <%= render 'form', contact: @contact, beneficiary: @beneficiary %>
+</div>

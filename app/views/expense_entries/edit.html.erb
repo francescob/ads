@@ -1,0 +1,6 @@
+<div>
+  <%= page_header(t('expense_entries.edit')) %>
+  <div class="bg-white shadow rounded-lg p-6">
+    <%= render 'form', expense_entry: @expense_entry, report: @expense_entry.report %>
+  </div>
+</div>

@@ -1,0 +1,641 @@
+it:
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%d/%m/%y %H:%M"
+      long: "%d %B %Y alle %H:%M"
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d/%m/%y"
+      long: "%d %B %Y"
+    day_names:
+      - Domenica
+      - Lunedì
+      - Martedì
+      - Mercoledì
+      - Giovedì
+      - Venerdì
+      - Sabato
+    abbr_day_names:
+      - Dom
+      - Lun
+      - Mar
+      - Mer
+      - Gio
+      - Ven
+      - Sab
+    month_names:
+      - ~
+      - Gennaio
+      - Febbraio
+      - Marzo
+      - Aprile
+      - Maggio
+      - Giugno
+      - Luglio
+      - Agosto
+      - Settembre
+      - Ottobre
+      - Novembre
+      - Dicembre
+    abbr_month_names:
+      - ~
+      - Gen
+      - Feb
+      - Mar
+      - Apr
+      - Mag
+      - Giu
+      - Lug
+      - Ago
+      - Set
+      - Ott
+      - Nov
+      - Dic
+  
+  activerecord:
+    models:
+      user: Utente
+      beneficiary: Beneficiario
+      appointment: Decreto di Nomina
+      report: Rendiconto
+      income_entry: Voce di Entrata
+      expense_entry: Voce di Uscita
+      asset: Bene Patrimoniale
+      liability: Passività
+      recurring_income: Entrata Ricorrente
+      recurring_expense: Uscita Ricorrente
+      deadline: Scadenza
+      hearing: Udienza
+      document: Documento
+      communication: Comunicazione
+      contact: Contatto
+      property: Immobile
+    attributes:
+      user:
+        email: Email
+        password: Password
+        password_confirmation: Conferma password
+        first_name: Nome
+        last_name: Cognome
+        tax_code: Codice Fiscale
+        address: Indirizzo
+        phone: Telefono
+        role: Ruolo
+        account_type: Tipo Account
+      beneficiary:
+        first_name: Nome
+        last_name: Cognome
+        tax_code: Codice Fiscale
+        date_of_birth: Data di Nascita
+        place_of_birth: Luogo di Nascita
+        gender: Genere
+        street_address: Indirizzo
+        city: "Città"
+        province: Provincia
+        zip_code: CAP
+        health_condition: Condizioni di Salute
+        diagnosis: Diagnosi
+        referring_doctor: Medico Curante
+        doctor_contact: Contatto Medico
+        notes: Note
+        status: Stato
+      appointment:
+        decree_number: Numero Decreto
+        decree_date: Data Decreto
+        court: Tribunale
+        court_section: Sezione
+        judge: Giudice Tutelare
+        appointment_date: Data Nomina
+        mandate_expiry_date: Scadenza Mandato
+        appointment_type: Tipo Nomina
+        financial_powers: Poteri Patrimoniali
+        personal_powers: Poteri Personali
+        ordinary_expense_limit: Limite Spese Ordinarie
+        extraordinary_expense_limit: Limite Spese Straordinarie
+        notes: Note
+      report:
+        reference_year: Anno di Riferimento
+        period_from: Periodo Dal
+        period_to: Periodo Al
+        status: Stato
+        filing_date: Data Deposito
+        court_notes: Note del Tribunale
+      income_entry:
+        entry_date: Data
+        description: Descrizione
+        amount: Importo
+        category: Categoria
+        source: Fonte
+      expense_entry:
+        entry_date: Data
+        description: Descrizione
+        amount: Importo
+        category: Categoria
+        supplier: Fornitore
+        receipt_number: N. Ricevuta
+        receipt_file: Ricevuta
+      asset:
+        asset_type: Tipo Bene
+        description: Descrizione
+        institution_or_location: Istituto/Luogo
+        initial_value: Valore Iniziale
+        current_value: Valore Attuale
+        valuation_date: Data Valutazione
+        notes: Note
+      liability:
+        liability_type: Tipo Passività
+        description: Descrizione
+        creditor: Creditore
+        initial_amount: Importo Iniziale
+        remaining_balance: Saldo Residuo
+        interest_rate: Tasso di Interesse
+        monthly_payment: Rata Mensile
+        start_date: Data Inizio
+        end_date: Data Fine
+        notes: Note
+      recurring_income:
+        income_type: Tipo Entrata
+        description: Descrizione
+        amount: Importo
+        frequency: Frequenza
+        start_date: Data Inizio
+        end_date: Data Fine
+        notes: Note
+        active: Attiva
+      recurring_expense:
+        expense_type: Tipo Uscita
+        description: Descrizione
+        amount: Importo
+        frequency: Frequenza
+        start_date: Data Inizio
+        end_date: Data Fine
+        notes: Note
+        active: Attiva
+      deadline:
+        title: Titolo
+        description: Descrizione
+        due_date: Data Scadenza
+        reminder_date: Data Promemoria
+        deadline_type: Tipo
+        status: Stato
+        priority: "Priorità"
+      hearing:
+        hearing_date: Data Udienza
+        court: Tribunale
+        courtroom: Aula
+        subject: Oggetto
+        outcome: Esito
+        next_hearing_date: Prossima Udienza
+        notes: Note
+      document:
+        title: Titolo
+        document_type: Tipo Documento
+        file: File
+        document_date: Data Documento
+        expiry_date: Data Scadenza
+        notes: Note
+      communication:
+        subject: Oggetto
+        body: Testo
+        counterpart: Controparte
+        channel: Canale
+        sent_at: Data Invio
+        status: Stato
+        attachment: Allegato
+      contact:
+        first_name: Nome
+        last_name: Cognome
+        relationship: Parentela
+        phone: Telefono
+        email: Email
+        notes: Note
+      property:
+        property_type: Tipo Immobile
+        description: Descrizione
+        address: Indirizzo
+        city: Comune
+        province: Provincia
+        zip_code: CAP
+        cadastral_sheet: Foglio
+        cadastral_particle: Particella
+        cadastral_sub: Subalterno
+        cadastral_category: Categoria
+        cadastral_class: Classe
+        cadastral_consistency: Consistenza
+        cadastral_income: Rendita Catastale
+        ownership_numerator: Numeratore Quota
+        ownership_denominator: Denominatore Quota
+        current_value: Valore Attuale
+        initial_value: Valore Iniziale
+        valuation_date: Data Valutazione
+        notes: Note
+
+    enums:
+      user:
+        role:
+          user: Utente
+          admin: Amministratore
+        account_type:
+          private_account: Privato
+          professional: Professionista
+          organization: Organizzazione
+      beneficiary:
+        gender:
+          male: Maschio
+          female: Femmina
+        status:
+          active: Attivo
+          suspended: Sospeso
+          closed: Chiuso
+      appointment:
+        appointment_type:
+          provisional: Provvisorio
+          definitive: Definitivo
+          urgent: Urgente
+      report:
+        status:
+          draft: Bozza
+          completed: Completato
+          filed: Depositato
+          approved: Approvato
+      income_entry:
+        category:
+          pension: Pensione
+          allowance: Indennità
+          annuity: Rendita
+          other_income: Altro
+      expense_entry:
+        category:
+          medical: Sanitaria
+          food: Alimentare
+          housing: Abitazione
+          clothing: Abbigliamento
+          taxes: Tasse/Imposte
+          ordinary: Ordinaria
+          extraordinary: Straordinaria
+          other_expense: Altro
+      asset:
+        asset_type:
+          bank_account: Conto Corrente
+          real_estate: Immobile
+          vehicle: Veicolo
+          securities: Titoli
+          cash: Contanti
+          other_asset: Altro
+      liability:
+        liability_type:
+          mortgage: Mutuo Ipotecario
+          car_loan: Finanziamento Auto
+          personal_loan: Prestito Personale
+          credit_card: Carta di Credito
+          business_loan: Finanziamento Aziendale
+          student_loan: Prestito Studentesco
+          overdraft: Scoperto Bancario
+          lease: Leasing
+          other: Altro
+      recurring_income:
+        income_type:
+          pension: Pensione
+          salary: Stipendio
+          disability_allowance: Indennità di Invalidità
+          annuity: Rendita
+          rent_income: Reddito da Affitto
+          investment_income: Reddito da Investimenti
+          alimony: Alimenti/Mantenimento
+          social_security: Assistenza Sociale
+          other_income: Altro
+        frequency:
+          monthly: Mensile
+          bimonthly: Bimestrale
+          quarterly: Trimestrale
+          semiannual: Semestrale
+          annual: Annuale
+      recurring_expense:
+        expense_type:
+          rent: Affitto
+          utilities: Utenze
+          insurance: Assicurazioni
+          health_care: Spese Sanitarie
+          care_services: Servizi di Assistenza
+          condominium_fees: Spese Condominiali
+          phone_internet: Telefono/Internet
+          subscriptions: Abbonamenti
+          transportation: Trasporti
+          food_allowance: Spesa Alimentare
+          medications: Farmaci
+          loan_payment: Rata Prestito/Mutuo
+          taxes: Tasse
+          other_expense: Altro
+        frequency:
+          monthly: Mensile
+          bimonthly: Bimestrale
+          quarterly: Trimestrale
+          semiannual: Semestrale
+          annual: Annuale
+      deadline:
+        deadline_type:
+          report: Rendiconto
+          hearing: Udienza
+          renewal: Rinnovo
+          administrative: Amministrativa
+          medical: Medica
+          other_deadline: Altra
+        status:
+          open: Aperta
+          completed: Completata
+          overdue: Scaduta
+        priority:
+          high: Alta
+          medium: Media
+          low: Bassa
+      document:
+        document_type:
+          identity: "Identità"
+          medical_doc: Medico
+          legal: Legale
+          financial: Finanziario
+          correspondence: Corrispondenza
+          other_doc: Altro
+      communication:
+        channel:
+          pec: PEC
+          email: Email
+          registered_mail: Raccomandata
+          fax: Fax
+        status:
+          draft: Bozza
+          sent: Inviata
+          received: Ricevuta
+      property:
+        property_type:
+          residential: Residenziale
+          commercial: Commerciale
+          agricultural: Agricolo
+          land: Terreno Edificabile
+          industrial: Industriale
+          garage: Box/Garage
+          other: Altro
+
+  dashboard:
+    title: Dashboard
+    active_beneficiaries: Beneficiari Attivi
+    upcoming_deadlines_7: Scadenze (7 giorni)
+    upcoming_deadlines_30: Scadenze (30 giorni)
+    draft_reports: Rendiconti in Bozza
+    overdue_deadlines: Scadenze Scadute
+    recent_deadlines: Prossime Scadenze
+    no_deadlines: Nessuna scadenza imminente
+    no_overdue: Nessuna scadenza scaduta
+    no_draft_reports: Nessun rendiconto in bozza
+    view_all: Vedi tutti
+    quick_actions: Azioni Rapide
+    new_beneficiary: Nuovo Beneficiario
+    view_calendar: Calendario
+    view_deadlines: Tutte le Scadenze
+
+  beneficiaries:
+    title: Beneficiari
+    new: Nuovo Beneficiario
+    edit: Modifica Beneficiario
+    created: Beneficiario creato con successo.
+    updated: Beneficiario aggiornato con successo.
+    deleted: Beneficiario eliminato con successo.
+    search_placeholder: Cerca per nome, cognome, codice fiscale...
+    no_beneficiaries: Nessun beneficiario trovato.
+    tabs:
+      profile: Profilo
+      appointments: Decreti
+      reports: Rendiconti
+      assets: Patrimonio
+      liabilities: Debiti
+      recurring_incomes: Entrate Ricorrenti
+      recurring_expenses: Uscite Ricorrenti
+      documents: Documenti
+      deadlines: Scadenze
+      hearings: Udienze
+      communications: Comunicazioni
+      contacts: Contatti
+
+  appointments:
+    title: Decreti di Nomina
+    new: Nuovo Decreto
+    edit: Modifica Decreto
+    created: Decreto creato con successo.
+    updated: Decreto aggiornato con successo.
+    deleted: Decreto eliminato con successo.
+    no_appointments: Nessun decreto di nomina trovato.
+
+  reports:
+    title: Rendiconti
+    new: Nuovo Rendiconto
+    edit: Modifica Rendiconto
+    created: Rendiconto creato con successo.
+    updated: Rendiconto aggiornato con successo.
+    deleted: Rendiconto eliminato con successo.
+    status_updated: Stato aggiornato con successo.
+    status_update_failed: Impossibile aggiornare lo stato.
+    pdf_generating: Generazione PDF in corso...
+    no_reports: Nessun rendiconto trovato.
+    opening_balance: Saldo Iniziale
+    total_income: Totale Entrate
+    total_expenses: Totale Uscite
+    closing_balance: Saldo Finale
+    generate_pdf: Genera PDF
+    download_pdf: Scarica PDF
+    add_income: Aggiungi Entrata
+    add_expense: Aggiungi Uscita
+
+  income_entries:
+    title: Voci di Entrata
+    new: Nuova Entrata
+    edit: Modifica Entrata
+    created: Entrata aggiunta con successo.
+    updated: Entrata aggiornata con successo.
+    deleted: Entrata eliminata con successo.
+
+  expense_entries:
+    title: Voci di Uscita
+    new: Nuova Uscita
+    edit: Modifica Uscita
+    created: Uscita aggiunta con successo.
+    updated: Uscita aggiornata con successo.
+    deleted: Uscita eliminata con successo.
+
+  assets:
+    title: Patrimonio
+    new: Nuovo Bene
+    edit: Modifica Bene
+    created: Bene creato con successo.
+    updated: Bene aggiornato con successo.
+    deleted: Bene eliminato con successo.
+    no_assets: Nessun bene patrimoniale trovato.
+    net_total: Totale Patrimonio Netto
+    generate_pdf: Genera PDF Inventario
+    download_pdf: Scarica PDF Inventario
+    pdf_generation_started: Generazione PDF inventario avviata. Ricarica la pagina tra qualche secondo.
+    pdf_not_found: PDF inventario non ancora generato.
+
+  liabilities:
+    title: Passività
+    new: Nuova Passività
+    new_description: Inserisci i dettagli del debito o finanziamento.
+    edit: Modifica Passività
+    created: Passività creata con successo.
+    updated: Passività aggiornata con successo.
+    deleted: Passività eliminata con successo.
+    no_liabilities: Nessuna passività trovata.
+    total_assets: Totale Beni Mobili
+    total_liabilities: Totale Passività
+    net_worth: Patrimonio Netto
+    financial_details: Dettagli Finanziari
+    general_info: Informazioni Generali
+    payment_progress: Progresso Pagamento
+    paid: Pagato
+    remaining: Residuo
+    estimated_months_remaining: Mesi rimanenti stimati
+    months: mesi
+    paid_off: Saldato
+    status: Stato
+
+  recurring_incomes:
+    title: Entrate Ricorrenti
+    new: Nuova Entrata Ricorrente
+    new_description: Inserisci i dettagli dell'entrata ricorrente (pensione, stipendio, rendita, ecc.).
+    edit: Modifica Entrata Ricorrente
+    created: Entrata ricorrente creata con successo.
+    updated: Entrata ricorrente aggiornata con successo.
+    deleted: Entrata ricorrente eliminata con successo.
+    status_updated: Stato entrata aggiornato con successo.
+    no_recurring_incomes: Nessuna entrata ricorrente trovata.
+    total_annual: Totale Annuale
+    total_monthly: Media Mensile
+    financial_info: Informazioni Finanziarie
+    details: Dettagli
+    amount_per_payment: Importo per Pagamento
+    annual_amount: Importo Annuale
+    total_received: Totale Ricevuto
+    payments_count: Numero Pagamenti
+    payments: pagamenti
+    next_payment: Prossimo Pagamento
+    no_next_payment: Nessun pagamento previsto
+    ongoing: In corso
+    toggle_status: Attiva/Disattiva
+    status_label: Stato
+    active_help: Entrata attualmente attiva e in corso
+    end_date_help: Lascia vuoto se l'entrata non ha scadenza
+    status:
+      active: Attiva
+      scheduled: Programmata
+      inactive: Inattiva
+
+  recurring_expenses:
+    title: Uscite Ricorrenti
+    new: Nuova Uscita Ricorrente
+    new_description: Inserisci i dettagli dell'uscita ricorrente (affitto, utenze, assicurazioni, ecc.).
+    edit: Modifica Uscita Ricorrente
+    created: Uscita ricorrente creata con successo.
+    updated: Uscita ricorrente aggiornata con successo.
+    deleted: Uscita ricorrente eliminata con successo.
+    status_updated: Stato uscita aggiornato con successo.
+    no_recurring_expenses: Nessuna uscita ricorrente trovata.
+    total_annual: Totale Annuale
+    total_monthly: Media Mensile
+    cash_flow: Bilancio Annuale
+    annual_balance: Entrate - Uscite
+    financial_info: Informazioni Finanziarie
+    details: Dettagli
+    amount_per_payment: Importo per Pagamento
+    annual_amount: Importo Annuale
+    total_paid: Totale Pagato
+    payments_count: Numero Pagamenti
+    payments: pagamenti
+    next_payment: Prossimo Pagamento
+    no_next_payment: Nessun pagamento previsto
+    ongoing: In corso
+    toggle_status: Attiva/Disattiva
+    status_label: Stato
+    active_help: Uscita attualmente attiva e in corso
+    end_date_help: Lascia vuoto se l'uscita non ha scadenza
+    status:
+      active: Attiva
+      scheduled: Programmata
+      inactive: Inattiva
+
+  deadlines:
+    title: Scadenze
+    new: Nuova Scadenza
+    edit: Modifica Scadenza
+    created: Scadenza creata con successo.
+    updated: Scadenza aggiornata con successo.
+    deleted: Scadenza eliminata con successo.
+    no_deadlines: Nessuna scadenza trovata.
+    calendar: Calendario
+    all_deadlines: Tutte le Scadenze
+    mark_completed: Segna come Completata
+
+  hearings:
+    title: Udienze
+    new: Nuova Udienza
+    edit: Modifica Udienza
+    created: Udienza creata con successo.
+    updated: Udienza aggiornata con successo.
+    deleted: Udienza eliminata con successo.
+    no_hearings: Nessuna udienza trovata.
+
+  documents:
+    title: Documenti
+    new: Nuovo Documento
+    edit: Modifica Documento
+    created: Documento creato con successo.
+    updated: Documento aggiornato con successo.
+    deleted: Documento eliminato con successo.
+    no_documents: Nessun documento trovato.
+
+  communications:
+    title: Comunicazioni
+    new: Nuova Comunicazione
+    edit: Modifica Comunicazione
+    created: Comunicazione creata con successo.
+    updated: Comunicazione aggiornata con successo.
+    deleted: Comunicazione eliminata con successo.
+    no_communications: Nessuna comunicazione trovata.
+
+  contacts:
+    title: Contatti
+    new: Nuovo Contatto
+    edit: Modifica Contatto
+    created: Contatto aggiunto con successo.
+    updated: Contatto aggiornato con successo.
+    deleted: Contatto eliminato con successo.
+
+  shared:
+    actions: Azioni
+    edit: Modifica
+    delete: Elimina
+    back: Indietro
+    save: Salva
+    cancel: Annulla
+    confirm_delete: Sei sicuro di voler eliminare questo elemento?
+    no_data: Nessun dato disponibile.
+    created_at: Creato il
+    updated_at: Aggiornato il
+    export_csv: Esporta CSV
+    export_pdf: Esporta PDF
+    search: Cerca
+    filter: Filtra
+    reset: Reset
+
+  errors:
+    beneficiary_not_found: Beneficiario non trovato.
+
+  navigation:
+    dashboard: Dashboard
+    beneficiaries: Beneficiari
+    deadlines: Scadenze
+    calendar: Calendario
+    profile: Profilo
+    sign_out: Esci
+    sign_in: Accedi
+    sign_up: Registrati

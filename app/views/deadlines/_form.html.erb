@@ -1,0 +1,47 @@
+<%= form_with(model: deadline, url: deadline.new_record? ? beneficiary_deadlines_path(beneficiary) : deadline_path(deadline), class: 'space-y-6') do |f| %>
+  <% if deadline.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4">
+      <ul class="text-sm text-red-700 list-disc pl-5">
+        <% deadline.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="md:col-span-2">
+        <%= f.label :title, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :title, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :due_date, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.date_field :due_date, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :reminder_date, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.date_field :reminder_date, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :deadline_type, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.select :deadline_type, options_for_select([[t('enums.deadline.deadline_type.report'), 'report'], [t('enums.deadline.deadline_type.hearing'), 'hearing'], [t('enums.deadline.deadline_type.renewal'), 'renewal'], [t('enums.deadline.deadline_type.administrative'), 'administrative'], [t('enums.deadline.deadline_type.medical'), 'medical'], [t('enums.deadline.deadline_type.other_deadline'), 'other_deadline']], deadline.deadline_type), {}, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :priority, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.select :priority, options_for_select([[t('enums.deadline.priority.high'), 'high'], [t('enums.deadline.priority.medium'), 'medium'], [t('enums.deadline.priority.low'), 'low']], deadline.priority), {}, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :status, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.select :status, options_for_select([[t('enums.deadline.status.open'), 'open'], [t('enums.deadline.status.completed'), 'completed'], [t('enums.deadline.status.overdue'), 'overdue']], deadline.status), {}, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div class="md:col-span-2">
+        <%= f.label :description, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_area :description, rows: 3, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <%= link_to t('shared.cancel'), deadline.new_record? ? beneficiary_path(beneficiary) : deadline_path(deadline), class: 'inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50' %>
+    <%= f.submit t('shared.save'), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 cursor-pointer' %>
+  </div>
+<% end %>

@@ -1,0 +1,152 @@
+<div class="mb-6">
+  <nav class="text-sm text-slate-600">
+    <%= link_to "Dashboard", root_path, class: "hover:text-blue-700" %>
+    <span class="mx-2">/</span>
+    <span class="text-slate-900 font-medium">Notifiche</span>
+  </nav>
+</div>
+
+<div class="mb-6 flex justify-between items-start">
+  <div>
+    <h1 class="text-3xl font-bold text-slate-900">Notifiche</h1>
+    <p class="mt-2 text-slate-600">
+      <% if @unread_count > 0 %>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+          <%= @unread_count %> non <%= @unread_count == 1 ? 'letta' : 'lette' %>
+        </span>
+      <% else %>
+        Nessuna notifica non letta
+      <% end %>
+    </p>
+  </div>
+  <% if @unread_count > 0 %>
+    <%= button_to "Segna tutte come lette", mark_all_as_read_notifications_path, method: :patch, class: "inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50" %>
+  <% end %>
+</div>
+
+<% if @notifications.any? %>
+  <div class="space-y-3">
+    <% @notifications.each do |notification| %>
+      <% 
+        event = notification.event
+        is_read = notification.read?
+        title = event.params[:title] || event.type.humanize
+        message = event.params[:message] || ''
+        url = event.params[:url]
+        icon = event.params[:icon] || '📬'
+        created_at = notification.created_at
+      %>
+      
+      <div class="bg-white shadow rounded-lg overflow-hidden <%= 'border-l-4 border-blue-500' unless is_read %>">
+        <div class="p-6">
+          <div class="flex items-start justify-between">
+            <div class="flex items-start space-x-4 flex-1">
+              <!-- Icon -->
+              <div class="flex-shrink-0">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full <%= is_read ? 'bg-slate-100' : 'bg-blue-50' %>">
+                  <span class="text-2xl"><%= icon %></span>
+                </div>
+              </div>
+              
+              <!-- Content -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center space-x-2 mb-1">
+                  <h3 class="text-sm font-medium text-slate-900">
+                    <%= title %>
+                  </h3>
+                  <% unless is_read %>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                      Nuova
+                    </span>
+                  <% end %>
+                </div>
+                
+                <% if message.present? %>
+                  <p class="mt-1 text-sm text-slate-600">
+                    <%= message %>
+                  </p>
+                <% end %>
+                
+                <div class="mt-2 flex items-center space-x-4 text-xs text-slate-500">
+                  <span class="flex items-center">
+                    <svg class="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <%= time_ago_in_words(created_at) %> fa
+                  </span>
+                  <% if created_at %>
+                    <span><%= l(created_at, format: :short) %></span>
+                  <% end %>
+                </div>
+                
+                <!-- Actions -->
+                <div class="mt-4 flex items-center space-x-3">
+                  <% if url.present? %>
+                    <%= link_to url, class: "inline-flex items-center text-sm font-medium text-blue-700 hover:text-blue-800" do %>
+                      <svg class="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                      </svg>
+                      Visualizza
+                    <% end %>
+                  <% end %>
+                  
+                  <% unless is_read %>
+                    <%= button_to mark_as_read_notification_path(notification), method: :patch, class: "inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-800" do %>
+                      <svg class="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      Segna come letta
+                    <% end %>
+                  <% end %>
+                  
+                  <%= button_to notification_path(notification), method: :delete, data: { turbo_confirm: "Sei sicuro di voler eliminare questa notifica?" }, class: "inline-flex items-center text-sm font-medium text-red-600 hover:text-red-800" do %>
+                    <svg class="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    Elimina
+                  <% end %>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Status Badge -->
+            <div class="ml-4 flex-shrink-0">
+              <% if is_read %>
+                <svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+              <% else %>
+                <span class="flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-blue-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                </span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- Pagination -->
+  <div class="mt-6">
+    <%= paginate @notifications %>
+  </div>
+<% else %>
+  <!-- Empty State -->
+  <div class="bg-white shadow rounded-lg p-12 text-center">
+    <svg class="mx-auto h-12 w-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+    </svg>
+    <h3 class="mt-2 text-sm font-medium text-slate-900">Nessuna notifica</h3>
+    <p class="mt-1 text-sm text-slate-500">Non hai ancora ricevuto notifiche.</p>
+    <div class="mt-6">
+      <%= link_to "Torna alla Dashboard", root_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800" %>
+    </div>
+  </div>
+<% end %>
+
+<div class="mt-6">
+  <%= link_to "← Torna alla Dashboard", root_path, class: "text-sm text-blue-700 hover:text-blue-800" %>
+</div>

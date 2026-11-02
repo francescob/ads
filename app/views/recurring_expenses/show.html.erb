@@ -1,0 +1,160 @@
+<div class="max-w-4xl mx-auto">
+  <div class="mb-6">
+    <div class="flex items-center text-sm text-slate-500 mb-2">
+      <%= link_to t('dashboard.title'), root_path, class: "hover:text-slate-700" %>
+      <span class="mx-2">/</span>
+      <%= link_to t('beneficiaries.title'), beneficiaries_path, class: "hover:text-slate-700" %>
+      <span class="mx-2">/</span>
+      <%= link_to @beneficiary.full_name, @beneficiary, class: "hover:text-slate-700" %>
+      <span class="mx-2">/</span>
+      <%= link_to t('recurring_expenses.title'), beneficiary_recurring_expenses_path(@beneficiary), class: "hover:text-slate-700" %>
+      <span class="mx-2">/</span>
+      <span class="text-slate-900"><%= @recurring_expense.description %></span>
+    </div>
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-slate-900"><%= @recurring_expense.description %></h1>
+        <p class="mt-2 text-sm text-slate-600">
+          <%= t("activerecord.enums.recurring_expense.expense_type.#{@recurring_expense.expense_type}") %> &mdash; 
+          <%= t("activerecord.enums.recurring_expense.frequency.#{@recurring_expense.frequency}") %>
+        </p>
+      </div>
+      <div class="flex space-x-3">
+        <%= link_to t('shared.edit'), edit_recurring_expense_path(@recurring_expense), class: 'inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50' %>
+        <%= link_to t('recurring_expenses.toggle_status'), toggle_active_recurring_expense_path(@recurring_expense), data: { turbo_method: :patch }, class: "inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md #{@recurring_expense.active? ? 'text-orange-700 border-orange-300 hover:bg-orange-50' : 'text-green-700 border-green-300 hover:bg-green-50'} bg-white" %>
+        <%= link_to t('shared.delete'), recurring_expense_path(@recurring_expense), data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') }, class: 'inline-flex items-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-6">
+    <!-- Stato e Importi -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200">
+        <h2 class="text-lg font-medium text-slate-900"><%= t('recurring_expenses.financial_info') %></h2>
+      </div>
+      <div class="px-6 py-5">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <span class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.recurring_expense.active') %></span>
+          </div>
+          <div>
+            <% if @recurring_expense.currently_active? %>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                <svg class="mr-1.5 h-2 w-2 fill-current" viewBox="0 0 8 8">
+                  <circle cx="4" cy="4" r="3" />
+                </svg>
+                <%= t('recurring_expenses.status.active') %>
+              </span>
+            <% elsif @recurring_expense.active? %>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                <%= t('recurring_expenses.status.scheduled') %>
+              </span>
+            <% else %>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-800">
+                <%= t('recurring_expenses.status.inactive') %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+
+        <dl class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-3">
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('recurring_expenses.amount_per_payment') %></dt>
+            <dd class="mt-1 text-2xl font-semibold text-slate-900"><%= format_currency(@recurring_expense.amount) %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('recurring_expenses.annual_amount') %></dt>
+            <dd class="mt-1 text-2xl font-semibold text-orange-700"><%= format_currency(@recurring_expense.annual_amount) %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('recurring_expenses.total_paid') %></dt>
+            <dd class="mt-1 text-2xl font-semibold text-red-700"><%= format_currency(@recurring_expense.total_paid) %></dd>
+          </div>
+        </dl>
+
+        <dl class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 mt-6 pt-6 border-t border-slate-200">
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('recurring_expenses.payments_count') %></dt>
+            <dd class="mt-1 text-lg font-medium text-slate-900">
+              <%= @recurring_expense.payments_count %> <%= t('recurring_expenses.payments') %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('recurring_expenses.next_payment') %></dt>
+            <dd class="mt-1 text-lg font-medium text-slate-900">
+              <%= @recurring_expense.next_payment_date ? l(@recurring_expense.next_payment_date, format: :long) : t('recurring_expenses.no_next_payment') %>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Dettagli -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200">
+        <h2 class="text-lg font-medium text-slate-900"><%= t('recurring_expenses.details') %></h2>
+      </div>
+      <div class="px-6 py-5">
+        <dl class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.recurring_expense.expense_type') %></dt>
+            <dd class="mt-1 text-sm text-slate-900">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                <%= t("activerecord.enums.recurring_expense.expense_type.#{@recurring_expense.expense_type}") %>
+              </span>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.recurring_expense.frequency') %></dt>
+            <dd class="mt-1 text-sm text-slate-900">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                <%= t("activerecord.enums.recurring_expense.frequency.#{@recurring_expense.frequency}") %>
+              </span>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.recurring_expense.start_date') %></dt>
+            <dd class="mt-1 text-sm text-slate-900"><%= @recurring_expense.start_date ? l(@recurring_expense.start_date, format: :long) : '-' %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.recurring_expense.end_date') %></dt>
+            <dd class="mt-1 text-sm text-slate-900"><%= @recurring_expense.end_date ? l(@recurring_expense.end_date, format: :long) : t('recurring_expenses.ongoing') %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Note -->
+    <% if @recurring_expense.notes.present? %>
+      <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200">
+          <h2 class="text-lg font-medium text-slate-900"><%= t('activerecord.attributes.recurring_expense.notes') %></h2>
+        </div>
+        <div class="px-6 py-5">
+          <p class="text-sm text-slate-700 whitespace-pre-wrap"><%= @recurring_expense.notes %></p>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Timestamps -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="px-6 py-4">
+        <dl class="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 text-xs text-slate-500">
+          <div>
+            <dt class="inline"><%= t('shared.created_at') %>:</dt>
+            <dd class="inline ml-1"><%= l(@recurring_expense.created_at, format: :long) %></dd>
+          </div>
+          <div>
+            <dt class="inline"><%= t('shared.updated_at') %>:</dt>
+            <dd class="inline ml-1"><%= l(@recurring_expense.updated_at, format: :long) %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <%= link_to t('shared.back'), beneficiary_path(@beneficiary), class: 'text-orange-700 hover:text-orange-800 font-medium' %>
+  </div>
+</div>

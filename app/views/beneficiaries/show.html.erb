@@ -1,0 +1,645 @@
+<%= native_navbar_tag(@beneficiary.full_name) %>
+
+<div>
+  <div class="sm:flex sm:items-center sm:justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900"><%= @beneficiary.full_name %></h1>
+      <p class="mt-1 text-sm text-slate-500"><%= @beneficiary.tax_code %> &mdash; <%= status_badge(@beneficiary.status) %></p>
+    </div>
+    <div class="mt-4 sm:mt-0 flex space-x-3">
+      <%= link_to t('shared.edit'), edit_beneficiary_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50' %>
+      <%= link_to t('shared.delete'), beneficiary_path(@beneficiary), data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete'), **native_haptic_data(:error) }, class: 'inline-flex items-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50' %>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div data-controller="tabs">
+    <div class="border-b border-slate-200 mb-6">
+      <nav class="-mb-px flex space-x-8 overflow-x-auto" aria-label="Tabs">
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="profile" class="tab-btn border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.profile') %></button>
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="appointments" class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.appointments') %> (<%= @appointments.count %>)</button>
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="reports" class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.reports') %> (<%= @reports.count %>)</button>
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="assets" class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.assets') %> (<%= @assets.count %>)</button>
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="properties" class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Immobili (<%= @properties.count %>)</button>
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="liabilities" class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.liabilities') %> (<%= @liabilities.count %>)</button>
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="recurring_incomes" class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.recurring_incomes') %> (<%= @recurring_incomes.count %>)</button>
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="recurring_expenses" class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.recurring_expenses') %> (<%= @recurring_expenses.count %>)</button>
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="deadlines" class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.deadlines') %> (<%= @deadlines.count %>)</button>
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="hearings" class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.hearings') %> (<%= @hearings.count %>)</button>
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="documents" class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.documents') %> (<%= @documents.count %>)</button>
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="communications" class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.communications') %> (<%= @communications.count %>)</button>
+        <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="contacts" class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.contacts') %> (<%= @contacts.count %>)</button>
+      </nav>
+    </div>
+
+    <!-- Profile Tab -->
+    <div data-tabs-target="panel" data-tab="profile">
+      <div class="bg-white shadow rounded-lg p-6">
+        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.beneficiary.date_of_birth') %></dt>
+            <dd class="mt-1 text-sm text-slate-900"><%= @beneficiary.date_of_birth&.strftime('%d/%m/%Y') || '-' %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.beneficiary.place_of_birth') %></dt>
+            <dd class="mt-1 text-sm text-slate-900"><%= @beneficiary.place_of_birth || '-' %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.beneficiary.gender') %></dt>
+            <dd class="mt-1 text-sm text-slate-900"><%= @beneficiary.gender ? t("activerecord.enums.beneficiary.gender.#{@beneficiary.gender}") : '-' %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-slate-500">Indirizzo</dt>
+            <dd class="mt-1 text-sm text-slate-900"><%= [@beneficiary.street_address, @beneficiary.city, @beneficiary.province, @beneficiary.zip_code].compact_blank.join(', ') %></dd>
+          </div>
+          <div class="sm:col-span-2">
+            <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.beneficiary.health_condition') %></dt>
+            <dd class="mt-1 text-sm text-slate-900"><%= @beneficiary.health_condition || '-' %></dd>
+          </div>
+          <div class="sm:col-span-2">
+            <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.beneficiary.diagnosis') %></dt>
+            <dd class="mt-1 text-sm text-slate-900"><%= @beneficiary.diagnosis || '-' %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.beneficiary.referring_doctor') %></dt>
+            <dd class="mt-1 text-sm text-slate-900"><%= @beneficiary.referring_doctor || '-' %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.beneficiary.doctor_contact') %></dt>
+            <dd class="mt-1 text-sm text-slate-900"><%= @beneficiary.doctor_contact || '-' %></dd>
+          </div>
+          <% if @beneficiary.notes.present? %>
+            <div class="sm:col-span-2">
+              <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.beneficiary.notes') %></dt>
+              <dd class="mt-1 text-sm text-slate-900"><%= simple_format(@beneficiary.notes) %></dd>
+            </div>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Appointments Tab -->
+    <div data-tabs-target="panel" data-tab="appointments" class="hidden">
+      <div class="mb-4 flex justify-end">
+        <%= link_to t('appointments.new'), new_beneficiary_appointment_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800' %>
+      </div>
+      <% if @appointments.any? %>
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.appointment.decree_number') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.appointment.court') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.appointment.appointment_date') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.appointment.mandate_expiry_date') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.appointment.appointment_type') %></th>
+                <th class="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% @appointments.each do |appt| %>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-6 py-4 text-sm font-medium"><%= link_to appt.decree_number, appointment_path(appt), class: 'text-blue-700 hover:text-blue-800' %></td>
+                  <td class="px-6 py-4 text-sm text-slate-500"><%= appt.court %></td>
+                  <td class="px-6 py-4 text-sm text-slate-500"><%= appt.appointment_date&.strftime('%d/%m/%Y') %></td>
+                  <td class="px-6 py-4 text-sm text-slate-500"><%= appt.mandate_expiry_date&.strftime('%d/%m/%Y') %></td>
+                  <td class="px-6 py-4 text-sm"><%= status_badge(appt.appointment_type) %></td>
+                  <td class="px-6 py-4 text-right text-sm">
+                    <%= link_to t('shared.edit'), edit_appointment_path(appt), class: 'text-blue-700 hover:text-blue-800 font-medium' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 text-center py-8"><%= t('appointments.no_appointments') %></p>
+      <% end %>
+    </div>
+
+    <!-- Reports Tab -->
+    <div data-tabs-target="panel" data-tab="reports" class="hidden">
+      <div class="mb-4 flex justify-end">
+        <%= link_to t('reports.new'), new_beneficiary_report_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800' %>
+      </div>
+      <% if @reports.any? %>
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Anno</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Periodo</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Stato</th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Saldo Finale</th>
+                <th class="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% @reports.each do |report| %>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-6 py-4 text-sm font-medium"><%= link_to report.reference_year, report_path(report), class: 'text-blue-700 hover:text-blue-800' %></td>
+                  <td class="px-6 py-4 text-sm text-slate-500"><%= report.period_from.strftime('%d/%m/%Y') %> - <%= report.period_to.strftime('%d/%m/%Y') %></td>
+                  <td class="px-6 py-4"><%= status_badge(report.status) %></td>
+                  <td class="px-6 py-4 text-sm text-right font-mono"><%= format_currency(report.closing_balance) %></td>
+                  <td class="px-6 py-4 text-right text-sm">
+                    <%= link_to t('shared.edit'), edit_report_path(report), class: 'text-blue-700 hover:text-blue-800 font-medium' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 text-center py-8"><%= t('reports.no_reports') %></p>
+      <% end %>
+    </div>
+
+    <!-- Assets Tab -->
+    <div data-tabs-target="panel" data-tab="assets" class="hidden">
+      <div class="mb-4 flex justify-between items-center">
+        <p class="text-sm font-medium text-slate-700"><%= t('assets.net_total') %>: <span class="text-lg font-bold text-slate-900"><%= format_currency(@beneficiary.net_asset_total) %></span></p>
+        <div class="flex space-x-2">
+          <% if @beneficiary.asset_inventory_pdf.attached? %>
+            <div class="flex flex-col items-end">
+              <%= link_to t('assets.download_pdf'), download_asset_inventory_beneficiary_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50' %>
+              <span class="text-xs text-slate-500 mt-1">
+                Generato il <%= l(@beneficiary.asset_inventory_pdf.created_at, format: :short) %>
+              </span>
+            </div>
+          <% end %>
+          <%= link_to t('assets.generate_pdf'), generate_asset_inventory_beneficiary_path(@beneficiary), data: { turbo_method: :post }, class: 'inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50' %>
+          <%= link_to t('assets.new'), new_beneficiary_asset_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800' %>
+        </div>
+      </div>
+      <% if @assets.any? %>
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.asset.asset_type') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.asset.description') %></th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.asset.current_value') %></th>
+                <th class="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% @assets.each do |asset| %>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-6 py-4 text-sm"><%= t("activerecord.enums.asset.asset_type.#{asset.asset_type}") %></td>
+                  <td class="px-6 py-4 text-sm font-medium"><%= link_to asset.description, asset_path(asset), class: 'text-blue-700 hover:text-blue-800' %></td>
+                  <td class="px-6 py-4 text-sm text-right font-mono"><%= format_currency(asset.current_value) %></td>
+                  <td class="px-6 py-4 text-right text-sm">
+                    <%= link_to t('shared.edit'), edit_asset_path(asset), class: 'text-blue-700 hover:text-blue-800 font-medium' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 text-center py-8"><%= t('assets.no_assets') %></p>
+      <% end %>
+    </div>
+
+    <!-- Properties Tab -->
+    <div data-tabs-target="panel" data-tab="properties" class="hidden">
+      <div class="mb-4 flex justify-between items-center">
+        <p class="text-sm font-medium text-slate-700">Valore Totale Immobili: <span class="text-lg font-bold text-slate-900"><%= format_currency(@beneficiary.total_properties_value) %></span></p>
+        <%= link_to 'Nuovo Immobile', new_beneficiary_property_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800' %>
+      </div>
+      <% if @properties.any? %>
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Tipo</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Descrizione</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Indirizzo</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Dati Catastali</th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Valore Attuale</th>
+                <th class="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% @properties.each do |property| %>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-6 py-4 text-sm"><%= property.property_type.humanize %></td>
+                  <td class="px-6 py-4 text-sm font-medium"><%= link_to property.description, property_path(property), class: 'text-blue-700 hover:text-blue-800' %></td>
+                  <td class="px-6 py-4 text-sm text-slate-600">
+                    <%= property.city.present? ? "#{property.city} (#{property.province})" : "-" %>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-slate-600">
+                    <% if property.cadastral_reference.present? %>
+                      <span class="text-xs"><%= property.cadastral_reference %></span>
+                    <% else %>
+                      -
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-right font-mono"><%= format_currency(property.current_value) %></td>
+                  <td class="px-6 py-4 text-right text-sm">
+                    <%= link_to t('shared.edit'), edit_property_path(property), class: 'text-blue-700 hover:text-blue-800 font-medium' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 text-center py-8">Nessun immobile registrato</p>
+      <% end %>
+    </div>
+
+    <!-- Liabilities Tab -->
+    <div data-tabs-target="panel" data-tab="liabilities" class="hidden">
+      <div class="mb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p class="text-sm font-medium text-blue-900"><%= t('liabilities.total_assets') %></p>
+            <p class="text-2xl font-bold text-blue-700"><%= format_currency(@beneficiary.total_assets) %></p>
+          </div>
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <p class="text-sm font-medium text-red-900"><%= t('liabilities.total_liabilities') %></p>
+            <p class="text-2xl font-bold text-red-700"><%= format_currency(@beneficiary.total_liabilities) %></p>
+          </div>
+          <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+            <p class="text-sm font-medium text-green-900"><%= t('liabilities.net_worth') %></p>
+            <p class="text-2xl font-bold <%= @beneficiary.net_worth >= 0 ? 'text-green-700' : 'text-red-700' %>">
+              <%= format_currency(@beneficiary.net_worth) %>
+            </p>
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <%= link_to t('liabilities.new'), new_beneficiary_liability_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800' %>
+        </div>
+      </div>
+      <% if @liabilities.any? %>
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.liability.liability_type') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.liability.description') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.liability.creditor') %></th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.liability.remaining_balance') %></th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase"><%= t('liabilities.status') %></th>
+                <th class="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% @liabilities.each do |liability| %>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-6 py-4 text-sm"><%= t("activerecord.enums.liability.liability_type.#{liability.liability_type}") %></td>
+                  <td class="px-6 py-4 text-sm font-medium"><%= link_to liability.description, liability_path(liability), class: 'text-blue-700 hover:text-blue-800' %></td>
+                  <td class="px-6 py-4 text-sm"><%= liability.creditor %></td>
+                  <td class="px-6 py-4 text-sm text-right font-mono <%= liability.remaining_balance.nil? ? 'text-slate-400' : (liability.paid_off? ? 'text-green-600' : 'text-red-600') %>">
+                    <%= format_currency(liability.remaining_balance) %>
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <% if liability.paid_off? %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <%= t('liabilities.paid_off') %>
+                      </span>
+                    <% elsif liability.percentage_paid.present? %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        <%= format_percentage(liability.percentage_paid, precision: 0) %>
+                      </span>
+                    <% else %>
+                      <span class="text-xs text-slate-400">-</span>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 text-right text-sm">
+                    <%= link_to t('shared.edit'), edit_liability_path(liability), class: 'text-blue-700 hover:text-blue-800 font-medium' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 text-center py-8"><%= t('liabilities.no_liabilities') %></p>
+      <% end %>
+    </div>
+
+    <!-- Recurring Incomes Tab -->
+    <div data-tabs-target="panel" data-tab="recurring_incomes" class="hidden">
+      <div class="mb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p class="text-sm font-medium text-blue-900"><%= t('recurring_incomes.total_annual') %></p>
+            <p class="text-2xl font-bold text-blue-700"><%= format_currency(@beneficiary.total_annual_recurring_income) %></p>
+          </div>
+          <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+            <p class="text-sm font-medium text-green-900"><%= t('recurring_incomes.total_monthly') %></p>
+            <p class="text-2xl font-bold text-green-700"><%= format_currency(@beneficiary.total_monthly_recurring_income) %></p>
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <%= link_to t('recurring_incomes.new'), new_beneficiary_recurring_income_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800' %>
+        </div>
+      </div>
+      <% if @recurring_incomes.any? %>
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.recurring_income.income_type') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.recurring_income.description') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.recurring_income.frequency') %></th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.recurring_income.amount') %></th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase"><%= t('recurring_incomes.annual_amount') %></th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase"><%= t('recurring_incomes.status_label') %></th>
+                <th class="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% @recurring_incomes.each do |income| %>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-6 py-4 text-sm"><%= t("activerecord.enums.recurring_income.income_type.#{income.income_type}") %></td>
+                  <td class="px-6 py-4 text-sm font-medium"><%= link_to income.description, recurring_income_path(income), class: 'text-blue-700 hover:text-blue-800' %></td>
+                  <td class="px-6 py-4 text-sm"><%= t("activerecord.enums.recurring_income.frequency.#{income.frequency}") %></td>
+                  <td class="px-6 py-4 text-sm text-right font-mono"><%= format_currency(income.amount) %></td>
+                  <td class="px-6 py-4 text-sm text-right font-mono font-semibold"><%= format_currency(income.annual_amount) %></td>
+                  <td class="px-6 py-4 text-center">
+                    <% if income.currently_active? %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <svg class="mr-1 h-2 w-2 fill-current" viewBox="0 0 8 8">
+                          <circle cx="4" cy="4" r="3" />
+                        </svg>
+                        <%= t('recurring_incomes.status.active') %>
+                      </span>
+                    <% elsif income.active? %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        <%= t('recurring_incomes.status.scheduled') %>
+                      </span>
+                    <% else %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                        <%= t('recurring_incomes.status.inactive') %>
+                      </span>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 text-right text-sm">
+                    <%= link_to t('shared.edit'), edit_recurring_income_path(income), class: 'text-blue-700 hover:text-blue-800 font-medium' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 text-center py-8"><%= t('recurring_incomes.no_recurring_incomes') %></p>
+      <% end %>
+    </div>
+
+    <!-- Recurring Expenses Tab -->
+    <div data-tabs-target="panel" data-tab="recurring_expenses" class="hidden">
+      <div class="mb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <p class="text-sm font-medium text-red-900"><%= t('recurring_expenses.total_annual') %></p>
+            <p class="text-2xl font-bold text-red-700"><%= format_currency(@beneficiary.total_annual_recurring_expense) %></p>
+          </div>
+          <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
+            <p class="text-sm font-medium text-orange-900"><%= t('recurring_expenses.total_monthly') %></p>
+            <p class="text-2xl font-bold text-orange-700"><%= format_currency(@beneficiary.total_monthly_recurring_expense) %></p>
+          </div>
+          <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+            <p class="text-sm font-medium text-slate-900"><%= t('recurring_expenses.cash_flow') %></p>
+            <p class="text-2xl font-bold <%= @beneficiary.annual_cash_flow >= 0 ? 'text-green-700' : 'text-red-700' %>">
+              <%= format_currency(@beneficiary.annual_cash_flow) %>
+            </p>
+            <p class="text-xs text-slate-500 mt-1"><%= t('recurring_expenses.annual_balance') %></p>
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <%= link_to t('recurring_expenses.new'), new_beneficiary_recurring_expense_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800' %>
+        </div>
+      </div>
+      <% if @recurring_expenses.any? %>
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.recurring_expense.expense_type') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.recurring_expense.description') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.recurring_expense.frequency') %></th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.recurring_expense.amount') %></th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase"><%= t('recurring_expenses.annual_amount') %></th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase"><%= t('recurring_expenses.status_label') %></th>
+                <th class="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% @recurring_expenses.each do |expense| %>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-6 py-4 text-sm"><%= t("activerecord.enums.recurring_expense.expense_type.#{expense.expense_type}") %></td>
+                  <td class="px-6 py-4 text-sm font-medium"><%= link_to expense.description, recurring_expense_path(expense), class: 'text-blue-700 hover:text-blue-800' %></td>
+                  <td class="px-6 py-4 text-sm"><%= t("activerecord.enums.recurring_expense.frequency.#{expense.frequency}") %></td>
+                  <td class="px-6 py-4 text-sm text-right font-mono"><%= format_currency(expense.amount) %></td>
+                  <td class="px-6 py-4 text-sm text-right font-mono font-semibold text-red-700"><%= format_currency(expense.annual_amount) %></td>
+                  <td class="px-6 py-4 text-center">
+                    <% if expense.currently_active? %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        <svg class="mr-1 h-2 w-2 fill-current" viewBox="0 0 8 8">
+                          <circle cx="4" cy="4" r="3" />
+                        </svg>
+                        <%= t('recurring_expenses.status.active') %>
+                      </span>
+                    <% elsif expense.active? %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        <%= t('recurring_expenses.status.scheduled') %>
+                      </span>
+                    <% else %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                        <%= t('recurring_expenses.status.inactive') %>
+                      </span>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 text-right text-sm">
+                    <%= link_to t('shared.edit'), edit_recurring_expense_path(expense), class: 'text-blue-700 hover:text-blue-800 font-medium' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 text-center py-8"><%= t('recurring_expenses.no_recurring_expenses') %></p>
+      <% end %>
+    </div>
+
+    <!-- Deadlines Tab -->
+    <div data-tabs-target="panel" data-tab="deadlines" class="hidden">
+      <div class="mb-4 flex justify-end">
+        <%= link_to t('deadlines.new'), new_beneficiary_deadline_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800' %>
+      </div>
+      <% if @deadlines.any? %>
+        <div class="space-y-3">
+          <% @deadlines.each do |deadline| %>
+            <div class="bg-white shadow rounded-lg p-4 flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-slate-900"><%= deadline.title %></p>
+                <p class="text-xs text-slate-500"><%= deadline.due_date.strftime('%d/%m/%Y') %></p>
+              </div>
+              <div class="flex items-center space-x-2">
+                <%= priority_badge(deadline.priority) %>
+                <%= status_badge(deadline.status) %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 text-center py-8"><%= t('deadlines.no_deadlines') %></p>
+      <% end %>
+    </div>
+
+    <!-- Hearings Tab -->
+    <div data-tabs-target="panel" data-tab="hearings" class="hidden">
+      <div class="mb-4 flex justify-end">
+        <%= link_to t('hearings.new'), new_beneficiary_hearing_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800' %>
+      </div>
+      <% if @hearings.any? %>
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.hearing.hearing_date') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.hearing.court') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.hearing.subject') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.hearing.outcome') %></th>
+                <th class="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% @hearings.each do |hearing| %>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-6 py-4 text-sm font-medium"><%= hearing.hearing_date.strftime('%d/%m/%Y %H:%M') %></td>
+                  <td class="px-6 py-4 text-sm text-slate-500"><%= hearing.court %></td>
+                  <td class="px-6 py-4 text-sm text-slate-500"><%= hearing.subject %></td>
+                  <td class="px-6 py-4 text-sm text-slate-500"><%= truncate(hearing.outcome, length: 50) %></td>
+                  <td class="px-6 py-4 text-right text-sm">
+                    <%= link_to t('shared.edit'), edit_hearing_path(hearing), class: 'text-blue-700 hover:text-blue-800 font-medium' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 text-center py-8"><%= t('hearings.no_hearings') %></p>
+      <% end %>
+    </div>
+
+    <!-- Documents Tab -->
+    <div data-tabs-target="panel" data-tab="documents" class="hidden">
+      <div class="mb-4 flex justify-end">
+        <%= link_to t('documents.new'), new_beneficiary_document_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800' %>
+      </div>
+      <% if @documents.any? %>
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.document.title') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.document.document_type') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.document.expiry_date') %></th>
+                <th class="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% @documents.each do |doc| %>
+                <tr class="hover:bg-slate-50 <%= 'bg-red-50' if doc.expired? %>">
+                  <td class="px-6 py-4 text-sm font-medium"><%= link_to doc.title, document_path(doc), class: 'text-blue-700 hover:text-blue-800' %></td>
+                  <td class="px-6 py-4 text-sm"><%= t("activerecord.enums.document.document_type.#{doc.document_type}") %></td>
+                  <td class="px-6 py-4 text-sm text-slate-500">
+                    <%= doc.expiry_date&.strftime('%d/%m/%Y') || '-' %>
+                    <% if doc.expired? %>
+                      <span class="ml-1 text-xs text-red-600 font-medium">Scaduto</span>
+                    <% elsif doc.expiring_soon? %>
+                      <span class="ml-1 text-xs text-orange-600 font-medium">In scadenza</span>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 text-right text-sm">
+                    <% if doc.file.attached? %>
+                      <%= link_to 'Download', rails_blob_path(doc.file, disposition: 'attachment'), class: 'text-blue-700 hover:text-blue-800 font-medium mr-3' %>
+                    <% end %>
+                    <%= link_to t('shared.edit'), edit_document_path(doc), class: 'text-blue-700 hover:text-blue-800 font-medium' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 text-center py-8"><%= t('documents.no_documents') %></p>
+      <% end %>
+    </div>
+
+    <!-- Communications Tab -->
+    <div data-tabs-target="panel" data-tab="communications" class="hidden">
+      <div class="mb-4 flex justify-end">
+        <%= link_to t('communications.new'), new_beneficiary_communication_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800' %>
+      </div>
+      <% if @communications.any? %>
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.communication.subject') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.communication.channel') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.communication.counterpart') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase"><%= t('activerecord.attributes.communication.status') %></th>
+                <th class="px-6 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% @communications.each do |comm| %>
+                <tr class="hover:bg-slate-50">
+                  <td class="px-6 py-4 text-sm font-medium"><%= link_to comm.subject, communication_path(comm), class: 'text-blue-700 hover:text-blue-800' %></td>
+                  <td class="px-6 py-4 text-sm"><%= t("activerecord.enums.communication.channel.#{comm.channel}") %></td>
+                  <td class="px-6 py-4 text-sm text-slate-500"><%= comm.counterpart %></td>
+                  <td class="px-6 py-4"><%= status_badge(comm.status) %></td>
+                  <td class="px-6 py-4 text-right text-sm">
+                    <%= link_to t('shared.edit'), edit_communication_path(comm), class: 'text-blue-700 hover:text-blue-800 font-medium' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 text-center py-8"><%= t('communications.no_communications') %></p>
+      <% end %>
+    </div>
+
+    <!-- Contacts Tab -->
+    <div data-tabs-target="panel" data-tab="contacts" class="hidden">
+      <div class="mb-4 flex justify-end">
+        <%= link_to t('contacts.new'), new_beneficiary_contact_path(@beneficiary), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800' %>
+      </div>
+      <% if @contacts.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <% @contacts.each do |contact| %>
+            <div class="bg-white shadow rounded-lg p-4">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-sm font-medium text-slate-900"><%= contact.full_name %></h4>
+                <span class="text-xs text-slate-500"><%= contact.relationship %></span>
+              </div>
+              <% if contact.phone.present? %>
+                <p class="text-xs text-slate-500">Tel: <%= contact.phone %></p>
+              <% end %>
+              <% if contact.email.present? %>
+                <p class="text-xs text-slate-500">Email: <%= contact.email %></p>
+              <% end %>
+              <div class="mt-2 flex space-x-2">
+                <%= link_to t('shared.edit'), edit_contact_path(contact), class: 'text-xs text-blue-700 hover:text-blue-800' %>
+                <%= link_to t('shared.delete'), contact_path(contact), data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') }, class: 'text-xs text-red-600 hover:text-red-800' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-500 text-center py-8">Nessun contatto trovato.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

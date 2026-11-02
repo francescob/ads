@@ -1,0 +1,46 @@
+<%= native_navbar_tag(t('deadlines.all_deadlines')) %>
+
+<div>
+  <%= page_header(t('deadlines.all_deadlines')) do %>
+    <%= link_to t('deadlines.calendar'), calendar_path, class: 'inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50' %>
+  <% end %>
+
+  <% if @deadlines.any? %>
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <table class="min-w-full divide-y divide-slate-200">
+        <thead class="bg-slate-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Titolo</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Beneficiario</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Scadenza</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Tipo</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Priorita</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Stato</th>
+            <th class="px-6 py-3"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <% @deadlines.each do |deadline| %>
+            <tr class="hover:bg-slate-50 <%= 'bg-red-50' if deadline.overdue? %>">
+              <td class="px-6 py-4 text-sm font-medium text-slate-900"><%= deadline.title %></td>
+              <td class="px-6 py-4 text-sm text-slate-500"><%= deadline.beneficiary.full_name %></td>
+              <td class="px-6 py-4 text-sm text-slate-500"><%= deadline.due_date.strftime('%d/%m/%Y') %></td>
+              <td class="px-6 py-4 text-sm"><%= t("activerecord.enums.deadline.deadline_type.#{deadline.deadline_type}") %></td>
+              <td class="px-6 py-4"><%= priority_badge(deadline.priority) %></td>
+              <td class="px-6 py-4"><%= status_badge(deadline.status) %></td>
+              <td class="px-6 py-4 text-right text-sm">
+                <% if deadline.open? %>
+                  <%= link_to t('deadlines.mark_completed'), deadline_path(deadline, deadline: { status: 'completed' }), data: { turbo_method: :patch }, class: 'text-green-600 hover:text-green-800 font-medium mr-2' %>
+                <% end %>
+                <%= link_to t('shared.edit'), edit_deadline_path(deadline), class: 'text-blue-700 hover:text-blue-800 font-medium' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-4"><%= paginate @deadlines %></div>
+  <% else %>
+    <p class="text-sm text-slate-500 text-center py-8"><%= t('deadlines.no_deadlines') %></p>
+  <% end %>
+</div>

@@ -1,0 +1,5 @@
+<% content_for(:breadcrumb_extra) { t('reports.new') } %>
+<div>
+  <%= page_header(t('reports.new')) %>
+  <%= render 'form', report: @report %>
+</div>

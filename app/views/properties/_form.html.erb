@@ -1,0 +1,130 @@
+<%= form_with(model: property, url: property.new_record? ? beneficiary_properties_path(beneficiary) : property_path(property), class: 'space-y-6') do |f| %>
+  <% if property.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4">
+      <ul class="text-sm text-red-700 list-disc pl-5">
+        <% property.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Informazioni Generali -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <h3 class="text-lg font-medium text-slate-900 mb-4">Informazioni Generali</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= f.label :property_type, "Tipo Immobile", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.select :property_type, 
+          options_for_select([
+            ['Residenziale (Appartamento, Casa)', 'residential'],
+            ['Commerciale (Negozio, Ufficio)', 'commercial'],
+            ['Agricolo (Terreno, Rustico)', 'agricultural'],
+            ['Terreno Edificabile', 'land'],
+            ['Industriale (Capannone, Magazzino)', 'industrial'],
+            ['Box/Garage/Posto Auto', 'garage'],
+            ['Altro', 'other']
+          ], property.property_type), 
+          { include_blank: '-- Seleziona tipo --' }, 
+          class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :description, "Descrizione", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :description, placeholder: "es. Appartamento via Roma", class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indirizzo -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <h3 class="text-lg font-medium text-slate-900 mb-4">Indirizzo</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="md:col-span-2">
+        <%= f.label :address, "Indirizzo", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :address, placeholder: "Via/Piazza e numero civico", class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :city, "Comune", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :city, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :province, "Provincia", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :province, placeholder: "es. MI, RM, TO", maxlength: 2, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm uppercase' %>
+      </div>
+      <div>
+        <%= f.label :zip_code, "CAP", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :zip_code, placeholder: "00000", maxlength: 5, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dati Catastali -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <h3 class="text-lg font-medium text-slate-900 mb-4">Dati Catastali</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <%= f.label :cadastral_sheet, "Foglio", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :cadastral_sheet, placeholder: "es. 123", class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :cadastral_particle, "Particella", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :cadastral_particle, placeholder: "es. 456", class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :cadastral_sub, "Subalterno", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :cadastral_sub, placeholder: "es. 1", class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :cadastral_category, "Categoria", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :cadastral_category, placeholder: "es. A/2, C/6", class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm uppercase' %>
+      </div>
+      <div>
+        <%= f.label :cadastral_class, "Classe", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :cadastral_class, placeholder: "es. 3", class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :cadastral_consistency, "Consistenza", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :cadastral_consistency, placeholder: "es. 5,5 vani", class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :cadastral_income, "Rendita Catastale (€)", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.number_field :cadastral_income, step: '0.01', placeholder: "0.00", class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Valore e Proprietà -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <h3 class="text-lg font-medium text-slate-900 mb-4">Valore e Proprietà</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="md:col-span-2">
+        <%= f.label :ownership_fraction, "Quota di Proprietà (frazione)", class: 'block text-sm font-medium text-slate-700' %>
+        <div class="mt-1 flex items-center space-x-2">
+          <%= f.number_field :ownership_numerator, min: '1', placeholder: "1", class: 'block w-20 rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm text-center' %>
+          <span class="text-2xl text-slate-400">/</span>
+          <%= f.number_field :ownership_denominator, min: '1', placeholder: "1", class: 'block w-20 rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm text-center' %>
+        </div>
+        <p class="mt-1 text-xs text-slate-500">Quota di proprietà del beneficiario (es. 1/2 per metà, 3/4 per tre quarti, 1/1 per piena proprietà)</p>
+      </div>
+      <div>
+        <%= f.label :valuation_date, "Data di Valutazione", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.date_field :valuation_date, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :initial_value, "Valore Iniziale (€)", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.number_field :initial_value, step: '0.01', placeholder: "0.00", class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :current_value, "Valore Attuale (€)", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.number_field :current_value, step: '0.01', placeholder: "0.00", class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div class="md:col-span-2">
+        <%= f.label :notes, "Note", class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_area :notes, rows: 3, placeholder: "Note aggiuntive sull'immobile...", class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <%= link_to 'Annulla', property.new_record? ? beneficiary_path(beneficiary) : property_path(property), class: 'inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50' %>
+    <%= f.submit property.new_record? ? 'Crea Immobile' : 'Aggiorna Immobile', class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 cursor-pointer' %>
+  </div>
+<% end %>

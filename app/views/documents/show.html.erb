@@ -1,0 +1,43 @@
+<% content_for(:breadcrumb_extra) { @document.title } %>
+<div>
+  <div class="sm:flex sm:items-center sm:justify-between mb-6">
+    <h1 class="text-2xl font-bold text-slate-900"><%= @document.title %></h1>
+    <div class="mt-4 sm:mt-0 flex space-x-3">
+      <% if @document.file.attached? %>
+        <%= link_to 'Download', rails_blob_path(@document.file, disposition: 'attachment'), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700' %>
+      <% end %>
+      <%= link_to t('shared.edit'), edit_document_path(@document), class: 'inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50' %>
+      <%= link_to t('shared.delete'), document_path(@document), data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') }, class: 'inline-flex items-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50' %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.document.document_type') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= t("activerecord.enums.document.document_type.#{@document.document_type}") %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.document.document_date') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @document.document_date&.strftime('%d/%m/%Y') || '-' %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.document.expiry_date') %></dt>
+        <dd class="mt-1 text-sm text-slate-900">
+          <%= @document.expiry_date&.strftime('%d/%m/%Y') || '-' %>
+          <% if @document.expired? %>
+            <span class="ml-1 text-xs text-red-600 font-medium">Scaduto</span>
+          <% elsif @document.expiring_soon? %>
+            <span class="ml-1 text-xs text-orange-600 font-medium">In scadenza</span>
+          <% end %>
+        </dd>
+      </div>
+      <% if @document.notes.present? %>
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.document.notes') %></dt>
+          <dd class="mt-1 text-sm text-slate-900"><%= simple_format(@document.notes) %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+</div>

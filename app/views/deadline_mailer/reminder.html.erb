@@ -1,0 +1,18 @@
+<h1>Promemoria Scadenza</h1>
+
+<p>Gentile <%= @user.full_name %>,</p>
+
+<p>Le ricordiamo la seguente scadenza:</p>
+
+<ul>
+  <li><strong>Titolo:</strong> <%= @deadline.title %></li>
+  <li><strong>Beneficiario:</strong> <%= @beneficiary.full_name %></li>
+  <li><strong>Scadenza:</strong> <%= @deadline.due_date.strftime('%d/%m/%Y') %></li>
+  <li><strong>Priorità:</strong> <%= I18n.t("activerecord.enums.deadline.priority.#{@deadline.priority}") %></li>
+</ul>
+
+<% if @deadline.description.present? %>
+  <p><strong>Descrizione:</strong> <%= @deadline.description %></p>
+<% end %>
+
+<p>Cordiali saluti,<br>Guardianship App</p>

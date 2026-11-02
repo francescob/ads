@@ -1,0 +1,49 @@
+<% content_for(:breadcrumb_extra) { t('hearings.title') } %>
+<div>
+  <div class="sm:flex sm:items-center sm:justify-between mb-6">
+    <h1 class="text-2xl font-bold text-slate-900"><%= @hearing.subject || 'Udienza' %></h1>
+    <div class="mt-4 sm:mt-0 flex space-x-3">
+      <%= link_to t('shared.edit'), edit_hearing_path(@hearing), class: 'inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50' %>
+      <%= link_to t('shared.delete'), hearing_path(@hearing), data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') }, class: 'inline-flex items-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50' %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.hearing.hearing_date') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @hearing.hearing_date.strftime('%d/%m/%Y %H:%M') %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.hearing.court') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @hearing.court %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.hearing.courtroom') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @hearing.courtroom || '-' %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.hearing.subject') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @hearing.subject || '-' %></dd>
+      </div>
+      <% if @hearing.outcome.present? %>
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.hearing.outcome') %></dt>
+          <dd class="mt-1 text-sm text-slate-900"><%= simple_format(@hearing.outcome) %></dd>
+        </div>
+      <% end %>
+      <% if @hearing.next_hearing_date.present? %>
+        <div>
+          <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.hearing.next_hearing_date') %></dt>
+          <dd class="mt-1 text-sm text-slate-900"><%= @hearing.next_hearing_date.strftime('%d/%m/%Y') %></dd>
+        </div>
+      <% end %>
+      <% if @hearing.notes.present? %>
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.hearing.notes') %></dt>
+          <dd class="mt-1 text-sm text-slate-900"><%= simple_format(@hearing.notes) %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+</div>

@@ -1,0 +1,196 @@
+<div class="mb-6">
+  <nav class="text-sm text-slate-600">
+    <%= link_to "Dashboard", root_path, class: "hover:text-blue-700" %>
+    <span class="mx-2">/</span>
+    <%= link_to "Beneficiari", beneficiaries_path, class: "hover:text-blue-700" %>
+    <% if @beneficiary&.persisted? %>
+      <span class="mx-2">/</span>
+      <%= link_to @beneficiary.full_name, beneficiary_path(@beneficiary), class: "hover:text-blue-700" %>
+      <span class="mx-2">/</span>
+      <%= link_to "Immobili", beneficiary_properties_path(@beneficiary), class: "hover:text-blue-700" %>
+    <% end %>
+    <span class="mx-2">/</span>
+    <span class="text-slate-900 font-medium"><%= @property.description %></span>
+  </nav>
+</div>
+
+<div class="mb-6 flex justify-between items-start">
+  <div>
+    <h1 class="text-3xl font-bold text-slate-900"><%= @property.description %></h1>
+    <p class="mt-2 text-slate-600">
+      <%= @property.property_type.humanize %> 
+      <% if @property.full_address.present? %>
+        - <%= @property.full_address %>
+      <% end %>
+    </p>
+  </div>
+  <div class="flex space-x-3">
+    <%= link_to "Modifica", edit_property_path(@property), class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800" %>
+    <%= button_to "Elimina", property_path(@property), method: :delete, data: { turbo_confirm: "Sei sicuro di voler eliminare questo immobile?" }, class: "inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50" %>
+  </div>
+</div>
+
+<!-- Informazioni Generali -->
+<div class="bg-white shadow rounded-lg p-6 mb-6">
+  <h2 class="text-lg font-semibold text-slate-900 mb-4">Informazioni Generali</h2>
+  <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Tipo Immobile</dt>
+      <dd class="mt-1 text-sm text-slate-900"><%= @property.property_type.humanize %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Descrizione</dt>
+      <dd class="mt-1 text-sm text-slate-900"><%= @property.description %></dd>
+    </div>
+  </dl>
+</div>
+
+<!-- Indirizzo -->
+<div class="bg-white shadow rounded-lg p-6 mb-6">
+  <h2 class="text-lg font-semibold text-slate-900 mb-4">Indirizzo</h2>
+  <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+    <div class="md:col-span-2">
+      <dt class="text-sm font-medium text-slate-500">Indirizzo Completo</dt>
+      <dd class="mt-1 text-sm text-slate-900">
+        <%= @property.full_address.presence || "Non specificato" %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Via/Piazza</dt>
+      <dd class="mt-1 text-sm text-slate-900"><%= @property.address.presence || "-" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Comune</dt>
+      <dd class="mt-1 text-sm text-slate-900"><%= @property.city.presence || "-" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Provincia</dt>
+      <dd class="mt-1 text-sm text-slate-900"><%= @property.province.presence || "-" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">CAP</dt>
+      <dd class="mt-1 text-sm text-slate-900"><%= @property.zip_code.presence || "-" %></dd>
+    </div>
+  </dl>
+</div>
+
+<!-- Dati Catastali -->
+<div class="bg-white shadow rounded-lg p-6 mb-6">
+  <h2 class="text-lg font-semibold text-slate-900 mb-4">Dati Catastali</h2>
+  <% if @property.cadastral_reference.present? %>
+    <div class="mb-4 p-3 bg-blue-50 rounded-md">
+      <p class="text-sm text-blue-900 font-medium"><%= @property.cadastral_reference %></p>
+    </div>
+  <% end %>
+  <dl class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4">
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Foglio</dt>
+      <dd class="mt-1 text-sm text-slate-900"><%= @property.cadastral_sheet.presence || "-" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Particella</dt>
+      <dd class="mt-1 text-sm text-slate-900"><%= @property.cadastral_particle.presence || "-" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Subalterno</dt>
+      <dd class="mt-1 text-sm text-slate-900"><%= @property.cadastral_sub.presence || "-" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Categoria</dt>
+      <dd class="mt-1 text-sm text-slate-900"><%= @property.cadastral_category.presence || "-" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Classe</dt>
+      <dd class="mt-1 text-sm text-slate-900"><%= @property.cadastral_class.presence || "-" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Consistenza</dt>
+      <dd class="mt-1 text-sm text-slate-900"><%= @property.cadastral_consistency.presence || "-" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Rendita Catastale</dt>
+      <dd class="mt-1 text-sm text-slate-900">
+        <% if @property.cadastral_income.present? %>
+          <%= number_to_currency(@property.cadastral_income, unit: "€ ", separator: ",", delimiter: ".", precision: 2) %>
+        <% else %>
+          -
+        <% end %>
+      </dd>
+    </div>
+  </dl>
+  <% if @property.cadastral_classification.present? %>
+    <div class="mt-4 p-3 bg-slate-50 rounded-md">
+      <p class="text-xs text-slate-600">Classificazione: <%= @property.cadastral_classification %></p>
+    </div>
+  <% end %>
+</div>
+
+<!-- Valore e Proprietà -->
+<div class="bg-white shadow rounded-lg p-6 mb-6">
+  <h2 class="text-lg font-semibold text-slate-900 mb-4">Valore e Proprietà</h2>
+  <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Quota di Proprietà</dt>
+      <dd class="mt-1 text-sm text-slate-900">
+        <% if @property.ownership_fraction.present? %>
+          <span class="text-lg font-semibold"><%= @property.ownership_fraction %></span>
+          <% if @property.ownership_percentage %>
+            <span class="text-xs text-slate-500 ml-2">(<%= number_to_percentage(@property.ownership_percentage, precision: 2, separator: ",", delimiter: ".") %>)</span>
+          <% end %>
+        <% else %>
+          -
+        <% end %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Data di Valutazione</dt>
+      <dd class="mt-1 text-sm text-slate-900">
+        <%= @property.valuation_date ? l(@property.valuation_date, format: :long) : "-" %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Valore Iniziale</dt>
+      <dd class="mt-1 text-sm text-slate-900">
+        <% if @property.initial_value.present? %>
+          <%= number_to_currency(@property.initial_value, unit: "€ ", separator: ",", delimiter: ".", precision: 2) %>
+        <% else %>
+          -
+        <% end %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-slate-500">Valore Attuale</dt>
+      <dd class="mt-1 text-sm text-slate-900 font-semibold text-lg">
+        <% if @property.current_value.present? %>
+          <%= number_to_currency(@property.current_value, unit: "€ ", separator: ",", delimiter: ".", precision: 2) %>
+        <% else %>
+          -
+        <% end %>
+      </dd>
+    </div>
+    <% if @property.owned_value.present? %>
+      <div class="md:col-span-2">
+        <dt class="text-sm font-medium text-slate-500">Valore Quota di Proprietà</dt>
+        <dd class="mt-1 text-sm text-slate-900">
+          <%= number_to_currency(@property.owned_value, unit: "€ ", separator: ",", delimiter: ".", precision: 2) %>
+          <span class="text-xs text-slate-500 ml-2">
+            (Calcolato: <%= number_to_currency(@property.current_value, unit: "€ ") %> × <%= @property.ownership_fraction %>)
+          </span>
+        </dd>
+      </div>
+    <% end %>
+  </dl>
+</div>
+
+<!-- Note -->
+<% if @property.notes.present? %>
+  <div class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-lg font-semibold text-slate-900 mb-4">Note</h2>
+    <p class="text-sm text-slate-700 whitespace-pre-wrap"><%= @property.notes %></p>
+  </div>
+<% end %>
+
+<div class="mt-6 flex justify-between">
+  <%= link_to "← Torna agli Immobili", beneficiary_properties_path(@beneficiary), class: "text-sm text-blue-700 hover:text-blue-800" %>
+  <%= link_to "Torna al Beneficiario →", beneficiary_path(@beneficiary), class: "text-sm text-blue-700 hover:text-blue-800" %>
+</div>

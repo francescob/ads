@@ -1,0 +1,71 @@
+<% content_for(:breadcrumb_extra) { t('appointments.title') } %>
+<div>
+  <div class="sm:flex sm:items-center sm:justify-between mb-6">
+    <h1 class="text-2xl font-bold text-slate-900">Decreto <%= @appointment.decree_number %></h1>
+    <div class="mt-4 sm:mt-0 flex space-x-3">
+      <%= link_to t('shared.edit'), edit_appointment_path(@appointment), class: 'inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50' %>
+      <%= link_to t('shared.delete'), appointment_path(@appointment), data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') }, class: 'inline-flex items-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50' %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.appointment.decree_number') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @appointment.decree_number %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.appointment.decree_date') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @appointment.decree_date&.strftime('%d/%m/%Y') %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.appointment.court') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @appointment.court %> - <%= @appointment.court_section %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.appointment.judge') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @appointment.judge %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.appointment.appointment_date') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @appointment.appointment_date&.strftime('%d/%m/%Y') %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.appointment.mandate_expiry_date') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @appointment.mandate_expiry_date&.strftime('%d/%m/%Y') %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.appointment.appointment_type') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= t("activerecord.enums.appointment.appointment_type.#{@appointment.appointment_type}") %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.appointment.ordinary_expense_limit') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= format_currency(@appointment.ordinary_expense_limit) %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.appointment.extraordinary_expense_limit') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= format_currency(@appointment.extraordinary_expense_limit) %></dd>
+      </div>
+      <div class="sm:col-span-2">
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.appointment.financial_powers') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= simple_format(@appointment.financial_powers) %></dd>
+      </div>
+      <div class="sm:col-span-2">
+        <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.appointment.personal_powers') %></dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= simple_format(@appointment.personal_powers) %></dd>
+      </div>
+      <% if @appointment.document.attached? %>
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-slate-500">Documento allegato</dt>
+          <dd class="mt-1"><%= link_to 'Scarica decreto', rails_blob_path(@appointment.document, disposition: 'attachment'), class: 'text-blue-700 hover:text-blue-800 text-sm font-medium' %></dd>
+        </div>
+      <% end %>
+      <% if @appointment.notes.present? %>
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-slate-500"><%= t('activerecord.attributes.appointment.notes') %></dt>
+          <dd class="mt-1 text-sm text-slate-900"><%= simple_format(@appointment.notes) %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+</div>

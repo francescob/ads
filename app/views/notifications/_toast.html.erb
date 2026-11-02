@@ -1,0 +1,94 @@
+<%# Toast Notification Component %>
+<%# Usage: render 'notifications/toast', notification: notification %>
+
+<% 
+  # Determine notification type/color scheme
+  notification_type = local_assigns[:notification_type] || 'success'
+  
+  colors = case notification_type
+  when 'success'
+    { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-800', icon_bg: 'bg-green-100', icon_text: 'text-green-600' }
+  when 'error'
+    { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-800', icon_bg: 'bg-red-100', icon_text: 'text-red-600' }
+  when 'warning'
+    { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-800', icon_bg: 'bg-yellow-100', icon_text: 'text-yellow-600' }
+  else # info
+    { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-800', icon_bg: 'bg-blue-100', icon_text: 'text-blue-600' }
+  end
+  
+  # Get notification details from event params
+  title = notification.event.params[:title]
+  message = notification.event.params[:message]
+  url = notification.event.params[:url]
+  icon = notification.event.params[:icon]
+%>
+
+<div 
+  data-controller="notification" 
+  data-notification-notification-id-value="<%= notification.id %>"
+  data-notification-auto-dismiss-value="true"
+  data-notification-dismiss-after-value="8000"
+  data-action="mouseenter->notification#pauseDismiss mouseleave->notification#resumeDismiss"
+  class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg <%= colors[:bg] %> border <%= colors[:border] %> shadow-lg transform transition-all duration-300 ease-in-out"
+  role="alert"
+>
+  <div class="p-4">
+    <div class="flex items-start">
+      <!-- Icon -->
+      <div class="flex-shrink-0">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full <%= colors[:icon_bg] %>">
+          <span class="text-lg"><%= icon %></span>
+        </div>
+      </div>
+      
+      <!-- Content -->
+      <div class="ml-3 flex-1 pt-0.5">
+        <p class="text-sm font-medium <%= colors[:text] %>">
+          <%= title %>
+        </p>
+        <% if message.present? %>
+          <p class="mt-1 text-sm <%= colors[:text] %> opacity-90">
+            <%= message %>
+          </p>
+        <% end %>
+        
+        <% if url.present? %>
+          <div class="mt-3">
+            <%= link_to url, class: "inline-flex items-center text-sm font-medium #{colors[:text]} hover:underline", data: { action: "click->notification#markAsRead" } do %>
+              Visualizza
+              <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Close Button -->
+      <div class="ml-4 flex flex-shrink-0">
+        <button 
+          type="button"
+          data-action="click->notification#dismiss"
+          class="inline-flex rounded-md <%= colors[:bg] %> <%= colors[:text] %> hover:opacity-75 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600"
+        >
+          <span class="sr-only">Chiudi</span>
+          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Progress bar for auto-dismiss -->
+  <div class="h-1 w-full bg-gray-200 bg-opacity-30">
+    <div class="h-full <%= colors[:icon_bg] %> transition-all duration-[8000ms] ease-linear" style="width: 0%; animation: shrink 8s linear forwards;"></div>
+  </div>
+</div>
+
+<style>
+  @keyframes shrink {
+    from { width: 100%; }
+    to { width: 0%; }
+  }
+</style>

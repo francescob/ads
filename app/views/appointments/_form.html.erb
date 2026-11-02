@@ -1,0 +1,76 @@
+<%= form_with(model: appointment, url: appointment.new_record? ? beneficiary_appointments_path(beneficiary) : appointment_path(appointment), class: 'space-y-6') do |f| %>
+  <% if appointment.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4">
+      <ul class="text-sm text-red-700 list-disc pl-5">
+        <% appointment.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <h3 class="text-lg font-medium text-slate-900 mb-4">Dati Decreto</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= f.label :decree_number, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :decree_number, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :decree_date, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.date_field :decree_date, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :court, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :court, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :court_section, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :court_section, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :judge, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_field :judge, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :appointment_type, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.select :appointment_type, options_for_select([[t('enums.appointment.appointment_type.provisional'), 'provisional'], [t('enums.appointment.appointment_type.definitive'), 'definitive'], [t('enums.appointment.appointment_type.urgent'), 'urgent']], appointment.appointment_type), { include_blank: '-- Seleziona --' }, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :appointment_date, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.date_field :appointment_date, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :mandate_expiry_date, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.date_field :mandate_expiry_date, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :ordinary_expense_limit, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.number_field :ordinary_expense_limit, step: '0.01', class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div>
+        <%= f.label :extraordinary_expense_limit, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.number_field :extraordinary_expense_limit, step: '0.01', class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div class="md:col-span-2">
+        <%= f.label :financial_powers, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_area :financial_powers, rows: 3, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div class="md:col-span-2">
+        <%= f.label :personal_powers, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_area :personal_powers, rows: 3, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+      <div class="md:col-span-2">
+        <%= f.label :document, 'Documento (PDF)', class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.file_field :document, accept: '.pdf', class: 'mt-1 block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100' %>
+      </div>
+      <div class="md:col-span-2">
+        <%= f.label :notes, class: 'block text-sm font-medium text-slate-700' %>
+        <%= f.text_area :notes, rows: 3, class: 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <%= link_to t('shared.cancel'), appointment.new_record? ? beneficiary_path(beneficiary) : appointment_path(appointment), class: 'inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50' %>
+    <%= f.submit t('shared.save'), class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 cursor-pointer' %>
+  </div>
+<% end %>

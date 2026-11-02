@@ -1,0 +1,105 @@
+<div class="bg-white shadow rounded-lg p-6">
+  <%= form_with(model: liability, url: liability.new_record? ? beneficiary_liabilities_path(beneficiary) : liability_path(liability), local: true, class: "space-y-6") do |f| %>
+    <% if liability.errors.any? %>
+      <div class="rounded-md bg-red-50 p-4">
+        <div class="flex">
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800">
+              <%= t('errors.template.header', count: liability.errors.count, model: Liability.model_name.human) %>
+            </h3>
+            <div class="mt-2 text-sm text-red-700">
+              <ul class="list-disc pl-5 space-y-1">
+                <% liability.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div>
+        <%= f.label :liability_type, class: "block text-sm font-medium text-slate-700" %>
+        <%= f.select :liability_type, 
+            options_for_select(
+              Liability.liability_types.keys.map { |type| [t("activerecord.enums.liability.liability_type.#{type}"), type] }, 
+              liability.liability_type
+            ),
+            { prompt: t('shared.select_option') },
+            class: "mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+
+      <div>
+        <%= f.label :creditor, class: "block text-sm font-medium text-slate-700" %>
+        <%= f.text_field :creditor, class: "mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-2">
+        <%= f.label :description, class: "block text-sm font-medium text-slate-700" %>
+        <%= f.text_field :description, class: "mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+
+      <div>
+        <%= f.label :initial_amount, class: "block text-sm font-medium text-slate-700" %>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-slate-500 sm:text-sm">€</span>
+          </div>
+          <%= f.number_field :initial_amount, step: 0.01, class: "block w-full pl-7 pr-12 rounded-md border-slate-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :remaining_balance, class: "block text-sm font-medium text-slate-700" %>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-slate-500 sm:text-sm">€</span>
+          </div>
+          <%= f.number_field :remaining_balance, step: 0.01, class: "block w-full pl-7 pr-12 rounded-md border-slate-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :interest_rate, class: "block text-sm font-medium text-slate-700" %>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <%= f.number_field :interest_rate, step: 0.01, class: "block w-full pr-12 rounded-md border-slate-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <span class="text-slate-500 sm:text-sm">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :monthly_payment, class: "block text-sm font-medium text-slate-700" %>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-slate-500 sm:text-sm">€</span>
+          </div>
+          <%= f.number_field :monthly_payment, step: 0.01, class: "block w-full pl-7 pr-12 rounded-md border-slate-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :start_date, class: "block text-sm font-medium text-slate-700" %>
+        <%= f.date_field :start_date, class: "mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+
+      <div>
+        <%= f.label :end_date, class: "block text-sm font-medium text-slate-700" %>
+        <%= f.date_field :end_date, class: "mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+
+      <div class="sm:col-span-2">
+        <%= f.label :notes, class: "block text-sm font-medium text-slate-700" %>
+        <%= f.text_area :notes, rows: 4, class: "mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      </div>
+    </div>
+
+    <div class="flex justify-end space-x-3">
+      <%= link_to t('shared.cancel'), liability.persisted? ? liability_path(liability) : beneficiary_path(beneficiary), class: "inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50" %>
+      <%= f.submit class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+    </div>
+  <% end %>
+</div>

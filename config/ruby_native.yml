@@ -1,0 +1,43 @@
+app:
+  name: "GuardianshipApp"
+  mode: normal  # normal or advanced
+  # entry_path: /  # Initial URL on app launch (defaults to first tab's path)
+
+appearance:
+  tint_color: "#0F172A"  # Slate-900 to match the app theme
+  background_color: "#F8FAFC"  # Slate-50 to match the app background
+  theme: auto  # auto, light, or dark
+  # landscape: true  # Allow landscape orientation on iPhone (defaults to portrait only)
+
+tabs:
+  - title: Home
+    path: /
+    icon: house.fill
+    auto_route: false  # Disable automatic tab switching since "/" matches everything
+  
+  - title: Beneficiari
+    path: /beneficiaries
+    icon: person.2.fill
+    auto_route:
+      - /beneficiaries
+      - /appointments
+      - /reports
+      - /patrimony
+      - /liabilities
+      - /hearings
+      - /documents
+      - /communications
+      - /contacts
+  
+  - title: Scadenze
+    path: /calendar
+    icon: calendar
+    auto_route:
+      - /deadlines
+      - /calendar
+  
+  - title: Profilo
+    path: /users/edit
+    icon: gear
+    auto_route:
+      - /users

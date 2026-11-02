@@ -1,0 +1,47 @@
+<% content_for(:breadcrumb_extra) { @deadline.title } %>
+<div>
+  <div class="sm:flex sm:items-center sm:justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900"><%= @deadline.title %></h1>
+      <p class="mt-1 text-sm text-slate-500"><%= @beneficiary.full_name %></p>
+    </div>
+    <div class="mt-4 sm:mt-0 flex space-x-3">
+      <% if @deadline.open? %>
+        <%= link_to t('deadlines.mark_completed'), deadline_path(@deadline, deadline: { status: 'completed' }), data: { turbo_method: :patch }, class: 'inline-flex items-center px-4 py-2 border border-green-300 shadow-sm text-sm font-medium rounded-md text-green-700 bg-white hover:bg-green-50' %>
+      <% end %>
+      <%= link_to t('shared.edit'), edit_deadline_path(@deadline), class: 'inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50' %>
+      <%= link_to t('shared.delete'), deadline_path(@deadline), data: { turbo_method: :delete, turbo_confirm: t('shared.confirm_delete') }, class: 'inline-flex items-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50' %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+      <div>
+        <dt class="text-sm font-medium text-slate-500">Scadenza</dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @deadline.due_date.strftime('%d/%m/%Y') %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500">Promemoria</dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= @deadline.reminder_date&.strftime('%d/%m/%Y') || '-' %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500">Tipo</dt>
+        <dd class="mt-1 text-sm text-slate-900"><%= t("activerecord.enums.deadline.deadline_type.#{@deadline.deadline_type}") %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500">Stato</dt>
+        <dd class="mt-1"><%= status_badge(@deadline.status) %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-slate-500">Priorita</dt>
+        <dd class="mt-1"><%= priority_badge(@deadline.priority) %></dd>
+      </div>
+      <% if @deadline.description.present? %>
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-slate-500">Descrizione</dt>
+          <dd class="mt-1 text-sm text-slate-900"><%= simple_format(@deadline.description) %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+</div>

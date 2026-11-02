@@ -1,0 +1,5 @@
+<% content_for(:breadcrumb_extra) { t('documents.new') } %>
+<div>
+  <%= page_header(t('documents.new')) %>
+  <%= render 'form', document: @document, beneficiary: @beneficiary %>
+</div>

@@ -1,0 +1,5 @@
+<% content_for(:breadcrumb_extra) { t('hearings.edit') } %>
+<div>
+  <%= page_header(t('hearings.edit')) %>
+  <%= render 'form', hearing: @hearing, beneficiary: @beneficiary %>
+</div>

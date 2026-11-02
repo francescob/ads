@@ -1,0 +1,18 @@
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+  <div class="bg-white shadow rounded-lg p-4 text-center">
+    <p class="text-xs font-medium text-slate-500 uppercase"><%= t('reports.opening_balance') %></p>
+    <p class="mt-1 text-xl font-bold text-slate-900"><%= format_currency(@report.opening_balance) %></p>
+  </div>
+  <div class="bg-white shadow rounded-lg p-4 text-center">
+    <p class="text-xs font-medium text-slate-500 uppercase"><%= t('reports.total_income') %></p>
+    <p class="mt-1 text-xl font-bold text-green-600">+ <%= format_currency(@report.total_income) %></p>
+  </div>
+  <div class="bg-white shadow rounded-lg p-4 text-center">
+    <p class="text-xs font-medium text-slate-500 uppercase"><%= t('reports.total_expenses') %></p>
+    <p class="mt-1 text-xl font-bold text-red-600">- <%= format_currency(@report.total_expenses) %></p>
+  </div>
+  <div class="bg-blue-50 shadow rounded-lg p-4 text-center border border-blue-200">
+    <p class="text-xs font-medium text-blue-600 uppercase"><%= t('reports.closing_balance') %></p>
+    <p class="mt-1 text-xl font-bold text-blue-800"><%= format_currency(@report.closing_balance) %></p>
+  </div>
+</div>

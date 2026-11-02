@@ -1,0 +1,9 @@
+<%= turbo_stream.replace @expense_entry do %>
+  <%= render partial: 'expense_entries/expense_entry', locals: { expense_entry: @expense_entry } %>
+<% end %>
+
+<%= turbo_stream.replace "report-summary" do %>
+  <%= turbo_frame_tag 'report-summary' do %>
+    <%= render 'reports/summary' %>
+  <% end %>
+<% end %>

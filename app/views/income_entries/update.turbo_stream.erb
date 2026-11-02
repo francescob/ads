@@ -1,0 +1,9 @@
+<%= turbo_stream.replace @income_entry do %>
+  <%= render partial: 'income_entries/income_entry', locals: { income_entry: @income_entry } %>
+<% end %>
+
+<%= turbo_stream.replace "report-summary" do %>
+  <%= turbo_frame_tag 'report-summary' do %>
+    <%= render 'reports/summary' %>
+  <% end %>
+<% end %>

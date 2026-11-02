@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html class="h-full bg-slate-50">
+  <head>
+    <title><%= content_for(:title) || "Guardianship App" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :ruby_native %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="h-full">
+    <% if user_signed_in? %>
+      <%= turbo_stream_from "notifications_#{current_user.id}" %>
+      
+      <div class="min-h-full">
+        <% unless native_app? %>
+          <!-- Mobile sidebar backdrop -->
+          <div id="mobile-sidebar-backdrop" class="hidden fixed inset-0 bg-gray-900/80 z-40 lg:hidden" data-controller="sidebar" data-action="click->sidebar#close"></div>
+
+          <!-- Sidebar -->
+          <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-800 transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0" data-sidebar-target="menu">
+            <%= render 'shared/sidebar' %>
+          </aside>
+        <% end %>
+
+        <!-- Main content -->
+        <div class="<%= native_app? ? '' : 'lg:pl-64' %>">
+          <%= render 'shared/topbar' unless native_app? %>
+
+          <main class="py-6 px-4 sm:px-6 lg:px-8 native-inset">
+            <%= render 'shared/flash' %>
+            <%= yield %>
+          </main>
+        </div>
+        
+        <!-- Toast Notifications Container -->
+        <div 
+          id="toast-container" 
+          aria-live="assertive" 
+          class="pointer-events-none fixed inset-0 z-50 flex items-end px-4 py-6 sm:items-start sm:p-6"
+        >
+          <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
+            <!-- Toast notifications will be inserted here via Turbo Stream -->
+            <div id="notifications"></div>
+          </div>
+        </div>
+        
+        <!-- Native tab bar -->
+        <%= native_tabs_tag %>
+      </div>
+    <% else %>
+      <main class="min-h-screen flex items-center justify-center bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 native-inset">
+        <%= render 'shared/flash' %>
+        <%= yield %>
+      </main>
+    <% end %>
+  </body>
+</html>

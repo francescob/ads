@@ -1,0 +1,58 @@
+<header class="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-sm">
+  <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+    <!-- Mobile menu button -->
+    <button type="button" class="lg:hidden text-slate-500 hover:text-slate-700" data-controller="sidebar" data-action="click->sidebar#toggle">
+      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+
+    <!-- Breadcrumb -->
+    <div class="flex-1 ml-4 lg:ml-0">
+      <%= render 'shared/breadcrumb' %>
+    </div>
+
+    <!-- Right side -->
+    <div class="flex items-center space-x-4">
+      <!-- Notifications -->
+      <% unread_notifications_count = current_user.notifications.unread.count %>
+      <%= link_to notifications_path, class: 'relative text-slate-500 hover:text-blue-600 transition-colors' do %>
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        <% if unread_notifications_count > 0 %>
+          <span class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium"><%= unread_notifications_count %></span>
+        <% end %>
+      <% end %>
+      
+      <!-- Deadlines -->
+      <% overdue_count = Deadline.joins(:beneficiary).where(beneficiaries: { user_id: current_user.id }).overdue.count %>
+      <% if overdue_count > 0 %>
+        <%= link_to deadlines_path, class: 'relative text-slate-500 hover:text-red-600 transition-colors' do %>
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium"><%= overdue_count %></span>
+        <% end %>
+      <% end %>
+
+      <!-- User dropdown -->
+      <div class="relative" data-controller="dropdown">
+        <button data-action="click->dropdown#toggle" class="flex items-center space-x-2 text-sm text-slate-700 hover:text-slate-900">
+          <div class="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center">
+            <span class="text-white text-sm font-medium"><%= current_user.first_name[0] %><%= current_user.last_name[0] %></span>
+          </div>
+          <span class="hidden sm:block font-medium"><%= current_user.full_name %></span>
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div data-dropdown-target="menu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 z-50">
+          <%= link_to t('navigation.profile'), edit_user_registration_path, class: 'block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100' %>
+          <%= link_to t('navigation.sign_out'), destroy_user_session_path, data: { turbo_method: :delete }, class: 'block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100' %>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
