@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Development-only gem (see Gemfile)
+return unless defined?(RailsAiContext)
+
 RailsAiContext.configure do |config|
   # Introspector preset:
   #   :standard — 8 core introspectors (schema, models, routes, jobs, gems, conventions, controllers, tests)

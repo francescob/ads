@@ -7,7 +7,7 @@ gem "propshaft"
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", ">= 5.0"
+gem "puma", "~> 7.2"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
@@ -51,10 +51,12 @@ gem "rails-i18n", "~> 8.0"
 # PDF
 gem "prawn"
 gem "prawn-table"
+# Needed by prawn; no longer bundled by default with Ruby 4 (only came in via test gems)
+gem "matrix"
 
 # Pagination & search
 gem "kaminari"
-gem "ransack"
+gem "ransack", "~> 4.4"
 
 # Notifications
 gem "noticed"
@@ -79,6 +81,9 @@ group :development, :test do
 end
 
 group :development do
+  # AI context files (AGENTS.md) and MCP server for coding assistants: `bin/rails ai:serve`
+  gem "rails-ai-context", "~> 5.38"
+
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
   gem "listen"
@@ -90,5 +95,4 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "rails-ai-context", "~> 0.8.4"
 gem "csv"
