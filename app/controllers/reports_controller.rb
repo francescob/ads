@@ -24,7 +24,7 @@ class ReportsController < ApplicationController
       redirect_to @report, notice: t('reports.created')
     else
       @appointments = @beneficiary.appointments.order(appointment_date: :desc)
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -37,7 +37,7 @@ class ReportsController < ApplicationController
       redirect_to @report, notice: t('reports.updated')
     else
       @appointments = @beneficiary.appointments.order(appointment_date: :desc)
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -53,10 +53,10 @@ class ReportsController < ApplicationController
   end
 
   def update_status
-    if @report.update(status: params[:status])
+    if @report.update(status: params[:status].to_s)
       redirect_to @report, notice: t('reports.status_updated')
     else
-      redirect_to @report, alert: t('reports.status_update_failed')
+      redirect_to @report, alert: [t('reports.status_update_failed'), @report.errors.full_messages.to_sentence].join(' ')
     end
   end
 
@@ -67,8 +67,7 @@ class ReportsController < ApplicationController
   end
 
   def set_report
-    @report = Report.joins(:beneficiary)
-                    .where(beneficiaries: { user_id: current_user.id })
+    @report = Report.owned_by(current_user)
                     .find(params[:id])
     @beneficiary = @report.beneficiary
   end
@@ -76,7 +75,7 @@ class ReportsController < ApplicationController
   def report_params
     params.require(:report).permit(
       :appointment_id, :reference_year, :period_from, :period_to,
-      :status, :filing_date, :court_notes
+      :filing_date, :court_notes
     )
   end
 end

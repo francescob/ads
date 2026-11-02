@@ -2,8 +2,9 @@ class DocumentsController < ApplicationController
   before_action :set_beneficiary, only: [:index, :new, :create]
   before_action :set_document, only: [:show, :edit, :update, :destroy]
 
+  # The list lives in the beneficiary page, in the "documents" tab.
   def index
-    @documents = @beneficiary.documents.order(created_at: :desc)
+    redirect_to beneficiary_path(@beneficiary, tab: "documents")
   end
 
   def show; end
@@ -17,7 +18,7 @@ class DocumentsController < ApplicationController
     if @document.save
       redirect_to @document, notice: t('documents.created')
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -27,14 +28,14 @@ class DocumentsController < ApplicationController
     if @document.update(document_params)
       redirect_to @document, notice: t('documents.updated')
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
   def destroy
     beneficiary = @document.beneficiary
     @document.destroy
-    redirect_to beneficiary_documents_path(beneficiary), notice: t('documents.deleted')
+    redirect_to beneficiary_path(beneficiary, tab: "documents"), status: :see_other, notice: t('documents.deleted')
   end
 
   private
@@ -44,8 +45,7 @@ class DocumentsController < ApplicationController
   end
 
   def set_document
-    @document = Document.joins(:beneficiary)
-                        .where(beneficiaries: { user_id: current_user.id })
+    @document = Document.owned_by(current_user)
                         .find(params[:id])
     @beneficiary = @document.beneficiary
   end

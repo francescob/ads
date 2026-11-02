@@ -2,8 +2,9 @@ class AppointmentsController < ApplicationController
   before_action :set_beneficiary, only: [:index, :new, :create]
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
 
+  # The list lives in the beneficiary page, in the "appointments" tab.
   def index
-    @appointments = @beneficiary.appointments.order(appointment_date: :desc)
+    redirect_to beneficiary_path(@beneficiary, tab: "appointments")
   end
 
   def show; end
@@ -17,7 +18,7 @@ class AppointmentsController < ApplicationController
     if @appointment.save
       redirect_to @appointment, notice: t('appointments.created')
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -27,14 +28,17 @@ class AppointmentsController < ApplicationController
     if @appointment.update(appointment_params)
       redirect_to @appointment, notice: t('appointments.updated')
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
   def destroy
     beneficiary = @appointment.beneficiary
-    @appointment.destroy
-    redirect_to beneficiary_appointments_path(beneficiary), notice: t('appointments.deleted')
+    unless @appointment.destroy
+      return redirect_to @appointment, alert: t('appointments.has_reports')
+    end
+
+    redirect_to beneficiary_path(beneficiary, tab: "appointments"), status: :see_other, notice: t('appointments.deleted')
   end
 
   private
@@ -44,8 +48,7 @@ class AppointmentsController < ApplicationController
   end
 
   def set_appointment
-    @appointment = Appointment.joins(:beneficiary)
-                              .where(beneficiaries: { user_id: current_user.id })
+    @appointment = Appointment.owned_by(current_user)
                               .find(params[:id])
     @beneficiary = @appointment.beneficiary
   end

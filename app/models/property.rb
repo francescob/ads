@@ -1,4 +1,6 @@
 class Property < ApplicationRecord
+  include OwnedThroughBeneficiary
+
   belongs_to :beneficiary
 
   # Tipi di immobile

@@ -57,7 +57,7 @@
       <% if @appointment.document.attached? %>
         <div class="sm:col-span-2">
           <dt class="text-sm font-medium text-slate-500">Documento allegato</dt>
-          <dd class="mt-1"><%= link_to 'Scarica decreto', rails_blob_path(@appointment.document, disposition: 'attachment'), class: 'text-blue-700 hover:text-blue-800 text-sm font-medium' %></dd>
+          <dd class="mt-1"><%= link_to 'Scarica decreto', file_path(@appointment.document.attachment), data: { turbo: false }, class: 'text-blue-700 hover:text-blue-800 text-sm font-medium' %></dd>
         </div>
       <% end %>
       <% if @appointment.notes.present? %>

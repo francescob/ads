@@ -47,7 +47,7 @@ class PdfGeneratedNotifier < ApplicationNotifier
       ]
     end
 
-    with(
+    event = with(
       beneficiary: beneficiary,
       pdf_type: pdf_type,
       title: title,
@@ -55,5 +55,15 @@ class PdfGeneratedNotifier < ApplicationNotifier
       url: url,
       icon: icon
     ).deliver(user)
+
+    # Real-time toast for the user who is waiting for the PDF
+    notification = event.notifications.find_by(recipient: user)
+    Turbo::StreamsChannel.broadcast_append_to(
+      "notifications_#{user.id}",
+      target: "notifications",
+      partial: "notifications/toast",
+      locals: { notification: notification, notification_type: "success" }
+    )
+    notification
   end
 end

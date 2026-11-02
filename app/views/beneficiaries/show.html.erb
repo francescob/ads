@@ -13,7 +13,7 @@
   </div>
 
   <!-- Tabs -->
-  <div data-controller="tabs">
+  <div data-controller="tabs" data-tabs-initial-value="<%= params[:tab] %>">
     <div class="border-b border-slate-200 mb-6">
       <nav class="-mb-px flex space-x-8 overflow-x-auto" aria-label="Tabs">
         <button data-tabs-target="tab" data-action="click->tabs#switch" data-tab="profile" class="tab-btn border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"><%= t('beneficiaries.tabs.profile') %></button>
@@ -560,7 +560,7 @@
                   </td>
                   <td class="px-6 py-4 text-right text-sm">
                     <% if doc.file.attached? %>
-                      <%= link_to 'Download', rails_blob_path(doc.file, disposition: 'attachment'), class: 'text-blue-700 hover:text-blue-800 font-medium mr-3' %>
+                      <%= link_to 'Download', file_path(doc.file.attachment), data: { turbo: false }, class: 'text-blue-700 hover:text-blue-800 font-medium mr-3' %>
                     <% end %>
                     <%= link_to t('shared.edit'), edit_document_path(doc), class: 'text-blue-700 hover:text-blue-800 font-medium' %>
                   </td>

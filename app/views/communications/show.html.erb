@@ -28,7 +28,7 @@
       <% if @communication.attachment.attached? %>
         <div>
           <dt class="text-sm font-medium text-slate-500">Allegato</dt>
-          <dd class="mt-1"><%= link_to 'Download', rails_blob_path(@communication.attachment, disposition: 'attachment'), class: 'text-blue-700 hover:text-blue-800 text-sm font-medium' %></dd>
+          <dd class="mt-1"><%= link_to 'Download', file_path(@communication.attachment.attachment), data: { turbo: false }, class: 'text-blue-700 hover:text-blue-800 text-sm font-medium' %></dd>
         </div>
       <% end %>
     </dl>

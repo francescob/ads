@@ -1,4 +1,6 @@
 class Contact < ApplicationRecord
+  include OwnedThroughBeneficiary
+
   belongs_to :beneficiary
 
   validates :first_name, :last_name, presence: true

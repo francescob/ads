@@ -2,9 +2,11 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["tab", "panel"]
+  static values = { initial: String }
 
   connect() {
-    this.showTab(this.tabTargets[0]?.dataset.tab || "profile")
+    const requested = this.tabTargets.find(tab => tab.dataset.tab === this.initialValue)
+    this.showTab(requested ? this.initialValue : (this.tabTargets[0]?.dataset.tab || "profile"))
   }
 
   switch(event) {

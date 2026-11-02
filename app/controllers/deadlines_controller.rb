@@ -7,8 +7,7 @@ class DeadlinesController < ApplicationController
       @beneficiary = user_beneficiaries.find(params[:beneficiary_id])
       @deadlines = @beneficiary.deadlines.order(:due_date).page(params[:page])
     else
-      @deadlines = Deadline.joins(:beneficiary)
-                           .where(beneficiaries: { user_id: current_user.id })
+      @deadlines = Deadline.owned_by(current_user)
                            .order(:due_date)
                            .includes(:beneficiary)
                            .page(params[:page])
@@ -16,14 +15,12 @@ class DeadlinesController < ApplicationController
   end
 
   def calendar
-    @month = params[:month] ? Date.parse(params[:month]) : Date.today
-    @deadlines = Deadline.joins(:beneficiary)
-                         .where(beneficiaries: { user_id: current_user.id })
+    @month = params[:month] ? Date.parse(params[:month]) : Date.current
+    @deadlines = Deadline.owned_by(current_user)
                          .where(due_date: @month.beginning_of_month..@month.end_of_month)
                          .order(:due_date)
                          .includes(:beneficiary)
-    @hearings = Hearing.joins(:beneficiary)
-                       .where(beneficiaries: { user_id: current_user.id })
+    @hearings = Hearing.owned_by(current_user)
                        .where(hearing_date: @month.beginning_of_month..@month.end_of_month)
                        .order(:hearing_date)
                        .includes(:beneficiary)
@@ -40,7 +37,7 @@ class DeadlinesController < ApplicationController
     if @deadline.save
       redirect_to @deadline, notice: t('deadlines.created')
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -50,7 +47,7 @@ class DeadlinesController < ApplicationController
     if @deadline.update(deadline_params)
       redirect_to @deadline, notice: t('deadlines.updated')
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -67,8 +64,7 @@ class DeadlinesController < ApplicationController
   end
 
   def set_deadline
-    @deadline = Deadline.joins(:beneficiary)
-                       .where(beneficiaries: { user_id: current_user.id })
+    @deadline = Deadline.owned_by(current_user)
                        .find(params[:id])
     @beneficiary = @deadline.beneficiary
   end

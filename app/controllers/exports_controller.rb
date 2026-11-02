@@ -2,8 +2,7 @@ require 'csv'
 
 class ExportsController < ApplicationController
   def report_pdf
-    report = Report.joins(:beneficiary)
-                   .where(beneficiaries: { user_id: current_user.id })
+    report = Report.owned_by(current_user)
                    .find(params[:report_id])
 
     pdf = ReportPdfGenerator.new(report).generate
@@ -19,8 +18,7 @@ class ExportsController < ApplicationController
   end
 
   def entries_csv
-    report = Report.joins(:beneficiary)
-                   .where(beneficiaries: { user_id: current_user.id })
+    report = Report.owned_by(current_user)
                    .find(params[:report_id])
 
     csv_data = CSV.generate(col_sep: ';') do |csv|

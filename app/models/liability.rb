@@ -1,4 +1,6 @@
 class Liability < ApplicationRecord
+  include OwnedThroughBeneficiary
+
   belongs_to :beneficiary
 
   enum :liability_type, {

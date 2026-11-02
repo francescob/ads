@@ -24,7 +24,7 @@ class AssetPdfGenerator
       pdf.text "Tribunale: #{@appointment.court}", size: 10
     end
     
-    pdf.text "Data inventario: #{Date.today.strftime('%d/%m/%Y')}", size: 10
+    pdf.text "Data inventario: #{Date.current.strftime('%d/%m/%Y')}", size: 10
     pdf.move_down 20
     pdf.stroke_horizontal_rule
     pdf.move_down 20

@@ -17,7 +17,7 @@ class PropertiesController < ApplicationController
     if @property.save
       redirect_to @property, notice: 'Immobile creato con successo.'
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -27,7 +27,7 @@ class PropertiesController < ApplicationController
     if @property.update(property_params)
       redirect_to @property, notice: 'Immobile aggiornato con successo.'
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -44,8 +44,7 @@ class PropertiesController < ApplicationController
   end
 
   def set_property
-    @property = Property.joins(:beneficiary)
-                        .where(beneficiaries: { user_id: current_user.id })
+    @property = Property.owned_by(current_user)
                         .find(params[:id])
     @beneficiary = @property.beneficiary
   end

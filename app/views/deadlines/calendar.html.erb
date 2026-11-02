@@ -26,8 +26,8 @@
       <% (start_date..end_date).each do |date| %>
         <% day_deadlines = @deadlines.select { |d| d.due_date == date } %>
         <% day_hearings = @hearings.select { |h| h.hearing_date.to_date == date } %>
-        <div class="bg-white min-h-[80px] p-1 <%= 'opacity-50' unless date.month == @month.month %> <%= 'ring-2 ring-blue-500 ring-inset' if date == Date.today %>">
-          <p class="text-xs font-medium text-slate-<%= date == Date.today ? '900' : '500' %> mb-1"><%= date.day %></p>
+        <div class="bg-white min-h-[80px] p-1 <%= 'opacity-50' unless date.month == @month.month %> <%= 'ring-2 ring-blue-500 ring-inset' if date == Date.current %>">
+          <p class="text-xs font-medium text-slate-<%= date == Date.current ? '900' : '500' %> mb-1"><%= date.day %></p>
           <% day_deadlines.each do |dl| %>
             <div class="text-xs px-1 py-0.5 mb-0.5 rounded bg-<%= dl.priority_color %>-100 text-<%= dl.priority_color %>-800 truncate" title="<%= dl.title %>"><%= dl.title %></div>
           <% end %>

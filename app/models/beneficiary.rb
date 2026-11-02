@@ -45,9 +45,7 @@ class Beneficiary < ApplicationRecord
     liabilities.sum(:remaining_balance)
   end
 
-  def net_asset_total
-    assets.sum(:current_value)
-  end
+  alias_method :net_asset_total, :total_assets
 
   def net_worth
     total_patrimony - total_liabilities

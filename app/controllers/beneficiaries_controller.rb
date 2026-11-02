@@ -30,7 +30,7 @@ class BeneficiariesController < ApplicationController
     if @beneficiary.save
       redirect_to @beneficiary, notice: t('beneficiaries.created')
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -40,7 +40,7 @@ class BeneficiariesController < ApplicationController
     if @beneficiary.update(beneficiary_params)
       redirect_to @beneficiary, notice: t('beneficiaries.updated')
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -56,7 +56,8 @@ class BeneficiariesController < ApplicationController
 
   def download_asset_inventory
     if @beneficiary.asset_inventory_pdf.attached?
-      redirect_to rails_blob_path(@beneficiary.asset_inventory_pdf, disposition: "attachment")
+      pdf = @beneficiary.asset_inventory_pdf
+      send_data pdf.download, filename: pdf.filename.to_s, type: pdf.content_type, disposition: :attachment
     else
       redirect_to @beneficiary, alert: t('assets.pdf_not_found')
     end

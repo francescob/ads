@@ -2,8 +2,9 @@ class CommunicationsController < ApplicationController
   before_action :set_beneficiary, only: [:index, :new, :create]
   before_action :set_communication, only: [:show, :edit, :update, :destroy]
 
+  # The list lives in the beneficiary page, in the "communications" tab.
   def index
-    @communications = @beneficiary.communications.order(created_at: :desc)
+    redirect_to beneficiary_path(@beneficiary, tab: "communications")
   end
 
   def show; end
@@ -17,7 +18,7 @@ class CommunicationsController < ApplicationController
     if @communication.save
       redirect_to @communication, notice: t('communications.created')
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -27,14 +28,14 @@ class CommunicationsController < ApplicationController
     if @communication.update(communication_params)
       redirect_to @communication, notice: t('communications.updated')
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
   def destroy
     beneficiary = @communication.beneficiary
     @communication.destroy
-    redirect_to beneficiary_communications_path(beneficiary), notice: t('communications.deleted')
+    redirect_to beneficiary_path(beneficiary, tab: "communications"), status: :see_other, notice: t('communications.deleted')
   end
 
   private
@@ -44,8 +45,7 @@ class CommunicationsController < ApplicationController
   end
 
   def set_communication
-    @communication = Communication.joins(:beneficiary)
-                                  .where(beneficiaries: { user_id: current_user.id })
+    @communication = Communication.owned_by(current_user)
                                   .find(params[:id])
     @beneficiary = @communication.beneficiary
   end

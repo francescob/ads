@@ -14,7 +14,7 @@ class IncomeEntriesController < ApplicationController
         format.html { redirect_to @report, notice: t('income_entries.created') }
       end
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -27,7 +27,7 @@ class IncomeEntriesController < ApplicationController
         format.html { redirect_to @income_entry.report, notice: t('income_entries.updated') }
       end
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -43,14 +43,12 @@ class IncomeEntriesController < ApplicationController
   private
 
   def set_report
-    @report = Report.joins(:beneficiary)
-                    .where(beneficiaries: { user_id: current_user.id })
+    @report = Report.owned_by(current_user)
                     .find(params[:report_id])
   end
 
   def set_income_entry
-    @income_entry = IncomeEntry.joins(report: :beneficiary)
-                               .where(beneficiaries: { user_id: current_user.id })
+    @income_entry = IncomeEntry.owned_by(current_user)
                                .find(params[:id])
   end
 

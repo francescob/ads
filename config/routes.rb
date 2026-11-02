@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   root to: 'dashboard#index'
 
+  get 'files/:id', to: 'files#show', as: :file
+
   # Notifications
   resources :notifications, only: [:index, :destroy] do
     member do
