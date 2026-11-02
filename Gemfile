@@ -90,5 +90,5 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "rails-ai-context", "~> 0.8.4"
+gem "rails-ai-context", "~> 5.38.2"
 gem "csv"
