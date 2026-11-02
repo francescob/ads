@@ -7,10 +7,10 @@ RSpec.describe "Navigation after create/delete", type: :request do
   before { sign_in user }
 
   {
-    appointments: -> (b) { FactoryBot.create(:appointment, beneficiary: b) },
-    hearings: -> (b) { FactoryBot.create(:hearing, beneficiary: b) },
-    documents: -> (b) { FactoryBot.create(:document, beneficiary: b) },
-    recurring_incomes: -> (b) { FactoryBot.create(:recurring_income, beneficiary: b) }
+    appointments: ->(b) { FactoryBot.create(:appointment, beneficiary: b) },
+    hearings: ->(b) { FactoryBot.create(:hearing, beneficiary: b) },
+    documents: ->(b) { FactoryBot.create(:document, beneficiary: b) },
+    recurring_incomes: ->(b) { FactoryBot.create(:recurring_income, beneficiary: b) }
   }.each do |tab, factory|
     it "deleting #{tab.to_s.singularize} lands on the beneficiary page, #{tab} tab" do
       record = factory.call(beneficiary)

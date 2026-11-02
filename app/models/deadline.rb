@@ -18,9 +18,9 @@ class Deadline < ApplicationRecord
 
   def priority_color
     case priority
-    when 'high' then 'red'
-    when 'medium' then 'orange'
-    when 'low' then 'green'
+    when "high" then "red"
+    when "medium" then "orange"
+    when "low" then "green"
     end
   end
 

@@ -13,7 +13,7 @@ class ExpenseEntry < ApplicationRecord
   validates :entry_date, :description, :amount, presence: true
   validates :amount, numericality: { greater_than: 0 }
 
-  validate :within_extraordinary_limit, if: -> { category == 'extraordinary' }
+  validate :within_extraordinary_limit, if: -> { category == "extraordinary" }
 
   private
 

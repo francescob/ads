@@ -1,6 +1,6 @@
 class HearingsController < ApplicationController
-  before_action :set_beneficiary, only: [:index, :new, :create]
-  before_action :set_hearing, only: [:show, :edit, :update, :destroy]
+  before_action :set_beneficiary, only: [ :index, :new, :create ]
+  before_action :set_hearing, only: [ :show, :edit, :update, :destroy ]
 
   # The list lives in the beneficiary page, in the "hearings" tab.
   def index
@@ -17,7 +17,7 @@ class HearingsController < ApplicationController
   def create
     @hearing = @beneficiary.hearings.build(hearing_params)
     if @hearing.save
-      redirect_to @hearing, notice: t('hearings.created')
+      redirect_to @hearing, notice: t("hearings.created")
     else
       @appointments = @beneficiary.appointments.order(appointment_date: :desc)
       render :new, status: :unprocessable_content
@@ -30,7 +30,7 @@ class HearingsController < ApplicationController
 
   def update
     if @hearing.update(hearing_params)
-      redirect_to @hearing, notice: t('hearings.updated')
+      redirect_to @hearing, notice: t("hearings.updated")
     else
       @appointments = @beneficiary.appointments.order(appointment_date: :desc)
       render :edit, status: :unprocessable_content
@@ -40,7 +40,7 @@ class HearingsController < ApplicationController
   def destroy
     beneficiary = @hearing.beneficiary
     @hearing.destroy
-    redirect_to beneficiary_path(beneficiary, tab: "hearings"), status: :see_other, notice: t('hearings.deleted')
+    redirect_to beneficiary_path(beneficiary, tab: "hearings"), status: :see_other, notice: t("hearings.deleted")
   end
 
   private

@@ -1,6 +1,6 @@
 class LiabilitiesController < ApplicationController
-  before_action :set_beneficiary, only: [:index, :new, :create]
-  before_action :set_liability, only: [:show, :edit, :update, :destroy]
+  before_action :set_beneficiary, only: [ :index, :new, :create ]
+  before_action :set_liability, only: [ :show, :edit, :update, :destroy ]
 
   # The list lives in the beneficiary page, in the "liabilities" tab.
   def index
@@ -16,7 +16,7 @@ class LiabilitiesController < ApplicationController
   def create
     @liability = @beneficiary.liabilities.build(liability_params)
     if @liability.save
-      redirect_to @liability, notice: t('liabilities.created')
+      redirect_to @liability, notice: t("liabilities.created")
     else
       render :new, status: :unprocessable_content
     end
@@ -26,7 +26,7 @@ class LiabilitiesController < ApplicationController
 
   def update
     if @liability.update(liability_params)
-      redirect_to @liability, notice: t('liabilities.updated')
+      redirect_to @liability, notice: t("liabilities.updated")
     else
       render :edit, status: :unprocessable_content
     end
@@ -35,7 +35,7 @@ class LiabilitiesController < ApplicationController
   def destroy
     beneficiary = @liability.beneficiary
     @liability.destroy
-    redirect_to beneficiary_path(beneficiary, tab: "liabilities"), status: :see_other, notice: t('liabilities.deleted')
+    redirect_to beneficiary_path(beneficiary, tab: "liabilities"), status: :see_other, notice: t("liabilities.deleted")
   end
 
   private

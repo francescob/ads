@@ -1,6 +1,6 @@
 class ExpenseEntriesController < ApplicationController
-  before_action :set_report, only: [:new, :create]
-  before_action :set_expense_entry, only: [:edit, :update, :destroy]
+  before_action :set_report, only: [ :new, :create ]
+  before_action :set_expense_entry, only: [ :edit, :update, :destroy ]
 
   def new
     @expense_entry = @report.expense_entries.build
@@ -11,7 +11,7 @@ class ExpenseEntriesController < ApplicationController
     if @expense_entry.save
       respond_to do |format|
         format.turbo_stream { @report = @expense_entry.report }
-        format.html { redirect_to @report, notice: t('expense_entries.created') }
+        format.html { redirect_to @report, notice: t("expense_entries.created") }
       end
     else
       render :new, status: :unprocessable_content
@@ -24,7 +24,7 @@ class ExpenseEntriesController < ApplicationController
     if @expense_entry.update(expense_entry_params)
       respond_to do |format|
         format.turbo_stream { @report = @expense_entry.report }
-        format.html { redirect_to @expense_entry.report, notice: t('expense_entries.updated') }
+        format.html { redirect_to @expense_entry.report, notice: t("expense_entries.updated") }
       end
     else
       render :edit, status: :unprocessable_content
@@ -36,7 +36,7 @@ class ExpenseEntriesController < ApplicationController
     @expense_entry.destroy
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to @report, notice: t('expense_entries.deleted') }
+      format.html { redirect_to @report, notice: t("expense_entries.deleted") }
     end
   end
 

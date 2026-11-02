@@ -27,8 +27,8 @@ class Liability < ApplicationRecord
   validate :end_date_after_start_date
   validate :remaining_balance_not_greater_than_initial
 
-  scope :active, -> { where('remaining_balance IS NULL OR remaining_balance > 0') }
-  scope :paid_off, -> { where('remaining_balance = 0 AND remaining_balance IS NOT NULL') }
+  scope :active, -> { where("remaining_balance IS NULL OR remaining_balance > 0") }
+  scope :paid_off, -> { where("remaining_balance = 0 AND remaining_balance IS NOT NULL") }
   scope :by_creditor, ->(creditor) { where(creditor: creditor) }
 
   def paid_off?

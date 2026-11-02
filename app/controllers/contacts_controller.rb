@@ -1,6 +1,6 @@
 class ContactsController < ApplicationController
-  before_action :set_beneficiary, only: [:index, :new, :create]
-  before_action :set_contact, only: [:show, :edit, :update, :destroy]
+  before_action :set_beneficiary, only: [ :index, :new, :create ]
+  before_action :set_contact, only: [ :show, :edit, :update, :destroy ]
 
   # The list lives in the beneficiary page, in the "contacts" tab.
   def index
@@ -35,7 +35,7 @@ class ContactsController < ApplicationController
   def destroy
     beneficiary = @contact.beneficiary
     @contact.destroy
-    redirect_to beneficiary_path(beneficiary, tab: "contacts"), status: :see_other, notice: t('contacts.deleted')
+    redirect_to beneficiary_path(beneficiary, tab: "contacts"), status: :see_other, notice: t("contacts.deleted")
   end
 
   private

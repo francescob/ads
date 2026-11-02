@@ -1,5 +1,5 @@
 class BeneficiariesController < ApplicationController
-  before_action :set_beneficiary, only: [:show, :edit, :update, :destroy, :generate_asset_inventory, :download_asset_inventory]
+  before_action :set_beneficiary, only: [ :show, :edit, :update, :destroy, :generate_asset_inventory, :download_asset_inventory ]
 
   def index
     @q = user_beneficiaries.ransack(params[:q])
@@ -28,7 +28,7 @@ class BeneficiariesController < ApplicationController
   def create
     @beneficiary = user_beneficiaries.build(beneficiary_params)
     if @beneficiary.save
-      redirect_to @beneficiary, notice: t('beneficiaries.created')
+      redirect_to @beneficiary, notice: t("beneficiaries.created")
     else
       render :new, status: :unprocessable_content
     end
@@ -38,7 +38,7 @@ class BeneficiariesController < ApplicationController
 
   def update
     if @beneficiary.update(beneficiary_params)
-      redirect_to @beneficiary, notice: t('beneficiaries.updated')
+      redirect_to @beneficiary, notice: t("beneficiaries.updated")
     else
       render :edit, status: :unprocessable_content
     end
@@ -46,12 +46,12 @@ class BeneficiariesController < ApplicationController
 
   def destroy
     @beneficiary.destroy
-    redirect_to beneficiaries_path, notice: t('beneficiaries.deleted')
+    redirect_to beneficiaries_path, notice: t("beneficiaries.deleted")
   end
 
   def generate_asset_inventory
     GenerateAssetPdfJob.perform_later(@beneficiary.id, current_user.id)
-    redirect_to @beneficiary, notice: t('assets.pdf_generation_started')
+    redirect_to @beneficiary, notice: t("assets.pdf_generation_started")
   end
 
   def download_asset_inventory
@@ -59,7 +59,7 @@ class BeneficiariesController < ApplicationController
       pdf = @beneficiary.asset_inventory_pdf
       send_data pdf.download, filename: pdf.filename.to_s, type: pdf.content_type, disposition: :attachment
     else
-      redirect_to @beneficiary, alert: t('assets.pdf_not_found')
+      redirect_to @beneficiary, alert: t("assets.pdf_not_found")
     end
   end
 

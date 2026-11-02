@@ -30,7 +30,7 @@ class Report < ApplicationRecord
 
   def opening_balance
     previous = beneficiary.reports
-                           .where('period_to < ?', period_from)
+                           .where("period_to < ?", period_from)
                            .order(period_to: :desc)
                            .first
     previous&.closing_balance || 0
@@ -54,10 +54,10 @@ class Report < ApplicationRecord
 
   def status_badge_class
     case status
-    when 'draft' then 'bg-gray-100 text-gray-800'
-    when 'completed' then 'bg-blue-100 text-blue-800'
-    when 'filed' then 'bg-indigo-100 text-indigo-800'
-    when 'approved' then 'bg-green-100 text-green-800'
+    when "draft" then "bg-gray-100 text-gray-800"
+    when "completed" then "bg-blue-100 text-blue-800"
+    when "filed" then "bg-indigo-100 text-indigo-800"
+    when "approved" then "bg-green-100 text-green-800"
     end
   end
 

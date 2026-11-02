@@ -1,6 +1,6 @@
 class RecurringExpensesController < ApplicationController
-  before_action :set_beneficiary, only: [:index, :new, :create]
-  before_action :set_recurring_expense, only: [:show, :edit, :update, :destroy, :toggle_active]
+  before_action :set_beneficiary, only: [ :index, :new, :create ]
+  before_action :set_recurring_expense, only: [ :show, :edit, :update, :destroy, :toggle_active ]
 
   # The list lives in the beneficiary page, in the "recurring_expenses" tab.
   def index
@@ -16,7 +16,7 @@ class RecurringExpensesController < ApplicationController
   def create
     @recurring_expense = @beneficiary.recurring_expenses.build(recurring_expense_params)
     if @recurring_expense.save
-      redirect_to @recurring_expense, notice: t('recurring_expenses.created')
+      redirect_to @recurring_expense, notice: t("recurring_expenses.created")
     else
       render :new, status: :unprocessable_content
     end
@@ -26,7 +26,7 @@ class RecurringExpensesController < ApplicationController
 
   def update
     if @recurring_expense.update(recurring_expense_params)
-      redirect_to @recurring_expense, notice: t('recurring_expenses.updated')
+      redirect_to @recurring_expense, notice: t("recurring_expenses.updated")
     else
       render :edit, status: :unprocessable_content
     end
@@ -35,12 +35,12 @@ class RecurringExpensesController < ApplicationController
   def destroy
     beneficiary = @recurring_expense.beneficiary
     @recurring_expense.destroy
-    redirect_to beneficiary_path(beneficiary, tab: "recurring_expenses"), status: :see_other, notice: t('recurring_expenses.deleted')
+    redirect_to beneficiary_path(beneficiary, tab: "recurring_expenses"), status: :see_other, notice: t("recurring_expenses.deleted")
   end
 
   def toggle_active
     @recurring_expense.update(active: !@recurring_expense.active)
-    redirect_to @recurring_expense, notice: t('recurring_expenses.status_updated')
+    redirect_to @recurring_expense, notice: t("recurring_expenses.status_updated")
   end
 
   private

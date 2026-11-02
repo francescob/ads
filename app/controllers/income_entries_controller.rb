@@ -1,6 +1,6 @@
 class IncomeEntriesController < ApplicationController
-  before_action :set_report, only: [:new, :create]
-  before_action :set_income_entry, only: [:edit, :update, :destroy]
+  before_action :set_report, only: [ :new, :create ]
+  before_action :set_income_entry, only: [ :edit, :update, :destroy ]
 
   def new
     @income_entry = @report.income_entries.build
@@ -11,7 +11,7 @@ class IncomeEntriesController < ApplicationController
     if @income_entry.save
       respond_to do |format|
         format.turbo_stream
-        format.html { redirect_to @report, notice: t('income_entries.created') }
+        format.html { redirect_to @report, notice: t("income_entries.created") }
       end
     else
       render :new, status: :unprocessable_content
@@ -24,7 +24,7 @@ class IncomeEntriesController < ApplicationController
     if @income_entry.update(income_entry_params)
       respond_to do |format|
         format.turbo_stream { @report = @income_entry.report }
-        format.html { redirect_to @income_entry.report, notice: t('income_entries.updated') }
+        format.html { redirect_to @income_entry.report, notice: t("income_entries.updated") }
       end
     else
       render :edit, status: :unprocessable_content
@@ -36,7 +36,7 @@ class IncomeEntriesController < ApplicationController
     @income_entry.destroy
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to @report, notice: t('income_entries.deleted') }
+      format.html { redirect_to @report, notice: t("income_entries.deleted") }
     end
   end
 

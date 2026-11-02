@@ -1,6 +1,6 @@
 class PropertiesController < ApplicationController
-  before_action :set_beneficiary, only: [:index, :new, :create]
-  before_action :set_property, only: [:show, :edit, :update, :destroy]
+  before_action :set_beneficiary, only: [ :index, :new, :create ]
+  before_action :set_property, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @properties = @beneficiary.properties.ordered
@@ -15,7 +15,7 @@ class PropertiesController < ApplicationController
   def create
     @property = @beneficiary.properties.build(property_params)
     if @property.save
-      redirect_to @property, notice: 'Immobile creato con successo.'
+      redirect_to @property, notice: "Immobile creato con successo."
     else
       render :new, status: :unprocessable_content
     end
@@ -25,7 +25,7 @@ class PropertiesController < ApplicationController
 
   def update
     if @property.update(property_params)
-      redirect_to @property, notice: 'Immobile aggiornato con successo.'
+      redirect_to @property, notice: "Immobile aggiornato con successo."
     else
       render :edit, status: :unprocessable_content
     end
@@ -34,7 +34,7 @@ class PropertiesController < ApplicationController
   def destroy
     beneficiary = @property.beneficiary
     @property.destroy
-    redirect_to beneficiary_properties_path(beneficiary), notice: 'Immobile eliminato con successo.'
+    redirect_to beneficiary_properties_path(beneficiary), notice: "Immobile eliminato con successo."
   end
 
   private

@@ -1,6 +1,6 @@
 class AssetsController < ApplicationController
-  before_action :set_beneficiary, only: [:index, :new, :create]
-  before_action :set_asset, only: [:show, :edit, :update, :destroy]
+  before_action :set_beneficiary, only: [ :index, :new, :create ]
+  before_action :set_asset, only: [ :show, :edit, :update, :destroy ]
 
   # The list lives in the beneficiary page, in the "assets" tab.
   def index
@@ -16,7 +16,7 @@ class AssetsController < ApplicationController
   def create
     @asset = @beneficiary.assets.build(asset_params)
     if @asset.save
-      redirect_to @asset, notice: t('assets.created')
+      redirect_to @asset, notice: t("assets.created")
     else
       render :new, status: :unprocessable_content
     end
@@ -26,7 +26,7 @@ class AssetsController < ApplicationController
 
   def update
     if @asset.update(asset_params)
-      redirect_to @asset, notice: t('assets.updated')
+      redirect_to @asset, notice: t("assets.updated")
     else
       render :edit, status: :unprocessable_content
     end
@@ -35,7 +35,7 @@ class AssetsController < ApplicationController
   def destroy
     beneficiary = @asset.beneficiary
     @asset.destroy
-    redirect_to beneficiary_path(beneficiary, tab: "assets"), status: :see_other, notice: t('assets.deleted')
+    redirect_to beneficiary_path(beneficiary, tab: "assets"), status: :see_other, notice: t("assets.deleted")
   end
 
   private

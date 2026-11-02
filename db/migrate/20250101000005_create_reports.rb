@@ -14,6 +14,6 @@ class CreateReports < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :reports, [:beneficiary_id, :reference_year]
+    add_index :reports, [ :beneficiary_id, :reference_year ]
   end
 end

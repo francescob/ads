@@ -1,6 +1,6 @@
 class AppointmentsController < ApplicationController
-  before_action :set_beneficiary, only: [:index, :new, :create]
-  before_action :set_appointment, only: [:show, :edit, :update, :destroy]
+  before_action :set_beneficiary, only: [ :index, :new, :create ]
+  before_action :set_appointment, only: [ :show, :edit, :update, :destroy ]
 
   # The list lives in the beneficiary page, in the "appointments" tab.
   def index
@@ -16,7 +16,7 @@ class AppointmentsController < ApplicationController
   def create
     @appointment = @beneficiary.appointments.build(appointment_params)
     if @appointment.save
-      redirect_to @appointment, notice: t('appointments.created')
+      redirect_to @appointment, notice: t("appointments.created")
     else
       render :new, status: :unprocessable_content
     end
@@ -26,7 +26,7 @@ class AppointmentsController < ApplicationController
 
   def update
     if @appointment.update(appointment_params)
-      redirect_to @appointment, notice: t('appointments.updated')
+      redirect_to @appointment, notice: t("appointments.updated")
     else
       render :edit, status: :unprocessable_content
     end
@@ -35,10 +35,10 @@ class AppointmentsController < ApplicationController
   def destroy
     beneficiary = @appointment.beneficiary
     unless @appointment.destroy
-      return redirect_to @appointment, alert: t('appointments.has_reports')
+      return redirect_to @appointment, alert: t("appointments.has_reports")
     end
 
-    redirect_to beneficiary_path(beneficiary, tab: "appointments"), status: :see_other, notice: t('appointments.deleted')
+    redirect_to beneficiary_path(beneficiary, tab: "appointments"), status: :see_other, notice: t("appointments.deleted")
   end
 
   private

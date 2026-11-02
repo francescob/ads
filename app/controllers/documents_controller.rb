@@ -1,6 +1,6 @@
 class DocumentsController < ApplicationController
-  before_action :set_beneficiary, only: [:index, :new, :create]
-  before_action :set_document, only: [:show, :edit, :update, :destroy]
+  before_action :set_beneficiary, only: [ :index, :new, :create ]
+  before_action :set_document, only: [ :show, :edit, :update, :destroy ]
 
   # The list lives in the beneficiary page, in the "documents" tab.
   def index
@@ -16,7 +16,7 @@ class DocumentsController < ApplicationController
   def create
     @document = @beneficiary.documents.build(document_params)
     if @document.save
-      redirect_to @document, notice: t('documents.created')
+      redirect_to @document, notice: t("documents.created")
     else
       render :new, status: :unprocessable_content
     end
@@ -26,7 +26,7 @@ class DocumentsController < ApplicationController
 
   def update
     if @document.update(document_params)
-      redirect_to @document, notice: t('documents.updated')
+      redirect_to @document, notice: t("documents.updated")
     else
       render :edit, status: :unprocessable_content
     end
@@ -35,7 +35,7 @@ class DocumentsController < ApplicationController
   def destroy
     beneficiary = @document.beneficiary
     @document.destroy
-    redirect_to beneficiary_path(beneficiary, tab: "documents"), status: :see_other, notice: t('documents.deleted')
+    redirect_to beneficiary_path(beneficiary, tab: "documents"), status: :see_other, notice: t("documents.deleted")
   end
 
   private

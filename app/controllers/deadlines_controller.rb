@@ -1,6 +1,6 @@
 class DeadlinesController < ApplicationController
-  before_action :set_beneficiary, only: [:new, :create]
-  before_action :set_deadline, only: [:show, :edit, :update, :destroy]
+  before_action :set_beneficiary, only: [ :new, :create ]
+  before_action :set_deadline, only: [ :show, :edit, :update, :destroy ]
 
   def index
     if params[:beneficiary_id]
@@ -35,7 +35,7 @@ class DeadlinesController < ApplicationController
   def create
     @deadline = @beneficiary.deadlines.build(deadline_params)
     if @deadline.save
-      redirect_to @deadline, notice: t('deadlines.created')
+      redirect_to @deadline, notice: t("deadlines.created")
     else
       render :new, status: :unprocessable_content
     end
@@ -45,7 +45,7 @@ class DeadlinesController < ApplicationController
 
   def update
     if @deadline.update(deadline_params)
-      redirect_to @deadline, notice: t('deadlines.updated')
+      redirect_to @deadline, notice: t("deadlines.updated")
     else
       render :edit, status: :unprocessable_content
     end
@@ -54,7 +54,7 @@ class DeadlinesController < ApplicationController
   def destroy
     beneficiary = @deadline.beneficiary
     @deadline.destroy
-    redirect_to beneficiary_deadlines_path(beneficiary), notice: t('deadlines.deleted')
+    redirect_to beneficiary_deadlines_path(beneficiary), notice: t("deadlines.deleted")
   end
 
   private
