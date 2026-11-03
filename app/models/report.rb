@@ -1,6 +1,7 @@
 class Report < ApplicationRecord
   include OwnedThroughBeneficiary
   include AppointmentOfSameBeneficiary
+  include Signable
 
   belongs_to :beneficiary
   belongs_to :appointment
@@ -46,6 +47,10 @@ class Report < ApplicationRecord
 
   def closing_balance
     opening_balance + total_income - total_expenses
+  end
+
+  def signature_original
+    generated_pdf
   end
 
   def next_statuses

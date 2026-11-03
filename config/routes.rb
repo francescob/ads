@@ -24,6 +24,7 @@ Rails.application.routes.draw do
         post  :generate_pdf
         patch :update_status
       end
+      resource :signature, only: [ :create, :destroy ]
     end
     resources :assets, path: "patrimony", shallow: true
     resources :properties,     shallow: true

@@ -64,6 +64,7 @@ it:
         file_too_large: "non può superare %{max}"
         exceeds_extraordinary_limit: "supera il limite per spese straordinarie (%{limit}) fissato dal decreto di nomina"
     models:
+      signature: Firma digitale
       user: Utente
       beneficiary: Beneficiario
       appointment: Decreto di Nomina
@@ -81,6 +82,8 @@ it:
       contact: Contatto
       property: Immobile
     attributes:
+      signature:
+        signed_file: File firmato
       user:
         email: Email
         password: Password
@@ -628,6 +631,46 @@ it:
     created: Contatto aggiunto con successo.
     updated: Contatto aggiornato con successo.
     deleted: Contatto eliminato con successo.
+
+  signatures:
+    title: Firma digitale
+    how_to: "Scarica il PDF del rendiconto, firmalo con il tuo strumento di firma digitale (smart card, firma remota, Dike, ArubaSign...) e carica qui il file firmato (.pdf o .p7m)."
+    generate_first: Genera prima il PDF del rendiconto, così l'app può controllare che il file firmato sia proprio quello.
+    upload: Carica file firmato
+    replace: Sostituisci file firmato
+    download: Scarica file firmato
+    remove: Rimuovi firma
+    removed: File firmato rimosso.
+    no_file: Seleziona il file firmato da caricare.
+    uploaded_ok: File firmato caricato e verificato.
+    uploaded_with_problems: File firmato caricato, ma la verifica ha trovato problemi.
+    signer: Firmatario
+    signed_at: Data della firma
+    timestamped: con marca temporale
+    issuer: Certificato rilasciato da
+    kind: Tipo di firma
+    qualified: Firma qualificata (firma digitale)
+    not_qualified: Firma non qualificata
+    document: Documento firmato
+    trust_not_checked: "La verifica dell'ente che ha rilasciato il certificato (elenco europeo dei prestatori fidati) non è ancora attiva: la firma è integra ma l'emittente non è stato controllato."
+    matches_original:
+      "true": Corrisponde al PDF generato dall'app.
+      "false": Non corrisponde al PDF attuale del rendiconto (è stato firmato un altro file o il PDF è stato rigenerato dopo la firma).
+      unknown: Non verificabile (PDF del rendiconto non ancora generato).
+    statuses:
+      pending: In verifica
+      valid_untrusted: Firma integra
+      valid_trusted: Firma valida
+      mismatch: Documento diverso
+      invalid: Firma non valida
+    messages:
+      unreadable: Il file non contiene una firma digitale leggibile (atteso un PDF firmato o un file .p7m).
+      integrity: "La firma non corrisponde al contenuto: il file è stato alterato dopo la firma."
+      modified_after_signature: Il PDF è stato modificato dopo l'ultima firma.
+      certificate_not_valid_at_signing: Il certificato del firmatario non era valido alla data della firma.
+      no_non_repudiation: Il certificato non è destinato alla firma di documenti (manca l'uso "non ripudio").
+      not_qualified: "Il certificato non risulta qualificato: potrebbe non avere il valore legale della firma digitale."
+      original_missing: Il PDF del rendiconto non è stato generato dall'app, quindi non è possibile confrontarlo.
 
   shared:
     actions: Azioni
