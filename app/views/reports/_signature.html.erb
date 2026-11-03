@@ -1,0 +1,64 @@
+<%# Digital signature of the report: upload of the version signed outside the app and its verification %>
+<% signature = report.signature %>
+<div id="report-signature" class="mt-8 bg-white shadow rounded-lg p-6">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h2 class="text-lg font-semibold text-slate-900"><%= t("signatures.title") %></h2>
+      <% unless signature %>
+        <p class="mt-1 text-sm text-slate-500"><%= t("signatures.how_to") %></p>
+      <% end %>
+    </div>
+    <% if signature %>
+      <% badge = { "valid_trusted" => "bg-green-100 text-green-800", "valid_untrusted" => "bg-green-100 text-green-800",
+                   "mismatch" => "bg-orange-100 text-orange-800", "invalid" => "bg-red-100 text-red-800" }.fetch(signature.status, "bg-gray-100 text-gray-800") %>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= badge %>"><%= t("signatures.statuses.#{signature.status}") %></span>
+    <% end %>
+  </div>
+
+  <% if signature %>
+    <dl class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+      <div><dt class="text-slate-500"><%= t("signatures.signer") %></dt>
+        <dd class="text-slate-900 font-medium"><%= signature.signer_name || "—" %><% if signature.signer_tax_code %> <span class="font-normal text-slate-500">(<%= signature.signer_tax_code %>)</span><% end %></dd></div>
+      <div><dt class="text-slate-500"><%= t("signatures.signed_at") %></dt>
+        <dd class="text-slate-900"><%= signature.signed_at ? l(signature.signed_at, format: :long) : "—" %><% if signature.timestamped %> · <%= t("signatures.timestamped") %><% end %></dd></div>
+      <div><dt class="text-slate-500"><%= t("signatures.issuer") %></dt>
+        <dd class="text-slate-900"><%= signature.issuer || "—" %></dd></div>
+      <div><dt class="text-slate-500"><%= t("signatures.kind") %></dt>
+        <dd class="text-slate-900"><%= signature.qualified ? t("signatures.qualified") : t("signatures.not_qualified") %>
+          <% if signature.format %> · <%= { "pades" => "PAdES", "cades" => "CAdES" }.fetch(signature.format, signature.format) %><% end %></dd></div>
+      <div class="sm:col-span-2"><dt class="text-slate-500"><%= t("signatures.document") %></dt>
+        <dd class="text-slate-900">
+          <%= t("signatures.matches_original.#{signature.matches_original.nil? ? 'unknown' : signature.matches_original}") %>
+          <% if report.generated_pdf_digest %>
+            <span class="block text-xs text-slate-400 font-mono break-all">SHA-256 <%= report.generated_pdf_digest %></span>
+          <% end %>
+        </dd></div>
+    </dl>
+
+    <% messages = signature.errors_list.map { |k| [ :error, k ] } + signature.warnings_list.map { |k| [ :warning, k ] } %>
+    <% if messages.any? %>
+      <ul class="mt-4 space-y-1 text-sm">
+        <% messages.each do |kind, key| %>
+          <li class="<%= kind == :error ? 'text-red-700' : 'text-orange-700' %>"><%= kind == :error ? "✕" : "!" %> <%= t("signatures.messages.#{key}") %></li>
+        <% end %>
+      </ul>
+    <% end %>
+    <% if signature.status_valid_untrusted? %>
+      <p class="mt-3 text-xs text-slate-500"><%= t("signatures.trust_not_checked") %></p>
+    <% end %>
+
+    <div class="mt-4 flex flex-wrap gap-3 text-sm">
+      <%= link_to t("signatures.download"), file_path(signature.signed_file.attachment), data: { turbo: false }, class: "text-blue-700 hover:text-blue-800 font-medium" %>
+      <%= link_to t("signatures.remove"), report_signature_path(report), data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }, class: "text-red-600 hover:text-red-800" %>
+    </div>
+  <% end %>
+
+  <%= form_with url: report_signature_path(report), scope: :signature, class: "mt-4 flex flex-wrap items-center gap-3" do |f| %>
+    <%= f.file_field :signed_file, accept: ".pdf,.p7m,application/pdf,application/pkcs7-mime", required: true,
+          class: "text-sm text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+    <%= f.submit signature ? t("signatures.replace") : t("signatures.upload"), class: "inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 cursor-pointer" %>
+  <% end %>
+  <% unless report.generated_pdf.attached? %>
+    <p class="mt-2 text-xs text-slate-500"><%= t("signatures.generate_first") %></p>
+  <% end %>
+</div>

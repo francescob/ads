@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_08_135744) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_03_110910) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -301,9 +301,33 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_135744) do
     t.integer "reference_year", null: false
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
+    t.string "generated_pdf_digest"
     t.index ["appointment_id"], name: "index_reports_on_appointment_id"
     t.index ["beneficiary_id", "reference_year"], name: "index_reports_on_beneficiary_id_and_reference_year"
     t.index ["beneficiary_id"], name: "index_reports_on_beneficiary_id"
+  end
+
+  create_table "signatures", force: :cascade do |t|
+    t.string "signable_type", null: false
+    t.integer "signable_id", null: false
+    t.integer "uploaded_by_id"
+    t.string "format"
+    t.integer "status", default: 0, null: false
+    t.string "signer_name"
+    t.string "signer_tax_code"
+    t.string "issuer"
+    t.string "certificate_serial"
+    t.datetime "certificate_valid_until"
+    t.datetime "signed_at"
+    t.boolean "timestamped", default: false, null: false
+    t.boolean "qualified", default: false, null: false
+    t.boolean "matches_original"
+    t.json "details", default: {}, null: false
+    t.datetime "verified_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["signable_type", "signable_id"], name: "index_signatures_on_signable", unique: true
+    t.index ["uploaded_by_id"], name: "index_signatures_on_uploaded_by_id"
   end
 
   create_table "solid_cable_messages", force: :cascade do |t|
@@ -475,6 +499,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_135744) do
   add_foreign_key "recurring_incomes", "beneficiaries"
   add_foreign_key "reports", "appointments"
   add_foreign_key "reports", "beneficiaries"
+  add_foreign_key "signatures", "users", column: "uploaded_by_id"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
