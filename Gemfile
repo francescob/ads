@@ -56,7 +56,7 @@ gem "matrix"
 
 # Pagination & search
 gem "kaminari"
-gem "ransack", "~> 4.4"
+gem "ransack", "~> 6.0"
 
 # Notifications
 gem "noticed"
